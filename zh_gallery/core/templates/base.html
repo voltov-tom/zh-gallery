@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zh-gallery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+    <link href="/media/favicon.ico" rel="icon" type="image/x-icon"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,200&family=Pushster&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+<div class="logo">
+    <figure class="image is-128x128">
+        <a href="/">
+            <img src="media/logo.png">
+        </a>
+    </figure>
+</div>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+
+    <div class="navbar-brand">
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="main-navbar">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="main-navbar" class="navbar-menu">
+        <div class="navbar-item">
+            <button class="button is-white">ABOUT<span style="color: #ae7394;">&nbsp;ZH-GALLERY</span></button>
+        </div>
+        <div class="navbar-item">
+            <button class="button is-white">GALLERIES</button>
+        </div>
+        <div class="navbar-item">
+            <button class="button is-white">IN INTERIOR</button>
+        </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+            <div class="navbar-item contact">
+                <button class="button is-white navbar-link">CONTACTS</button>
+            </div>
+            <div class="navbar-dropdown">
+                <div class="navbar-item navigation">
+                    <figure class="image is-24x24">
+                        <a href="https://www.instagram.com/zh_note/">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1024px-Instagram_logo_2016.svg.png">
+                        </a>
+                    </figure>
+
+                    <figure class="image is-24x24">
+                        <a href="https://twitter.com/ZhenyaNote">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/1024px-Twitter-logo.svg.png">
+                        </a>
+                    </figure>
+
+                    <figure class="image is-24x24">
+                        <a href="https://vk.com/zh_note">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/VK_Compact_Logo_%282021-present%29.svg/1024px-VK_Compact_Logo_%282021-present%29.svg.png">
+                        </a>
+                    </figure>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</nav>
+
+<div>
+    <figure class="image">
+        <img src="media/IMG_0076.JPG">
+    </figure>
+</div>
+
+<footer class="footer">
+    <div class="content has-text-centered">
+        <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias atque consectetur culpa doloribus eaque
+            eligendi harum ipsam laudantium modi nesciunt nostrum, quaerat quia ratione sapiente sint soluta ut
+            voluptates voluptatum!
+        </div>
+    </div>
+</footer>
+
+</body>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    if ($navbarBurgers.length > 0) {
+        $navbarBurgers.forEach( el => {
+            el.addEventListener('click', () => {
+                const target = el.dataset.target;
+                const $target = document.getElementById(target);
+                el.classList.toggle('is-active');
+                $target.classList.toggle('is-active');
+            });
+        });
+    }
+});
+
+</script>
+
+</html>
