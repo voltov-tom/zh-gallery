@@ -1,6 +1,2 @@
-Include
-Lib
-Scripts
-pyvenv.cfg
+venv
 .idea
-zh_gallery/db.sqlite3
