@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^ao##e(k%xs3mq-65hq#5c3ok5ft!@%s_r_y)8p8x_1f61+&y=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '5.53.124.55']
 
 
 # Application definition
@@ -77,11 +77,14 @@ WSGI_APPLICATION = 'zh_gallery.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'zh_gallery',
+        'USER': 'voltov',
+        'PASSWORD': 'gallery1234',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -107,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'EUROPE/SAMARA'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
