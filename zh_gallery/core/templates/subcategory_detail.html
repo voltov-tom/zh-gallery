@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="columns is-multiline detail">
+
+    {% for item in media_items %}
+    <div class="column is-3">
+        <div class="card">
+            <div class="subtitle has-text-centered">{{ item.title }}</div>
+            <div class="card-image">
+                <figure class="image">
+                    <img src="{{ item.image.url }}" alt="Placeholder image">
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="content">
+                    {{ item.description }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock content %}

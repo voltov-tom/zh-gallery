@@ -27,3 +27,7 @@
             text-align: center;
         }
 }
+
+.detail {
+    justify-content: space-around;
+}
