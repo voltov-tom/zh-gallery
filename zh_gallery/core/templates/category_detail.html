@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="columns is-multiline detail">
+
+    {% for subcategory in subcategories %}
+    <div class="column is-3">
+        <div class="card">
+            <div class="subtitle has-text-centered">{{ subcategory.title }}</div>
+            <div class="card-image">
+                <a href="{% url 'subcategory_view' subcategory.category.slug subcategory.slug %}">
+                    <figure class="image">
+                        {% if subcategory.image %}
+                        <img src="{{ subcategory.image.url }}" alt="Placeholder image">
+                        {% else %}
+                        <img src="{% static 'core/images/no_photo.jpeg' %}" alt="Placeholder image">
+                        {% endif %}
+                    </figure>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock content %}
