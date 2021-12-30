@@ -1,12 +1,47 @@
 from django.db import models
 
 
+def make_slug_from_name(name):
+    return name.lower().replace('_', '-').replace(' ', '')
+
+
 class MainCategory(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
 
     class Meta:
         verbose_name_plural = 'Main categories'
+        ordering = ['title']
+
+    def save(self, *args, **kwargs):
+        self.slug = make_slug_from_name(self.title)
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return self.slug
+
+    def __str__(self):
+        return self.title
+
+
+class SubCategory(models.Model):
+    category = models.ForeignKey(
+        MainCategory,
+        related_name='subcategory',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255)
+    image = models.ImageField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = make_slug_from_name(self.title)
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'Subcategories'
         ordering = ['title']
 
     def get_absolute_url(self):
@@ -17,11 +52,25 @@ class MainCategory(models.Model):
 
 
 class MediaItem(models.Model):
-    category = models.ForeignKey(MainCategory, related_name='media_item', on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(
+        SubCategory,
+        related_name='mediaitem',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     title = models.CharField(max_length=255)
-    image = models.ImageField()
-    description = models.CharField(max_length=255, null=True, blank=True)
     slug = models.SlugField(max_length=255)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    image = models.ImageField()
+
+    def save(self, *args, **kwargs):
+        self.slug = make_slug_from_name(self.title)
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'Media items'
+        ordering = ['title']
 
     def get_absolute_url(self):
         return self.slug

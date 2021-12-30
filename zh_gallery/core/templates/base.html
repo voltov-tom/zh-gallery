@@ -34,7 +34,7 @@
     </div>
 
     <div id="main-navbar" class="navbar-menu">
-        {% for category in categories %}
+        {% for category in categories.all %}
 
             <div class="navbar-item">
                 <a href="{% url 'category_view' category.slug %}">

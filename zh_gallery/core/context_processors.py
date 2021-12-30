@@ -1,6 +1,11 @@
-from .models import MainCategory
+from .models import MainCategory, SubCategory
 
 
 def categories(request):
     categories = MainCategory.objects.all()
-    return {'categories': categories}
+    subcategories = SubCategory.objects.all()
+    context = {
+        'categories': categories,
+        'subcategories': subcategories
+    }
+    return context
