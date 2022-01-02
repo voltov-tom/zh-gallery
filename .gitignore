@@ -2,3 +2,4 @@ venv
 .idea
 /zh_gallery/static
 /zh_gallery/media
+/zh_gallery/settings.py
