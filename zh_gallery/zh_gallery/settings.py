@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-^ao##e(k%xs3mq-65hq#5c3ok5ft!@%s_r_y)8p8x_1f61+&y=
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = True 
+DEBUG = False 
 
 ALLOWED_HOSTS = ['localhost', 'zh-gallery.ru']
 
