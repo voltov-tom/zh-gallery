@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="content has-text-centered">
+    <div class="title">{{ media_item.title }}</div>
+    <figure class="image">
+        {% if media_item.image %}
+        <img src="{{ media_item.image.url }}">
+        {% else %}
+        <img src="{% static 'core/images/no_photo.jpeg' %}">
+        {% endif %}
+    </figure>
+    <p>{{ media_item.description }}</p>
+</div>
+
+<div class="content">comments:</div>
+<div class="content">some comments</div>
+
+{% endblock content %}

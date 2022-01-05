@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 
 <div class="columns is-multiline detail">
@@ -8,9 +9,15 @@
         <div class="card">
             <div class="subtitle has-text-centered">{{ item.title }}</div>
             <div class="card-image">
-                <figure class="image">
-                    <img src="{{ item.image.url }}" alt="Placeholder image">
-                </figure>
+                <a href="{% url 'media_item_view' subcategory.category.slug subcategory.slug item.slug %}">
+                    <figure class="image">
+                        {% if item.image %}
+                        <img src="{{ item.image.url }}">
+                        {% else %}
+                        <img src="{% static 'core/images/no_photo.jpeg' %}">
+                        {% endif %}
+                    </figure>
+                </a>
             </div>
             <div class="card-content">
                 <div class="content">

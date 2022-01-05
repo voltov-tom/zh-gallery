@@ -12,9 +12,9 @@
                 <a href="{% url 'subcategory_view' subcategory.category.slug subcategory.slug %}">
                     <figure class="image">
                         {% if subcategory.image %}
-                        <img src="{{ subcategory.image.url }}" alt="Placeholder image">
+                        <img src="{{ subcategory.image.url }}">
                         {% else %}
-                        <img src="{% static 'core/images/no_photo.jpeg' %}" alt="Placeholder image">
+                        <img src="{% static 'core/images/no_photo.jpeg' %}">
                         {% endif %}
                     </figure>
                 </a>
