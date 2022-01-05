@@ -15,6 +15,7 @@ urlpatterns = [
 
     path('<slug:slug>/', category_view, name='category_view'),
     path('<slug:category_slug>/<slug:slug>/', subcategory_view, name='subcategory_view'),
+    path('<slug:category_slug>/<slug:subcategory_slug>/<slug:slug>/', media_item_view, name='media_item_view'),
 ]
 
 if settings.DEBUG:
