@@ -6,6 +6,14 @@ def frontpage_view(request):
     return render(request, 'frontpage.html')
 
 
+def terms_and_conditions_view(request):
+    return render(request, 'terms_and_conditions.html')
+
+
+def privacy_policy_view(request):
+    return render(request, 'privacy_policy.html')
+
+
 def about_view(request):
     return render(request, 'about.html')
 

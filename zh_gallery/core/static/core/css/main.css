@@ -20,7 +20,7 @@
     justify-content: space-around;
     padding: 0 200px;
 }
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 768px) {
         .navbar-menu {
             padding: 0;
             text-align: center;
@@ -35,6 +35,11 @@
 
 .media_item_card {
     margin: auto;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-around;
 }
 
 .preloader {
