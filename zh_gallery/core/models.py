@@ -2,7 +2,7 @@ from django.db import models
 
 
 def make_slug_from_name(name):
-    return name.lower().replace('_', '-').replace(' ', '')
+    return name.lower().replace("_", "-").replace(" ", "").replace("’", "").replace("'", "")
 
 
 class MainCategory(models.Model):
