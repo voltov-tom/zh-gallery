@@ -34,3 +34,11 @@ def subcategory_view(request, category_slug, slug):
         'media_items': media_items
     }
     return render(request, 'subcategory_detail.html', content)
+
+
+def media_item_view(request, category_slug, subcategory_slug, slug):
+    media_item = get_object_or_404(MediaItem, slug=slug)
+    content = {
+        'media_item': media_item
+    }
+    return render(request, 'media_item_detail.html', content)
