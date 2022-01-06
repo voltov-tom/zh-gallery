@@ -2,8 +2,11 @@
 {% load static %}
 {% block content %}
 
-<div class="content has-text-centered">
-    <div class="title">{{ media_item.title }}</div>
+{% with media_item as item %}
+{% include 'parts/back_button_title.html' %}
+{% endwith %}
+
+<div class="content">
 
     <figure class="image">
         {% if media_item.image %}
@@ -26,9 +29,9 @@
     </span>
 
     <p>{{ media_item.description }}</p>
-</div>
 
 <div class="content">comments:</div>
 <div class="content">some comments</div>
 
+</div>
 {% endblock content %}
