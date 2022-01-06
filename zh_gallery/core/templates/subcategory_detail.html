@@ -2,6 +2,10 @@
 {% load static %}
 {% block content %}
 
+{% with subcategory as item %}
+{% include 'parts/back_button_title.html' %}
+{% endwith %}
+
 <div class="columns is-multiline detail">
 
     {% for item in media_items %}
