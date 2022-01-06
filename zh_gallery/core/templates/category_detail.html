@@ -7,9 +7,10 @@
     {% for subcategory in subcategories %}
     <div class="column is-3">
         <div class="card">
-            <div class="subtitle has-text-centered">{{ subcategory.title }}</div>
-            <div class="card-image">
-                <a href="{% url 'subcategory_view' subcategory.category.slug subcategory.slug %}">
+            <a class="media_href" href="{% url 'subcategory_view' subcategory.category.slug subcategory.slug %}">
+                <div class="subtitle has-text-centered">{{ subcategory.title }}</div>
+
+                <div class="card-image">
                     <figure class="image">
                         {% if subcategory.image %}
                         <img src="{{ subcategory.image.url }}">
@@ -17,8 +18,31 @@
                         <img src="{% static 'core/images/no_photo.jpeg' %}">
                         {% endif %}
                     </figure>
-                </a>
-            </div>
+
+                    <span class="icon-text views_likes">
+                        <span class="icon">
+                            <ion-icon name="eye-outline"></ion-icon>
+                        </span>
+                        <span>{{ views }}</span>
+
+                        <span class="icon">
+                            <ion-icon name="heart-outline"></ion-icon>
+                        </span>
+                        <span>{likes}</span>
+                    </span>
+
+                    <div class="card-content">
+                        <div class="content">
+                            {% if subcategory.description %}
+                            {{ subcategory.description }}
+                            {% else %}
+                            no description
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </a>
         </div>
     </div>
     {% endfor %}
