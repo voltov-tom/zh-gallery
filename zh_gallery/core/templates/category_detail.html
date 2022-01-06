@@ -2,6 +2,10 @@
 {% load static %}
 {% block content %}
 
+{% with category as item %}
+{% include 'parts/back_button_title.html' %}
+{% endwith %}
+
 <div class="columns is-multiline detail">
 
     {% for subcategory in subcategories %}
@@ -23,7 +27,7 @@
                         <span class="icon">
                             <ion-icon name="eye-outline"></ion-icon>
                         </span>
-                        <span>{{ views }}</span>
+                        <span>{{ subcategory.get_category_views }}</span>
 
                         <span class="icon">
                             <ion-icon name="heart-outline"></ion-icon>
