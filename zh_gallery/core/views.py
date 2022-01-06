@@ -20,7 +20,11 @@ def about_view(request):
 
 def category_view(request, slug):
     category = get_object_or_404(MainCategory, slug=slug)
+    subcategory = SubCategory.objects.filter(category=category)[0]
+    media_items = MediaItem.objects.filter(subcategory=subcategory)
+    views = sum(media_items.values_list('views', flat=True))
     content = {
+        'views': views,
         'category': category
     }
     return render(request, 'category_detail.html', content)
@@ -38,6 +42,8 @@ def subcategory_view(request, category_slug, slug):
 
 def media_item_view(request, category_slug, subcategory_slug, slug):
     media_item = get_object_or_404(MediaItem, slug=slug)
+    media_item.views += 1
+    media_item.save()
     content = {
         'media_item': media_item
     }
