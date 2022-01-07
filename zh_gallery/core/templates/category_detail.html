@@ -27,7 +27,9 @@
                         <span class="icon">
                             <ion-icon name="eye-outline"></ion-icon>
                         </span>
-                        <span>{{ subcategory.get_category_views }}</span>
+                        <span>
+                            {{ views|get_value:subcategory }}
+                        </span>
 
                         <span class="icon">
                             <ion-icon name="heart-outline"></ion-icon>
