@@ -42,34 +42,65 @@
     justify-content: center;
 }
 
+.views_likes {
+    display: flex;
+    justify-content: right;
+}
+
+.media_href:active,
+.media_href:hover,
+.media_href {
+    text-decoration: none;
+    color: inherit;
+}
+
 .preloader {
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  overflow: hidden;
-  background: white;
-  z-index: 1001;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    background: white;
+    z-index: 1001;
 }
 
 .preloader__image {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  width: 70px;
-  height: 70px;
-  margin-top: -35px;
-  margin-left: -35px;
-  text-align: center;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    width: 70px;
+    height: 70px;
+    margin-top: -35px;
+    margin-left: -35px;
+    text-align: center;
 }
 
 .loaded_hiding .preloader {
-  transition: 0.8s opacity;
-  opacity: 0;
+    transition: 0.8s opacity;
+    opacity: 0;
 }
 
 .loaded .preloader {
-  display: none;
+    display: none;
 }
 
+#myBtn {
+    display: none;
+    position: fixed;
+    bottom: 10px;
+    right: 20px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: #ae7394;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    opacity: 0.5;
+}
+
+#myBtn:hover {
+    opacity: 1;
+}
+>>>>>>> b5d3ba8ee085f8e28bcf02a1e3707df1269c44b8
