@@ -1,5 +1,13 @@
 from django.shortcuts import render, get_object_or_404
+
+from django.template.defaulttags import register
+
 from .models import MainCategory, MediaItem, SubCategory
+
+
+@register.filter
+def get_value(dictionary, key):
+    return dictionary.get(key)
 
 
 def frontpage_view(request):
@@ -20,9 +28,14 @@ def about_view(request):
 
 def category_view(request, slug):
     category = get_object_or_404(MainCategory, slug=slug)
-    subcategory = SubCategory.objects.filter(category=category)[0]
-    media_items = MediaItem.objects.filter(subcategory=subcategory)
-    views = sum(media_items.values_list('views', flat=True))
+    subcategory = SubCategory.objects.filter(category=category)
+    views = {}
+
+    for sub in subcategory:
+        media_items = MediaItem.objects.filter(subcategory=sub)
+        category_views = sum(media_items.values_list('views', flat=True))
+        views[sub] = category_views
+
     content = {
         'views': views,
         'category': category
