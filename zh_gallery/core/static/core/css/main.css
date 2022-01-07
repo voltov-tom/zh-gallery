@@ -78,7 +78,7 @@
 
 .loaded_hiding .preloader {
     transition: 0.8s opacity;
-opacity: 0;
+    opacity: 0;
 }
 
 .loaded .preloader {
