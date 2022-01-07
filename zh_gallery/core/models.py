@@ -49,7 +49,7 @@ class SubCategory(models.Model):
         return self.slug
 
     def __str__(self):
-        return self.title
+        return f'{self.category}: {self.title}'
 
 
 class MediaItem(models.Model):
@@ -79,4 +79,4 @@ class MediaItem(models.Model):
         return self.slug
 
     def __str__(self):
-        return self.title
+        return f'{self.subcategory}: {self.title}'
