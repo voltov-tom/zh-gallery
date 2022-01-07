@@ -28,15 +28,16 @@ def about_view(request):
 
 def category_view(request, slug):
     category = get_object_or_404(MainCategory, slug=slug)
-    subcategory = SubCategory.objects.filter(category=category)
+    subcategories = SubCategory.objects.filter(category=category)
     views = {}
 
-    for sub in subcategory:
+    for sub in subcategories:
         media_items = MediaItem.objects.filter(subcategory=sub)
         category_views = sum(media_items.values_list('views', flat=True))
         views[sub] = category_views
 
     content = {
+        'subcategories': subcategories,
         'views': views,
         'category': category
     }
