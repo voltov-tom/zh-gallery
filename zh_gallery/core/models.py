@@ -35,6 +35,7 @@ class SubCategory(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255)
     image = models.ImageField(null=True, blank=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.slug = make_slug_from_name(self.title)
@@ -63,6 +64,8 @@ class MediaItem(models.Model):
     slug = models.SlugField(max_length=255)
     description = models.CharField(max_length=255, null=True, blank=True)
     image = models.ImageField()
+    likes = models.IntegerField(default=0)
+    views = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         self.slug = make_slug_from_name(self.title)
