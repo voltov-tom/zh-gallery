@@ -73,7 +73,7 @@
 
                 {% if request.user.is_authenticated %}
                     <p>Hello {{ request.user }}!</p>
-                    <a href="#" onclick="signOut();">Sign out</a>
+                    <a href="/" onclick="signOut();">Sign out</a>
                 {% else %}
                     <div class="g-signin2" data-onsuccess="onSignIn"></div>
                 {% endif %}
@@ -145,8 +145,6 @@
 
 </body>
 
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-
 <script>
 window.onload = function () {
     document.body.classList.add('loaded_hiding');
@@ -192,13 +190,23 @@ function topFunction() {
 }
 </script>
 
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
 <script>
-  function signOut() {
+function onSignIn(googleUser) {
+    var profile = googleUser.getBasicProfile();
+    console.log('ID: ' + profile.getId());
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail());
+}
+
+function signOut() {
     var auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(function () {
-      console.log('User signed out.');
+        console.log('User signed out.');
     });
-  }
+}
 </script>
 
 </html>
