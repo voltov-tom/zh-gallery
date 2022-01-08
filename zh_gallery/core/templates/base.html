@@ -13,6 +13,7 @@
           rel="stylesheet">
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <meta name="google-signin-client_id" content="{{ client_id }}">
 </head>
 
 <body>
@@ -62,29 +63,38 @@
 
         <div class="navbar-item has-dropdown is-hoverable">
             <div class="navbar-item contact">
-                <button class="button is-white navbar-link">CONTACTS</button>
+<!--                <button class="button is-white navbar-link">CONTACTS</button>-->
+                <button class="button is-white navbar-link">SIGN IN</button>
             </div>
+
 
             <div class="navbar-dropdown">
                 <div class="navbar-item navigation">
 
-                    <figure class="image is-24x24">
-                        <a href="https://www.instagram.com/zh_note/">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1024px-Instagram_logo_2016.svg.png">
-                        </a>
-                    </figure>
+                {% if request.user.is_authenticated %}
+                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                {% else %}
+                    <p>Hello {{ request.user }}!</p>
+                    <a href="#" onclick="signOut();">Sign out</a>
+                {% endif %}
 
-                    <figure class="image is-24x24">
-                        <a href="https://twitter.com/ZhenyaNote">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/1024px-Twitter-logo.svg.png">
-                        </a>
-                    </figure>
+<!--                    <figure class="image is-24x24">-->
+<!--                        <a href="https://www.instagram.com/zh_note/">-->
+<!--                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1024px-Instagram_logo_2016.svg.png">-->
+<!--                        </a>-->
+<!--                    </figure>-->
 
-                    <figure class="image is-24x24">
-                        <a href="https://vk.com/zh_note">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/VK_Compact_Logo_%282021-present%29.svg/1024px-VK_Compact_Logo_%282021-present%29.svg.png">
-                        </a>
-                    </figure>
+<!--                    <figure class="image is-24x24">-->
+<!--                        <a href="https://twitter.com/ZhenyaNote">-->
+<!--                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/1024px-Twitter-logo.svg.png">-->
+<!--                        </a>-->
+<!--                    </figure>-->
+
+<!--                    <figure class="image is-24x24">-->
+<!--                        <a href="https://vk.com/zh_note">-->
+<!--                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/VK_Compact_Logo_%282021-present%29.svg/1024px-VK_Compact_Logo_%282021-present%29.svg.png">-->
+<!--                        </a>-->
+<!--                    </figure>-->
 
                 </div>
             </div>
@@ -138,7 +148,6 @@
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 
 <script>
-
 window.onload = function () {
     document.body.classList.add('loaded_hiding');
     window.setTimeout(function () {
@@ -146,11 +155,9 @@ window.onload = function () {
         document.body.classList.remove('loaded_hiding');
     }, 500);
 }
-
 </script>
 
 <script>
-
 document.addEventListener('DOMContentLoaded', () => {
     const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
     if ($navbarBurgers.length > 0) {
@@ -164,14 +171,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-
 </script>
 
 <script>
-    //Get the button:
 mybutton = document.getElementById("myBtn");
 
-// When the user scrolls down 20px from the top of the document, show the button
 window.onscroll = function() {scrollFunction()};
 
 function scrollFunction() {
@@ -182,11 +186,19 @@ function scrollFunction() {
   }
 }
 
-// When the user clicks on the button, scroll to the top of the document
 function topFunction() {
   document.body.scrollTop = 0; // For Safari
   document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
+</script>
+
+<script>
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+  }
 </script>
 
 </html>
