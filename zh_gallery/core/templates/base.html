@@ -62,8 +62,8 @@
         </div>
 
         <div class="navbar-item has-dropdown is-hoverable">
+
             <div class="navbar-item contact">
-<!--                <button class="button is-white navbar-link">CONTACTS</button>-->
                 <button class="button is-white navbar-link">SIGN IN</button>
             </div>
 
@@ -71,30 +71,8 @@
             <div class="navbar-dropdown">
                 <div class="navbar-item navigation">
 
-                {% if request.user.is_authenticated %}
-                    <p>Hello {{ request.user }}!</p>
                     <a href="/" onclick="signOut();">Sign out</a>
-                {% else %}
                     <div class="g-signin2" data-onsuccess="onSignIn"></div>
-                {% endif %}
-
-<!--                    <figure class="image is-24x24">-->
-<!--                        <a href="https://www.instagram.com/zh_note/">-->
-<!--                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1024px-Instagram_logo_2016.svg.png">-->
-<!--                        </a>-->
-<!--                    </figure>-->
-
-<!--                    <figure class="image is-24x24">-->
-<!--                        <a href="https://twitter.com/ZhenyaNote">-->
-<!--                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/1024px-Twitter-logo.svg.png">-->
-<!--                        </a>-->
-<!--                    </figure>-->
-
-<!--                    <figure class="image is-24x24">-->
-<!--                        <a href="https://vk.com/zh_note">-->
-<!--                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/VK_Compact_Logo_%282021-present%29.svg/1024px-VK_Compact_Logo_%282021-present%29.svg.png">-->
-<!--                        </a>-->
-<!--                    </figure>-->
 
                 </div>
             </div>
@@ -139,7 +117,7 @@
     </div>
 </footer>
 
-<button onclick="topFunction()" id="myBtn" title="Go to top" style="margin: auto;">
+<button onclick="topFunction()" id="topButton" title="Go to top" style="margin: auto;">
     <ion-icon name="arrow-up-outline"></ion-icon>
 </button>
 
@@ -172,21 +150,21 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <script>
-mybutton = document.getElementById("myBtn");
+mybutton = document.getElementById("topButton");
 
 window.onscroll = function() {scrollFunction()};
 
 function scrollFunction() {
-  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-    mybutton.style.display = "block";
-  } else {
-    mybutton.style.display = "none";
-  }
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        mybutton.style.display = "block";
+    } else {
+        mybutton.style.display = "none";
+}
 }
 
 function topFunction() {
-  document.body.scrollTop = 0; // For Safari
-  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
 }
 </script>
 
