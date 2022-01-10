@@ -1,4 +1,4 @@
-venv
+../venv
 /zh_gallery/static
 /zh_gallery/media
 /zh_gallery/zh_gallery/settings.py
