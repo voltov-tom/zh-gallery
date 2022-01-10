@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html>
 
@@ -13,7 +14,6 @@
           rel="stylesheet">
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <meta name="google-signin-client_id" content="{{ client_id }}">
 </head>
 
 <body>
@@ -69,13 +69,28 @@
 
 
             <div class="navbar-dropdown">
-                <div class="navbar-item navigation">
+                <div class="navbar-item ">
 
-                    <a href="/" onclick="signOut();">Sign out</a>
-                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                    {% if user.is_authenticated %}
+                        <div class="block is-size-6 navigation">
+                            <span>Welcome,&nbsp;{{ user.first_name }}!&nbsp;</span>
+                            <a href="{% url 'logout' %}" class="button is-danger is-inverted" style="padding: 0 1;">
+                                <ion-icon name="log-out-outline"></ion-icon>
+                            </a>
+                        </div>
+                    {% else %}
+                    <div class="content">
+                        <a class="button is-primary is-inverted" href="{% provider_login_url 'google' %}">
+                            <figure class="image is-24x24">
+                                <img alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png">
+                            </figure>
+                        </a>
+                    </div>
+                    {% endif %}
 
                 </div>
             </div>
+
         </div>
     </div>
 </nav>
@@ -83,7 +98,7 @@
 {% block content %}
 {% endblock content %}
 
-<footer class="footer">
+<footer class="footer" style="padding-bottom: 48px;">
     <div class="columns">
         <div class="has-text-centered">
             <ul>
@@ -93,7 +108,7 @@
                 <li>Social links:</li>
             </ul>
 
-            <div class="navbar-item navigation">
+            <div class="navbar-item footer-contact">
                 <figure class="image is-24x24">
                     <a href="https://www.instagram.com/zh_note/">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1024px-Instagram_logo_2016.svg.png" alt="inst">
@@ -165,25 +180,6 @@ function scrollFunction() {
 function topFunction() {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
-}
-</script>
-
-<script src="https://apis.google.com/js/platform.js" async defer></script>
-
-<script>
-function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId());
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail());
-}
-
-function signOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-        console.log('User signed out.');
-    });
 }
 </script>
 

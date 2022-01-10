@@ -3,10 +3,30 @@
     justify-content: center;
 }
 
-.navigation {
+.footer-contact {
     display: flex;
     justify-content: space-around;
 }
+
+.navigation {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+    @media screen and (max-width: 768px) {
+        .navigation {
+            justify-content: center;
+        }
+    }
+
+.log-in {
+    padding: 0 250px;
+}
+    @media screen and (max-width: 960px) {
+        .log-in {
+            padding: 0 50px;
+        }
+    }
 
 .contact {
 }
@@ -25,7 +45,7 @@
             padding: 0;
             text-align: center;
         }
-}
+    }
 
 .detail {
     justify-content: space-around;
@@ -85,7 +105,7 @@
     display: none;
 }
 
-#myBtn {
+#topButton {
     display: none;
     position: fixed;
     bottom: 10px;
@@ -101,6 +121,6 @@
     opacity: 0.5;
 }
 
-#myBtn:hover {
+#topButton:hover {
     opacity: 1;
 }
