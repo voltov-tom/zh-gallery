@@ -73,7 +73,7 @@
 
                     {% if user.is_authenticated %}
                         <div class="block is-size-6 navigation">
-                            <span>Welcome,&nbsp;{{ user.first_name }}!&nbsp;</span>
+                            <span>Welcome,&nbsp;{{ user }}!&nbsp;</span>
                             <a href="{% url 'logout' %}" class="button is-danger is-inverted" style="padding: 0 1;">
                                 <ion-icon name="log-out-outline"></ion-icon>
                             </a>
