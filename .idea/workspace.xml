@@ -95,6 +95,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="editing main.css and base.html" />
     <MESSAGE value="editing and base.html ignoring settings.py" />
     <MESSAGE value="edit main css" />
     <MESSAGE value="edit preloader" />
