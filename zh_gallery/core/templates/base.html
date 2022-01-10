@@ -71,12 +71,9 @@
             <div class="navbar-dropdown">
                 <div class="navbar-item navigation">
 
-                {% if request.user.is_authenticated %}
-                    <p>Hello {{ request.user }}!</p>
-                    <a href="/" onclick="signOut();">Sign out</a>
-                {% else %}
+                <p>Hello {{ request.user }}!</p>
+                    <a href="#" onclick="signOut();">SIGN OUT</a>
                     <div class="g-signin2" data-onsuccess="onSignIn"></div>
-                {% endif %}
 
 <!--                    <figure class="image is-24x24">-->
 <!--                        <a href="https://www.instagram.com/zh_note/">-->
