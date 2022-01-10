@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7ed9bb0-31d6-4d83-8fb7-84ed27e64d7d" name="Changes" comment="fix" />
+    <list default="true" id="d7ed9bb0-31d6-4d83-8fb7-84ed27e64d7d" name="Changes" comment="fix branches, edit button and user.username" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,7 +26,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RESET_MODE" value="SOFT" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="GitSEFilterConfiguration">
     <file-type-list>
@@ -95,7 +95,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="editing main.css and base.html" />
     <MESSAGE value="editing and base.html ignoring settings.py" />
     <MESSAGE value="edit main css" />
     <MESSAGE value="edit preloader" />
@@ -121,6 +120,7 @@
     <MESSAGE value="tested google auth, add template, edit css" />
     <MESSAGE value="edit user_name, button" />
     <MESSAGE value="fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
+    <MESSAGE value="fix branches, edit button and user.username" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix branches, edit button and user.username" />
   </component>
 </project>
