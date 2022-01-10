@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d7ed9bb0-31d6-4d83-8fb7-84ed27e64d7d" name="Changes" comment="edit user_name, button" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_AUTO_UPDATE" value="true" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="22sXHT92vXCAql0lbPUbnVHGZAY" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_MARK_IGNORED_FILES_AS_EXCLUDED" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/zh_gallery/core/templates/parts" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\voltovlaptop\Desktop\zh_gallery\zh_gallery\core\templates\parts" />
+      <recent name="C:\Users\voltovlaptop\Desktop\zh_gallery\zh_gallery\core\templates" />
+      <recent name="C:\Users\voltovlaptop\Desktop\zh_gallery\zh_gallery\core\static\core\images" />
+      <recent name="C:\Users\voltovlaptop\Desktop\zh_gallery\zh_gallery\core" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\voltovlaptop\Desktop\zh_gallery\zh_gallery\templates" />
+      <recent name="C:\Users\voltovlaptop\Desktop\zh_gallery\zh_gallery" />
+      <recent name="C:\Users\voltovlaptop\Desktop\zh_gallery\zh_gallery\core\templates\parts" />
+      <recent name="D:\for_desktop\zh_gallery\zh_gallery\core\static\core" />
+      <recent name="D:\for_desktop\zh_gallery\zh_gallery\core\static\css" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="auth_branch" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="editing main.css and base.html" />
+    <MESSAGE value="editing and base.html ignoring settings.py" />
+    <MESSAGE value="edit main css" />
+    <MESSAGE value="edit preloader" />
+    <MESSAGE value="edit preloader, add gif" />
+    <MESSAGE value="add main-2.jpg" />
+    <MESSAGE value="edit main-2.jpg, edit css" />
+    <MESSAGE value="add term, policy, edit views, urls, edit footer" />
+    <MESSAGE value="add media_item_detail, edit views.py, urls.py" />
+    <MESSAGE value="edit .gitignore" />
+    <MESSAGE value="edit models.py make_slug_from_name()" />
+    <MESSAGE value="add icons, makemigrations, add views to media_item" />
+    <MESSAGE value="add button back, top" />
+    <MESSAGE value="add views counter for subcategory" />
+    <MESSAGE value="edit gitignore, add button.html" />
+    <MESSAGE value="del subcategories from context_processors.py, edit __str_" />
+    <MESSAGE value="fix None desc" />
+    <MESSAGE value="white color for button up" />
+    <MESSAGE value="add test google sign in" />
+    <MESSAGE value="fix google sign in" />
+    <MESSAGE value="fix2 google sign in" />
+    <MESSAGE value="fix3 google sign in" />
+    <MESSAGE value="add requirements.txt" />
+    <MESSAGE value="tested google auth, add template, edit css" />
+    <MESSAGE value="edit user_name, button" />
+    <option name="LAST_COMMIT_MESSAGE" value="edit user_name, button" />
+  </component>
+</project>
