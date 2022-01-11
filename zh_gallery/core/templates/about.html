@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 
+{% with 'About' as item %}
+{% include 'parts/back_button_title.html' %}
+{% endwith %}
+
 <div class="block has-text-centered">
     Some info about zh-gallery:<br>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt mollitia quam
     voluptates. Aut, consequuntur dicta distinctio dolor est explicabo ipsum laboriosam libero omnis possimus quae quasi

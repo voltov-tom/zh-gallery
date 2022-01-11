@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MainCategory, MediaItem, SubCategory
+from .models import MainCategory, MediaItem, SubCategory, MediaItemReview
 
 
 @admin.register(MainCategory)
@@ -15,3 +15,6 @@ class SubCategoryAdmin(admin.ModelAdmin):
 @admin.register(MediaItem)
 class MediaItemAdmin(admin.ModelAdmin):
     exclude = ('slug',)
+
+
+admin.site.register(MediaItemReview)
