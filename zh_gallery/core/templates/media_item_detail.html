@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load socialaccount %}
+
 {% block content %}
 
 {% with media_item as item %}
@@ -7,7 +9,6 @@
 {% endwith %}
 
 <div class="content">
-
     <figure class="image">
         {% if media_item.image %}
         <img src="{{ media_item.image.url }}">
@@ -15,7 +16,9 @@
         <img src="{% static 'core/images/no_photo.jpeg' %}">
         {% endif %}
     </figure>
+</div>
 
+<div class="content media_item_bottom">
     <span class="icon-text views_likes">
         <span class="icon">
             <ion-icon name="eye-outline"></ion-icon>
@@ -25,13 +28,53 @@
         <span class="icon">
             <ion-icon name="heart-outline"></ion-icon>
         </span>
-        <span>{likes}</span>
+        <span>{{ media_item.likes }}</span>
     </span>
 
     <p>{{ media_item.description }}</p>
 
-<div class="content">comments:</div>
-<div class="content">some comments</div>
+    <h2 class="subtitle">Reviews</h2>
+    <div class="reviews-wrapper">
+        {% for review in media_item.reviews.all %}
+        <div class="notification space-below">
+            <p>
+                <strong>User: </strong>{{ review.user }},
+                <strong>Date: </strong>{{ review.date_added|date:"d.m.Y" }}
+            </p>
+            {{ review.content }}
+        </div>
+        {% empty %}
+        <div class="notification space-below">
+            No reviews yet.
+        </div>
+        {% endfor %}
+    </div>
 
+    <div class="notification space-below" style="margin-top: 20px">
+        {% if request.user.is_authenticated %}
+
+        <form method="post" action=".">
+            {% csrf_token %}
+            <div class="field">
+                <label>Leave the comment:</label>
+                <div class="control">
+                    <textarea class="textarea" name="content"></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button class="button is-success">Submit</button>
+                </div>
+            </div>
+        </form>
+
+        {% else %}
+        <p>
+            Please<a href="{% provider_login_url 'google' %}"><strong>log in with Google</strong></a>to leave a comment
+        </p>
+        {% endif %}
+
+    </div>
 </div>
+
 {% endblock content %}

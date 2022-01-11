@@ -1,8 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from django.template.defaulttags import register
 
-from .models import MainCategory, MediaItem, SubCategory
+from .models import MainCategory, MediaItem, SubCategory, MediaItemReview
 
 
 @register.filter
@@ -30,15 +30,19 @@ def category_view(request, slug):
     category = get_object_or_404(MainCategory, slug=slug)
     subcategories = SubCategory.objects.filter(category=category)
     views = {}
+    likes = {}
 
     for sub in subcategories:
         media_items = MediaItem.objects.filter(subcategory=sub)
         category_views = sum(media_items.values_list('views', flat=True))
+        category_likes = sum(media_items.values_list('likes', flat=True))
         views[sub] = category_views
+        likes[sub] = category_likes
 
     content = {
         'subcategories': subcategories,
         'views': views,
+        'likes': likes,
         'category': category
     }
     return render(request, 'category_detail.html', content)
@@ -58,6 +62,18 @@ def media_item_view(request, category_slug, subcategory_slug, slug):
     media_item = get_object_or_404(MediaItem, slug=slug)
     media_item.views += 1
     media_item.save()
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        content = request.POST.get('content', '')
+
+        MediaItemReview.objects.create(
+            user=request.user, media_item=media_item, content=content
+        )
+
+        return redirect(
+            'media_item_view', category_slug=category_slug, subcategory_slug=subcategory_slug, slug=slug
+        )
+
     content = {
         'media_item': media_item
     }

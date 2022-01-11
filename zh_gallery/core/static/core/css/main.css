@@ -42,7 +42,7 @@
 }
     @media screen and (max-width: 768px) {
         .navbar-menu {
-            padding: 0;
+            padding: 0px;
             text-align: center;
         }
     }
@@ -63,6 +63,7 @@
 }
 
 .views_likes {
+    padding-right: 10px;
     display: flex;
     justify-content: right;
 }
@@ -124,4 +125,15 @@
 #topButton:hover {
     opacity: 1;
 }
->>>>>>> b5d3ba8ee085f8e28bcf02a1e3707df1269c44b8
+
+.media_item_bottom {
+    justify-content: space-around;
+    padding: 0 200px;
+}
+    @media screen and (max-width: 768px) {
+        .media_item_bottom {
+            padding: 0px;
+            text-align: center;
+        }
+    }
+}
