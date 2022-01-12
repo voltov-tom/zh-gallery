@@ -62,16 +62,21 @@ def media_item_view(request, category_slug, subcategory_slug, slug):
     media_item = get_object_or_404(MediaItem, slug=slug)
     media_item.views += 1
     media_item.save()
+    print(request.session)
 
     if request.method == 'POST' and request.user.is_authenticated:
         content = request.POST.get('content', '')
-
         MediaItemReview.objects.create(
-            user=request.user, media_item=media_item, content=content
+            user=request.user,
+            media_item=media_item,
+            content=content
         )
 
         return redirect(
-            'media_item_view', category_slug=category_slug, subcategory_slug=subcategory_slug, slug=slug
+            'media_item_view',
+            category_slug=category_slug,
+            subcategory_slug=subcategory_slug,
+            slug=slug
         )
 
     content = {
