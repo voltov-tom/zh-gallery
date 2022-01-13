@@ -1,6 +1,8 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 
 from django.template.defaulttags import register
+from django.urls import reverse
 
 from .models import MainCategory, MediaItem, SubCategory, MediaItemReview
 
@@ -35,14 +37,14 @@ def category_view(request, slug):
     for sub in subcategories:
         media_items = MediaItem.objects.filter(subcategory=sub)
         category_views = sum(media_items.values_list('views', flat=True))
-        category_likes = sum(media_items.values_list('likes', flat=True))
+        # category_likes = sum(media_items.values_list('likes', flat=True))
         views[sub] = category_views
-        likes[sub] = category_likes
+        # likes[sub] = category_likes
 
     content = {
         'subcategories': subcategories,
         'views': views,
-        'likes': likes,
+        # 'likes': likes,
         'category': category
     }
     return render(request, 'category_detail.html', content)
@@ -62,9 +64,9 @@ def media_item_view(request, category_slug, subcategory_slug, slug):
     media_item = get_object_or_404(MediaItem, slug=slug)
     media_item.views += 1
     media_item.save()
-    print(request.session)
 
     if request.method == 'POST' and request.user.is_authenticated:
+        print('post')
         content = request.POST.get('content', '')
         MediaItemReview.objects.create(
             user=request.user,

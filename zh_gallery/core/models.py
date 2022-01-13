@@ -65,8 +65,8 @@ class MediaItem(models.Model):
     slug = models.SlugField(max_length=255)
     description = models.CharField(max_length=255, null=True, blank=True)
     image = models.ImageField()
-    likes = models.IntegerField(default=0)
     views = models.IntegerField(default=0)
+    likes = models.ManyToManyField(User, related_name='likes')
 
     def save(self, *args, **kwargs):
         self.slug = make_slug_from_name(self.title)
