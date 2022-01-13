@@ -19,20 +19,34 @@
 </div>
 
 <div class="block is-flex" style="justify-content: space-around; margin-bottom: 0px;">
+
     <div style="justify-content: center;">
         <figure class="image is-24x24">
             <img src="{% static 'core/images/eye-outline.svg' %}" alt="eye">
         </figure>
         <div class="has-text-centered">{{ media_item.views }}</div>
     </div>
+
     <div style="justify-content: center;">
-        <figure class="image is-24x24">
-            <a href="#">
-                <img src="{% static 'core/images/heart-outline.svg' %}" alt="heart">
-            </a>
-        </figure>
-        <div class="has-text-centered">{{ media_item.likes }}</div>
+        <div class="has-text-centered"> media_item.likes </div>
+
+            <figure class="image is-24x24">
+                <a @click="like({{ media_item.slug }})" id="likes_button">
+                    <img src="{% static 'core/images/heart-outline.svg' %}" alt="heart">
+                </a>
+            </figure>
+
+<!--        <form action=" url 'like_view' media_item.subcategory.category.slug media_item.subcategory.slug media_item.slug " method="POST">-->
+<!--             csrf_token -->
+<!--            <figure class="image is-24x24">-->
+<!--                <button type="submit" name="media_slug" value=" media_item.slug ">-->
+<!--                    <img src=" static 'core/images/heart-outline.svg' " alt="heart">-->
+<!--                </button>-->
+<!--            </figure>-->
+<!--        </form>-->
+
     </div>
+
 </div>
 
 <div class="content media_item_bottom">
@@ -88,3 +102,45 @@
 </div>
 
 {% endblock content %}
+{% block scripts %}
+
+<script>
+var likes = new Vue({
+    el: '#likes_button',
+    delimiters: ['[[', ']]'],
+    data() {
+        return {
+            slug: '{{ media_item.slug }}'
+        }
+    },
+    methods: {
+        like() {
+            var data =  {
+                'like': true,
+                'slug': this.slug
+            };
+
+            console.log(data);
+
+            fetch('/api/like/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(data)
+                })
+                .then((response) => {
+                    console.log('response:', response)
+                })
+                .catch(function (error) {
+                    console.log('error:', error);
+                })
+            }
+        }
+    })
+
+</script>
+
+{% endblock scripts %}
