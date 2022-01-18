@@ -2,9 +2,21 @@
 
     <div class="column is-1 is-hidden-mobile" style="margin: auto;">
         <form style="padding: 0 0 0 20px; margin: auto;">
-            <button class="button is-danger is-inverted" type="button" onclick="history.back()">
-                <ion-icon name="arrow-back-outline"></ion-icon>
-            </button>
+            {% if item.likes %}
+                <a href="{% url 'subcategory_view' item.subcategory.category.slug item.subcategory.slug %}"
+                   class="button is-danger is-inverted" type="button">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                </a>
+            {% elif item.category %}
+                <a href="{% url 'category_view' item.category.slug %}"
+                    class="button is-danger is-inverted" type="button">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                </a>
+            {% else %}
+                <a href="/" class="button is-danger is-inverted" type="button">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                </a>
+            {% endif %}
         </form>
     </div>
 
