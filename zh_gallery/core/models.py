@@ -1,9 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-
-
-def make_slug_from_name(name):
-    return name.lower().replace("_", "-").replace(" ", "").replace("’", "").replace("'", "")
+from slugify import slugify
 
 
 class MainCategory(models.Model):
@@ -15,7 +12,7 @@ class MainCategory(models.Model):
         ordering = ['title']
 
     def save(self, *args, **kwargs):
-        self.slug = make_slug_from_name(self.title)
+        self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
@@ -39,7 +36,7 @@ class SubCategory(models.Model):
     description = models.CharField(max_length=255, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        self.slug = make_slug_from_name(self.title)
+        self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
     class Meta:
@@ -69,7 +66,7 @@ class MediaItem(models.Model):
     likes = models.ManyToManyField(User, related_name='likes')
 
     def save(self, *args, **kwargs):
-        self.slug = make_slug_from_name(self.title)
+        self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
     class Meta:
