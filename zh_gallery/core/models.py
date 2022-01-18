@@ -65,8 +65,8 @@ class MediaItem(models.Model):
     slug = models.SlugField(max_length=255)
     description = models.CharField(max_length=255, null=True, blank=True)
     image = models.ImageField()
-    likes = models.IntegerField(default=0)
     views = models.IntegerField(default=0)
+    likes = models.ManyToManyField(User, related_name='likes')
 
     def save(self, *args, **kwargs):
         self.slug = make_slug_from_name(self.title)
@@ -80,7 +80,11 @@ class MediaItem(models.Model):
         return self.slug
 
     def __str__(self):
-        return f'{self.subcategory}: {self.title}'
+        return f'{self.id}, {self.subcategory}: {self.title}'
+
+    @property
+    def total_likes(self):
+        return self.likes.count()
 
 
 class MediaItemReview(models.Model):
