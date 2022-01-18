@@ -1,8 +1,9 @@
-from django.http import HttpResponseRedirect
+import json
+
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
 from django.template.defaulttags import register
-from django.urls import reverse
 
 from .models import MainCategory, MediaItem, SubCategory, MediaItemReview
 
@@ -31,21 +32,27 @@ def about_view(request):
 def category_view(request, slug):
     category = get_object_or_404(MainCategory, slug=slug)
     subcategories = SubCategory.objects.filter(category=category)
+
     views = {}
     likes = {}
 
     for sub in subcategories:
         media_items = MediaItem.objects.filter(subcategory=sub)
         category_views = sum(media_items.values_list('views', flat=True))
-        # category_likes = sum(media_items.values_list('likes', flat=True))
         views[sub] = category_views
-        # likes[sub] = category_likes
+
+        category_query = media_items.values_list('likes', flat=True)
+        category_likes = 0
+        for i in category_query:
+            if i is not None:
+                category_likes += 1
+        likes[sub] = category_likes
 
     content = {
+        'category': category,
         'subcategories': subcategories,
         'views': views,
-        # 'likes': likes,
-        'category': category
+        'likes': likes
     }
     return render(request, 'category_detail.html', content)
 
@@ -66,7 +73,6 @@ def media_item_view(request, category_slug, subcategory_slug, slug):
     media_item.save()
 
     if request.method == 'POST' and request.user.is_authenticated:
-        print('post')
         content = request.POST.get('content', '')
         MediaItemReview.objects.create(
             user=request.user,
@@ -81,7 +87,39 @@ def media_item_view(request, category_slug, subcategory_slug, slug):
             slug=slug
         )
 
+    already_liked = media_item.likes.filter(id=request.user.id).exists()
+
     content = {
-        'media_item': media_item
+        'media_item': media_item,
+        'already_liked': json.dumps(already_liked),
+        'likes_count': media_item.total_likes
     }
     return render(request, 'media_item_detail.html', content)
+
+
+def like_button(request):
+    if request.method == 'POST' and request.user.is_authenticated:
+        data = json.loads(request.body)
+
+        if data['operation'] == 'like_submit':
+            media_id = data['media_id']
+            media_item = get_object_or_404(MediaItem, id=media_id)
+
+            if media_item.likes.filter(id=request.user.id):
+                media_item.likes.remove(request.user)
+                liked = False
+            else:
+                if not media_item.likes:
+                    media_item.likes.create()
+                media_item.likes.add(request.user.id)
+                liked = True
+
+            context = {
+                'likes_count': media_item.total_likes,
+                'liked': liked,
+                'media_id': media_id,
+                'success': True
+            }
+            return HttpResponse(json.dumps(context), content_type='application/json')
+
+    return HttpResponse(json.dumps({'success': False}), content_type='application/json')

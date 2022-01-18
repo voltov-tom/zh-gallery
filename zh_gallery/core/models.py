@@ -80,7 +80,11 @@ class MediaItem(models.Model):
         return self.slug
 
     def __str__(self):
-        return f'{self.subcategory}: {self.title}'
+        return f'{self.id}, {self.subcategory}: {self.title}'
+
+    @property
+    def total_likes(self):
+        return self.likes.count()
 
 
 class MediaItemReview(models.Model):
