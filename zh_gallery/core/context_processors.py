@@ -1,4 +1,4 @@
-from .models import MainCategory, SubCategory
+from .models import MainCategory
 
 
 def categories(request):
