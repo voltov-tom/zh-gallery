@@ -7,7 +7,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('logout/', views.LogoutView.as_view(next_page='/'), name='logout'),
+    path('logout/', views.LogoutView.as_view(), name='logout'),
     path('accounts/', include('allauth.urls')),
 
     path('', include('core.urls')),
