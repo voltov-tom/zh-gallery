@@ -1,10 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div>
+<div style="margin-bottom: 24px;">
     <figure class="image">
         <img src="static/core/images/main.JPG">
     </figure>
 </div>
+
+{% if request.user.is_superuser %}
+<div class="content media_item_bottom">
+<p>Last added comments:</p>
+
+    {% for review in last_reviews %}
+    <div class="notification space-below">
+        <a href="{{ review.media_item.get_absolute_url }}">
+            <strong>{{ review.media_item.title }}</strong><br>
+        </a>
+        <strong>{{ review.user }}</strong>
+        {{ review.date_added|date:"H:i d.m.y" }}
+        <p>{{ review.content }}</p>
+    </div>
+    {% endfor %}
+
+</div>
+{% endif %}
 
 {% endblock content %}
