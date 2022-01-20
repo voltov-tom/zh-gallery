@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.template.defaulttags import now
+from django.utils import timezone
 from slugify import slugify
 
 
@@ -62,8 +64,10 @@ class MediaItem(models.Model):
     slug = models.SlugField(max_length=255)
     description = models.CharField(max_length=255, null=True, blank=True)
     image = models.ImageField()
+
     views = models.IntegerField(default=0)
-    likes = models.ManyToManyField(User, related_name='likes')
+    likes = models.ManyToManyField(User, related_name='likes', blank=True)
+    like_time = models.DateTimeField(default=timezone.now())
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
