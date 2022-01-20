@@ -12,7 +12,7 @@
     <div class="column is-3 media_item_card">
         <div class="card">
             <a class="media_href"
-               href="{% url 'media_item_view' subcategory.category.slug subcategory.slug item.slug %}">
+               href="{{ item.get_absolute_url }}">
                 <div class="subtitle has-text-centered">{{ item.title }}</div>
 
                 <div class="card-image">

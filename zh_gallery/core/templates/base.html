@@ -48,7 +48,7 @@
         {% for category in categories.all %}
 
         <div class="navbar-item">
-            <a href="{% url 'category_view' category.slug %}">
+            <a href="{{ category.get_absolute_url }}">
                 <button class="button is-white">
                     {{ category.title }}
                 </button>
