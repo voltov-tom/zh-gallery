@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
 from django.template.defaulttags import register
+from django.utils import timezone
 
 from .models import MainCategory, MediaItem, SubCategory, MediaItemReview
 
@@ -14,8 +15,18 @@ def get_value(dictionary, key):
 
 
 def frontpage_view(request):
-    last_reviews = MediaItemReview.objects.all()[:10]
-    return render(request, 'frontpage.html', {'last_reviews': last_reviews})
+    if request.user.is_superuser:
+        last_reviews = MediaItemReview.objects.all()[:10]
+        last_liked_items = MediaItem.objects.all().order_by('-like_time')[:10]
+
+        context = {
+            'last_reviews': last_reviews,
+            'last_liked_items': last_liked_items
+        }
+        return render(request, 'frontpage.html', context)
+
+    else:
+        return render(request, 'frontpage.html')
 
 
 def terms_and_conditions_view(request):
@@ -113,6 +124,8 @@ def like_button(request):
                 if not media_item.likes:
                     media_item.likes.create()
                 media_item.likes.add(request.user.id)
+                media_item.like_time = timezone.now()
+                media_item.save()
                 liked = True
 
             context = {
