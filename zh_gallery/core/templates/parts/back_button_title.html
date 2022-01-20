@@ -3,12 +3,12 @@
     <div class="column is-1 is-hidden-mobile" style="margin: auto;">
         <form style="padding: 0 0 0 20px; margin: auto;">
             {% if item.likes %}
-                <a href="{% url 'subcategory_view' item.subcategory.category.slug item.subcategory.slug %}"
+                <a href="{{ item.subcategory.get_absolute_url }}"
                    class="button is-danger is-inverted" type="button">
                     <ion-icon name="arrow-back-outline"></ion-icon>
                 </a>
             {% elif item.category %}
-                <a href="{% url 'category_view' item.category.slug %}"
+                <a href="{{ item.category.get_absolute_url }}"
                     class="button is-danger is-inverted" type="button">
                     <ion-icon name="arrow-back-outline"></ion-icon>
                 </a>

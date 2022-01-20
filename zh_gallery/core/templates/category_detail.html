@@ -11,7 +11,7 @@
     {% for subcategory in subcategories %}
     <div class="column is-3">
         <div class="card">
-            <a class="media_href" href="{% url 'subcategory_view' subcategory.category.slug subcategory.slug %}">
+            <a class="media_href" href="{{ subcategory.get_absolute_url }}">
                 <div class="subtitle has-text-centered">{{ subcategory.title }}</div>
 
                 <div class="card-image">
