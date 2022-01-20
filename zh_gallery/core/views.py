@@ -14,7 +14,8 @@ def get_value(dictionary, key):
 
 
 def frontpage_view(request):
-    return render(request, 'frontpage.html')
+    last_reviews = MediaItemReview.objects.all()[:10]
+    return render(request, 'frontpage.html', {'last_reviews': last_reviews})
 
 
 def terms_and_conditions_view(request):

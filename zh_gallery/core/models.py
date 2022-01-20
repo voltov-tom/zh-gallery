@@ -4,7 +4,7 @@ from slugify import slugify
 
 
 class MainCategory(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255)
 
     class Meta:
@@ -16,7 +16,7 @@ class MainCategory(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return self.slug
+        return f'/{self.slug}'
 
     def __str__(self):
         return self.title
@@ -30,7 +30,7 @@ class SubCategory(models.Model):
         null=True,
         blank=True
     )
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255)
     image = models.ImageField(null=True, blank=True)
     description = models.CharField(max_length=255, null=True, blank=True)
@@ -44,7 +44,7 @@ class SubCategory(models.Model):
         ordering = ['title']
 
     def get_absolute_url(self):
-        return self.slug
+        return f'/{self.category.slug}/{self.slug}'
 
     def __str__(self):
         return f'{self.category}: {self.title}'
@@ -58,7 +58,7 @@ class MediaItem(models.Model):
         null=True,
         blank=True
     )
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(max_length=255)
     description = models.CharField(max_length=255, null=True, blank=True)
     image = models.ImageField()
@@ -74,7 +74,7 @@ class MediaItem(models.Model):
         ordering = ['title']
 
     def get_absolute_url(self):
-        return self.slug
+        return f'/{self.subcategory.category.slug}/{self.subcategory.slug}/{self.slug}'
 
     def __str__(self):
         return f'{self.id}, {self.subcategory}: {self.title}'
