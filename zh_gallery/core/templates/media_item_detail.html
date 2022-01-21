@@ -42,7 +42,7 @@
     </div>
 
     <div class="content media_item_bottom">
-        <div class="notification" v-if="unauthMessage">
+        <div class="notification is-warning is-light" v-if="unauthMessage">
             <button v-on:click="unauthMessage = !unauthMessage" class="delete"></button>
                 <p>
                     Please&nbsp;
@@ -57,7 +57,7 @@
         <h2 class="subtitle">Reviews</h2>
         <div class="reviews-wrapper">
             {% for review in media_item.reviews.all %}
-            <div class="notification space-below">
+            <div class="notification space-below review">
                 <p>
                     <strong>User: </strong>{{ review.user }},
                     <strong>Date: </strong>{{ review.date_added|date:"d.m.Y" }}
@@ -91,7 +91,7 @@
 
         {% else %}
 
-        <article class="message is-dark" style="margin-top: 20px">
+        <article class="message is-dark" style="margin: 24px 0;">
             <div class="message-body">
                 Please&nbsp;
                 <a href="{% provider_login_url 'google' %}">

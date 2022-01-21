@@ -1,13 +1,10 @@
 from django.contrib import admin
-from django.contrib.auth import views
-from django.conf.urls.static import static
-from django.conf import settings
 from django.urls import path, include
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('logout/', views.LogoutView.as_view(), name='logout'),
     path('accounts/', include('allauth.urls')),
 
     path('', include('core.urls')),
