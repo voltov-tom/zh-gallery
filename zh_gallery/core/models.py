@@ -66,7 +66,7 @@ class MediaItem(models.Model):
     image = models.ImageField()
 
     views = models.IntegerField(default=0)
-    likes = models.ManyToManyField(User, related_name='likes', blank=True)
+    likes = models.ManyToManyField(User, related_name='likes', null=True, blank=True)
     like_time = models.DateTimeField(default=timezone.now())
 
     def save(self, *args, **kwargs):
