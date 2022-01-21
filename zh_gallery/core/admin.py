@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MainCategory, MediaItem, SubCategory, MediaItemReview
+from .models import MainCategory, MediaItem, SubCategory, MediaItemReview, About
 
 
 @admin.register(MainCategory)
@@ -18,3 +18,4 @@ class MediaItemAdmin(admin.ModelAdmin):
 
 
 admin.site.register(MediaItemReview)
+admin.site.register(About)
