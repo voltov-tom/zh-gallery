@@ -4,13 +4,17 @@
 {% with 'About' as item %}
 {% include 'parts/back_button_title.html' %}
 {% endwith %}
-
-<div class="block has-text-centered">
-    Some info about zh-gallery:<br>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt mollitia quam
-    voluptates. Aut, consequuntur dicta distinctio dolor est explicabo ipsum laboriosam libero omnis possimus quae quasi
-    reiciendis rerum unde voluptate? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut beatae blanditiis
-    corporis nisi nulla officia sapiente sed soluta tempore vero? Alias assumenda cupiditate necessitatibus placeat
-    repudiandae suscipit ut velit voluptatem.
+<div class="content media_item_bottom">
+    <div class="subtitle">Some info about zh-gallery:</div>
+    <div class="columns">
+        <div class="column is-half">{{ text.body }}</div>
+        {% if text.image %}
+            <div class="column is-half">
+                <figure class="is-image">
+                    <img src="{{ text.image.url }}" alt="image">
+                </figure>
+            </div>
+        {% endif %}
+    </div>
 </div>
-
 {% endblock content %}
