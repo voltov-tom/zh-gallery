@@ -15,18 +15,15 @@ def get_value(dictionary, key):
 
 
 def frontpage_view(request):
-    if request.user.is_superuser:
-        last_reviews = MediaItemReview.objects.all()[:10]
-        last_liked_items = MediaItem.objects.all().order_by('-like_time')[:10]
+    last_reviews = MediaItemReview.objects.all()[:5]
+    last_liked_items = MediaItem.objects.all().order_by('-like_time')[:10]
 
-        context = {
-            'last_reviews': last_reviews,
-            'last_liked_items': last_liked_items
-        }
-        return render(request, 'frontpage.html', context)
+    context = {
+        'last_reviews': last_reviews,
+        'last_liked_items': last_liked_items
+    }
+    return render(request, 'frontpage.html', context)
 
-    else:
-        return render(request, 'frontpage.html')
 
 
 def terms_and_conditions_view(request):

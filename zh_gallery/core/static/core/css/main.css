@@ -133,7 +133,33 @@
     @media screen and (max-width: 768px) {
         .media_item_bottom {
             padding: 0px;
-            text-align: center;
+            margin: 10px;
+            text-align: justify;
         }
     }
+
+.review {
+    text-align: justify;
+}
+    @media screen and (max-width: 768px) {
+        .review {
+            padding: 0 15px;
+            margin: 10px;
+            text-align: justify;
+        }
+    }
+
+.column_frontpage {
+}
+    @media screen and (max-width: 768px) {
+        .column_frontpage {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    }
+
+.cart_frontpage {
+    display: flex;
+    justify-content: center;
+    margin: 5px;
 }
