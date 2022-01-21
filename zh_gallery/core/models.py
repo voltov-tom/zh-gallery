@@ -66,7 +66,7 @@ class MediaItem(models.Model):
 
     views = models.IntegerField(default=0)
     likes = models.ManyToManyField(User, related_name='likes', blank=True)
-    like_time = models.DateTimeField(default=now())
+    like_time = models.DateTimeField(auto_now=now())
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
