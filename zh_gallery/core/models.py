@@ -99,3 +99,8 @@ class MediaItemReview(models.Model):
 
     def __str__(self):
         return f'{self.media_item}, {self.user}'
+
+
+class About(models.Model):
+    body = models.TextField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True)

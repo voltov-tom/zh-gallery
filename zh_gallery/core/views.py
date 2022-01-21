@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template.defaulttags import register
 from django.utils import timezone
 
-from .models import MainCategory, MediaItem, SubCategory, MediaItemReview
+from .models import MainCategory, MediaItem, SubCategory, MediaItemReview, About
 
 
 @register.filter
@@ -38,7 +38,7 @@ def privacy_policy_view(request):
 
 
 def about_view(request):
-    return render(request, 'about.html')
+    return render(request, 'about.html', {'text': About.objects.all()[0]})
 
 
 def category_view(request, slug):
