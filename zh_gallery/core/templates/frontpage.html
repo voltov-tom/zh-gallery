@@ -43,7 +43,7 @@
 
             {% for item in last_liked_items %}
 
-            <a href="{{ review.media_item.get_absolute_url }}" style="width: 100%;">
+            <a href="{{ item.get_absolute_url }}" style="width: 100%;">
                 <div class="card" style=" margin-bottom: 10px;">
                     <div class="card-content" style="padding: 0;">
                         <div class="media" style="align-items: center;">
