@@ -4,14 +4,14 @@
 {% with 'About' as item %}
 {% include 'parts/back_button_title.html' %}
 {% endwith %}
-<div class="content media_item_bottom">
+<div class="content about">
     <div class="subtitle">Some info about zh-gallery:</div>
     <div class="columns">
-        <div class="column is-half">{{ text.body }}</div>
+        <div class="column is-9">{{ text.body }}</div>
         {% if text.image %}
-            <div class="column is-half">
-                <figure class="is-image">
-                    <img src="{{ text.image.url }}" alt="image">
+            <div class="column is-3" style="">
+                <figure class="image">
+                    <img class="is-rounded" src="{{ text.image.url }}" alt="image">
                 </figure>
             </div>
         {% endif %}
