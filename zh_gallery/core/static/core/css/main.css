@@ -10,10 +10,10 @@
 
 .navigation {
     display: flex;
-    align-items: center;
+    align-items: left;
     justify-content: start;
 }
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1114px) {
         .navigation {
             justify-content: center;
         }
@@ -22,7 +22,7 @@
 .log-in {
     padding: 0 250px;
 }
-    @media screen and (max-width: 960px) {
+    @media screen and (max-width: 1114px) {
         .log-in {
             padding: 0 50px;
         }
@@ -30,7 +30,7 @@
 
 .contact {
 }
-    @media screen and (max-width: 960px) {
+    @media screen and (max-width: 1114px) {
         .contact {
             display: none;
         }
@@ -40,7 +40,7 @@
     justify-content: space-around;
     padding: 0 200px;
 }
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1114px) {
         .navbar-menu {
             padding: 0px;
             text-align: center;
@@ -63,7 +63,7 @@
 }
 
 .views_likes {
-    padding-right: 10px;
+    padding-right: 5px;
     display: flex;
     justify-content: right;
 }
@@ -130,9 +130,9 @@
     justify-content: space-around;
     padding: 0 200px;
 }
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1114px) {
         .media_item_bottom {
-            padding: 0px;
+            padding: 0 15px;
             margin: 10px;
             text-align: justify;
         }
@@ -141,10 +141,10 @@
 .review {
     text-align: justify;
 }
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1114px) {
         .review {
             padding: 0 15px;
-            margin: 10px;
+            margin-bottom: 10px;
             text-align: justify;
         }
     }
@@ -158,8 +158,22 @@
         }
     }
 
-.cart_frontpage {
-    display: flex;
-    justify-content: center;
-    margin: 5px;
+.review_body {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
 }
+
+.about {
+    justify-content: space-around;
+    padding: 0 200px;
+}
+    @media screen and (max-width: 1114px) {
+        .about {
+            padding: 15px;
+            margin: 10px;
+            text-align: justify;
+        }
+    }

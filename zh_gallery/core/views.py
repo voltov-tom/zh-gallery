@@ -15,7 +15,7 @@ def get_value(dictionary, key):
 
 
 def frontpage_view(request):
-    last_reviews = MediaItemReview.objects.all()[:5]
+    last_reviews = MediaItemReview.objects.all()[:10]
     last_liked_items = MediaItem.objects.all().order_by('-like_time')[:10]
 
     context = {
@@ -23,7 +23,6 @@ def frontpage_view(request):
         'last_liked_items': last_liked_items
     }
     return render(request, 'frontpage.html', context)
-
 
 
 def terms_and_conditions_view(request):
@@ -47,6 +46,7 @@ def category_view(request, slug):
 
     for sub in subcategories:
         media_items = MediaItem.objects.filter(subcategory=sub)
+
         category_views = sum(media_items.values_list('views', flat=True))
         views[sub] = category_views
 
