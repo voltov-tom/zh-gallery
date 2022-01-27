@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template.defaulttags import register
 from django.utils import timezone
 
-from .models import MainCategory, MediaItem, SubCategory, MediaItemReview, About
+from .models import MainCategory, MediaItem, SubCategory, MediaItemReview
 
 
 @register.filter
