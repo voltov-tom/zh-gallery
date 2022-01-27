@@ -44,17 +44,17 @@
     <div class="content media_item_bottom">
         <div class="notification is-warning is-light" v-if="unauthMessage">
             <button v-on:click="unauthMessage = !unauthMessage" class="delete"></button>
-                <p>
-                    Please&nbsp;
-                    <a href="{% provider_login_url 'google' %}">
-                        <strong>log in with Google</strong>
-                    </a>
-                    &nbsp;to like
-                </p>
+            <p>
+                Please&nbsp;
+                <a href="{% url 'account_login' %}?next={{ request.path }}">
+                    <strong>log in</strong>
+                </a>
+                &nbsp;to like
+            </p>
         </div>
-        <div class="content">{{ media_item.description }}</div>
+        <div class="content" style="padding: 0 15px;">{{ media_item.description }}</div>
 
-        <h2 class="subtitle">Reviews</h2>
+        <h2 class="subtitle" style="padding: 0 15px;">Reviews</h2>
         <div class="reviews-wrapper">
             {% for review in media_item.reviews.all %}
             <div class="notification space-below review">
