@@ -6,7 +6,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="yandex-verification" content="7b0c797192ea8358" />
+    <meta name="yandex-verification" content="7b0c797192ea8358">
+    <meta name="description" content="{{ description.body }}">
     <title>Zh-gallery</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     <link rel="stylesheet" href="{% static 'core/css/main.css' %}">
@@ -65,35 +66,23 @@
             </a>
         </div>
 
-        <div class="navbar-item has-dropdown is-hoverable">
-
-            <div class="navbar-item contact">
-                <button class="button is-white navbar-link">SIGN IN</button>
-            </div>
-
-            <div class="navbar-dropdown">
-                <div class="navbar-item" style="justify-content: center;">
-
-                    {% if user.is_authenticated %}
-                        <div class="block is-size-6 navigation">
-                            <span>Welcome,&nbsp;{{ user }}!&nbsp;</span>
-                            <a href="{% url 'account_logout' %}?next={{ request.path }}" class="button is-danger is-inverted" style="padding: 0 1;">
-                            </a>
-                        </div>
-                    {% else %}
-                    <a href="{% url 'account_login' %}" class="button is-info is-light" style="margin: 2px;">
-                        Sign In
-                    </a>
-                    <a href="{% url 'account_signup' %}" class="button is-info is-light" style="margin: 2px;">
-                        Sign Up
-                    </a>
-                    {% endif %}
-
-                </div>
-            </div>
-
+        <div class="navbar-item" style="display: flex; justify-content: center; align-items: center;">
+            {% if user.is_authenticated %}
+                <span>Welcome,&nbsp;{{ user }}!&nbsp;</span>
+                <a href="{% url 'account_logout' %}?next={{ request.path }}" class="button is-danger is-inverted">
+                    <ion-icon name="log-out-outline"></ion-icon>
+                </a>
+            {% else %}
+                <a href="{% url 'account_login' %}" class="button is-info is-light" style="margin: 2px;">
+                    Sign In
+                </a>
+                <a href="{% url 'account_signup' %}" class="button is-info is-light" style="margin: 2px;">
+                    Sign Up
+                </a>
+            {% endif %}
         </div>
     </div>
+
 </nav>
 
 {% block content %}
@@ -112,19 +101,22 @@
             <div class="navbar-item footer-contact">
                 <figure class="image is-24x24">
                     <a href="https://www.instagram.com/zh_note/">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1024px-Instagram_logo_2016.svg.png" alt="inst">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1024px-Instagram_logo_2016.svg.png"
+                             alt="inst">
                     </a>
                 </figure>
 
                 <figure class="image is-24x24">
                     <a href="https://twitter.com/ZhenyaNote">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/1024px-Twitter-logo.svg.png" alt="twitt">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/1024px-Twitter-logo.svg.png"
+                             alt="twitt">
                     </a>
                 </figure>
 
                 <figure class="image is-24x24">
                     <a href="https://vk.com/zh_note">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/VK_Compact_Logo_%282021-present%29.svg/1024px-VK_Compact_Logo_%282021-present%29.svg.png"  alt="vk">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/VK_Compact_Logo_%282021-present%29.svg/1024px-VK_Compact_Logo_%282021-present%29.svg.png"
+                             alt="vk">
                     </a>
                 </figure>
             </div>
@@ -150,6 +142,9 @@ window.onload = function () {
         document.body.classList.remove('loaded_hiding');
     }, 500);
 }
+
+
+
 </script>
 
 <script>
@@ -166,6 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
+
 </script>
 
 <script>
@@ -185,6 +183,9 @@ function topFunction() {
     document.body.scrollTop = 0;
     document.documentElement.scrollTop = 0;
 }
+
+
+
 </script>
 
 </html>
