@@ -63,7 +63,8 @@
 }
 
 .views_likes {
-    padding-right: 5px;
+    padding-right: 10px;
+    padding-bottom: 10px;
     display: flex;
     justify-content: right;
 }
@@ -177,3 +178,7 @@
             text-align: justify;
         }
     }
+
+.media-left {
+    margin: 0;
+}
