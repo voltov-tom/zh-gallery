@@ -34,7 +34,7 @@ def privacy_policy_view(request):
 
 
 def about_view(request):
-    return render(request, 'about.html', {'text': About.objects.all()[0]})
+    return render(request, 'about.html')
 
 
 def category_view(request, slug):
