@@ -1,9 +1,11 @@
-from .models import MainCategory
+from .models import MainCategory, About
 
 
-def categories(request):
+def context(request):
     categories = MainCategory.objects.all()
-    context = {
-        'categories': categories
+    description = About.objects.all()[0]
+    ctx = {
+        'categories': categories,
+        'description': description
     }
-    return context
+    return ctx
