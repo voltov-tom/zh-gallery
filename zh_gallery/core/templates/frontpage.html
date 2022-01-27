@@ -11,15 +11,15 @@
 <div class="content media_item_bottom">
     <div class="columns">
 
-        <div class="column is-10">
-            <p>Last added comments:</p>
+        <div class="column is-8">
+            <p style="margin: 0 10px;">Last added comments:</p>
 
             {% for review in last_reviews %}
             <div class="notification space-below review">
                 <p class="has-text-centered"><strong>{{ review.media_item.title }}</strong></p>
 
                 <a href="{{ review.media_item.get_absolute_url }}">
-                    <figure class="image is-48x48" style="margin: auto;">
+                    <figure class="image is-64x64" style="margin: auto;">
                         {% if review.media_item.image %}
                         <img src="{{ review.media_item.image.url }}">
                         {% else %}
@@ -28,51 +28,59 @@
                     </figure>
                 </a>
 
-                <div>
+                <div style="margin-top: 20px; padding-bottom: 10px;">
                     <strong>{{ review.user }}</strong>
                     {{ review.date_added|date:"H:i d.m.y" }}
-                    <p>{{ review.content }}</p>
+                    <p class="review_body">{{ review.content }}</p>
                 </div>
-
             </div>
             {% endfor %}
+
         </div>
 
-        <p class="is-hidden-desktop">Last liked items:</p>
-        <div class="column is-2 column_frontpage">
-            <p class="is-hidden-mobile">Last liked items:</p>
+        <div class="column is-4 column_frontpage">
+            <p style="margin: 0 10px;">Last liked items:</p>
 
             {% for item in last_liked_items %}
-            <div class="card cart_frontpage">
-                <a class="media_href" href="{{ item.get_absolute_url }}">
-                    <div class="has-text-centered" style="margin: 5px;">{{ item.title }}</div>
 
-                    <div class="card-image">
-                        <figure class="image is-48x48">
-                            {% if item.image %}
-                            <img src="{{ item.image.url }}">
-                            {% else %}
-                            <img src="{% static 'core/images/no_photo.jpeg' %}">
-                            {% endif %}
-                        </figure>
+            <a href="{{ item.get_absolute_url }}" style="width: 100%;">
+                <div class="card" style=" margin-bottom: 10px;">
+                    <div class="card-content" style="padding: 0;">
+                        <div class="media" style="align-items: center;">
+
+                            <div class="media-left" style="align-items: center;">
+                                <figure class="image is-48x48">
+                                    {% if item.image %}
+                                    <img src="{{ item.image.url }}">
+                                    {% else %}
+                                    <img src="{% static 'core/images/no_photo.jpeg' %}">
+                                    {% endif %}
+                                </figure>
+                            </div>
+
+                            <div class="media-content">
+                                <p class="title is-4" style="padding: 5px;">{{ item.title }}</p>
+                                <p class="subtitle is-6" style="padding: 5px;">{{ item.subcategory }}</p>
+
+                                <span class="icon-text views_likes">
+                                    <span class="icon">
+                                        <ion-icon name="eye-outline"></ion-icon>
+                                    </span>
+                                    <span>{{ item.views }}</span>
+
+                                    <span class="icon">
+                                        <ion-icon name="heart-outline"></ion-icon>
+                                    </span>
+                                    <span>{{ item.total_likes }}</span>
+                                </span>
+                            </div>
+
+                        </div>
                     </div>
-
-                    <span class="icon-text views_likes">
-                        <span class="icon">
-                            <ion-icon name="eye-outline"></ion-icon>
-                        </span>
-                        <span>{{ item.views }}</span>
-
-                        <span class="icon">
-                            <ion-icon name="heart-outline"></ion-icon>
-                        </span>
-                        <span>{{ item.total_likes }}</span>
-                    </span>
-
-                </a>
-            </div>
-
+                </div>
+            </a>
             {% endfor %}
+
         </div>
     </div>
 </div>
