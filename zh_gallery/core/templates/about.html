@@ -7,11 +7,11 @@
 <div class="content about">
     <div class="subtitle">Some info about zh-gallery:</div>
     <div class="columns">
-        <div class="column is-9">{{ text.body }}</div>
-        {% if text.image %}
+        <div class="column is-9">{{ description.body }}</div>
+        {% if description.image %}
             <div class="column is-3" style="">
                 <figure class="image">
-                    <img style="height: auto; width: 200px;" class="is-rounded" src="{{ text.image.url }}" alt="image">
+                    <img style="height: auto; width: 200px;" class="is-rounded" src="{{ description.image.url }}" alt="image">
                 </figure>
             </div>
         {% endif %}
