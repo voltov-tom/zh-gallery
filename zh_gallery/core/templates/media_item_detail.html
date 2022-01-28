@@ -45,11 +45,11 @@
         <div class="notification is-warning is-light" v-if="unauthMessage">
             <button v-on:click="unauthMessage = !unauthMessage" class="delete"></button>
             <p>
-                Please&nbsp;
+                Please
                 <a href="{% url 'account_login' %}?next={{ request.path }}">
                     <strong>log in</strong>
                 </a>
-                &nbsp;to like
+                to like
             </p>
         </div>
         <div class="content" style="padding: 0 15px;">{{ media_item.description }}</div>
@@ -93,11 +93,11 @@
 
         <article class="message is-dark" style="margin: 24px 0;">
             <div class="message-body">
-                Please&nbsp;
+                Please
                 <a href="{% url 'account_login' %}?next={{ request.path }}">
                     <strong>log in</strong>
                 </a>
-                &nbsp;to leave a comment
+                to leave a comment
             </div>
         </article>
         {% endif %}
