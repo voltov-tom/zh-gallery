@@ -1,0 +1,79 @@
+{% load i18n %}
+{% autoescape off %}
+{% load static %}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        .social:active,
+        .social:hover,
+        .social {
+            text-decoration: none;
+            color: inherit;
+        }
+        .figure {
+            margin: 0 170px 24px;
+        }
+        .image {
+            height: auto;
+            width: 100%;
+        }
+        .content {
+            padding: 0 200px;
+        }
+        .footer {
+            padding: 24px;
+            background-color: #fafafa;
+            margin: auto;
+        }
+        .links {
+            text-align: center;
+        }
+        .email {
+            font-style: italic;
+        }
+        .links-image {
+            height: auto;
+            width: 24px;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<div class="figure">
+    <img class="image" src="https://zh-gallery.ru/static/core/images/main.JPG">
+</div>
+
+<div class="content">
+    {% blocktrans with site_name=current_site.name %}Hello from {{ site_name }}!{% endblocktrans %}
+    {% block content %}
+    {% endblock %}
+</div>
+
+<footer class="footer">
+    <div class="links">
+        <span class="email">e-mail: </span><a href="#">zhenya@zh-gallery.ru</a><br>
+        <span>Social links:</span>
+
+        <div>
+            <a class="social" href="https://www.instagram.com/zh_note/">
+                <img class="links-image"
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1024px-Instagram_logo_2016.svg.png"
+                     alt="inst">
+            </a>
+
+            <a class="social" href="https://twitter.com/ZhenyaNote">
+                <img class="links-image"
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/1024px-Twitter-logo.svg.png"
+                     alt="twitt">
+            </a>
+
+            <a class="social" href="https://vk.com/zh_note" >
+                <img class="links-image"
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/VK_Compact_Logo_%282021-present%29.svg/1024px-VK_Compact_Logo_%282021-present%29.svg.png"
+                     alt="vk">
+            </a>
+        </div>
+
+    </div>
+</footer>
+{% endautoescape %}
