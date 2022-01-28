@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% load socialaccount %}
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign Up Closed" %}{% endblock %}
+
+{% block content %}
+<div class="content media_item_bottom">
+    <h1>{% trans "Sign Up Closed" %}</h1>
+    <p>{% trans "We are sorry, but the sign up is currently closed." %}</p>
+</div>
+{% endblock %}
