@@ -72,7 +72,7 @@
         </div>
 
         {% if request.user.is_authenticated %}
-        <div class="notification space-below" style="margin-top: 20px">
+        <div class="notification space-below" style="margin: 20px 0;">
             <form method="post" action=".">
                 {% csrf_token %}
                 <div class="field">
