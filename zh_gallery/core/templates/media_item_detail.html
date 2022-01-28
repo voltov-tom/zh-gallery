@@ -94,8 +94,8 @@
         <article class="message is-dark" style="margin: 24px 0;">
             <div class="message-body">
                 Please&nbsp;
-                <a href="{% provider_login_url 'google' %}">
-                    <strong>log in with Google</strong>
+                <a href="{% url 'account_login' %}?next={{ request.path }}">
+                    <strong>log in</strong>
                 </a>
                 &nbsp;to leave a comment
             </div>
