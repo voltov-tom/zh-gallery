@@ -64,21 +64,26 @@
             </a>
         </div>
 
-        <div class="navbar-item" style="display: flex; justify-content: center; align-items: center;">
-            {% if user.is_authenticated %}
-                <span>Welcome,&nbsp;{{ user }}!&nbsp;</span>
-                <a href="{% url 'account_logout' %}?next={{ request.path }}" class="button is-danger is-inverted">
+        {% if user.is_authenticated %}
+            <div class="navbar-item my_account">
+                Welcome,
+                <a href="{% url 'my_account_view' %}">&nbsp;{{ user }}!&nbsp;</a>
+            </div>
+            <div class="navbar-item my_account">
+                <a href="{% url 'account_logout' %}" class="button is-danger is-inverted">
                     <ion-icon name="log-out-outline"></ion-icon>
                 </a>
-            {% else %}
+            </div>
+        {% else %}
+            <div class="navbar-item my_account">
                 <a href="{% url 'account_login' %}" class="button is-info is-light" style="margin: 2px;">
                     Sign In
                 </a>
                 <a href="{% url 'account_signup' %}" class="button is-info is-light" style="margin: 2px;">
                     Sign Up
                 </a>
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
     </div>
 
 </nav>

@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<div class="media_item_bottom">
+    {% for item in request.user.likes.all %}
+        <ul>{{ item.subcategory }}:{{ item.title }}</ul>
+    <figure class="image is-128x128">
+        <img src="{{ item.image.url }}">
+    </figure>
+    {% endfor %}
+</div>
+
+{% endblock content %}

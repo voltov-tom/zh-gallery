@@ -1,23 +1,24 @@
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 {% load static %}
 {% block content %}
 
-{% with category as item %}
-{% include 'parts/back_button_title.html' %}
+{% with subcategory as item %}
+{% include 'core/parts/back_button_title.html' %}
 {% endwith %}
 
 <div class="columns is-multiline detail">
 
-    {% for subcategory in subcategories %}
-    <div class="column is-3">
+    {% for item in media_items %}
+    <div class="column is-3 media_item_card">
         <div class="card">
-            <a class="media_href" href="{{ subcategory.get_absolute_url }}">
-                <div class="subtitle has-text-centered">{{ subcategory.title }}</div>
+            <a class="media_href"
+               href="{{ item.get_absolute_url }}">
+                <div class="subtitle has-text-centered">{{ item.title }}</div>
 
                 <div class="card-image">
                     <figure class="image">
-                        {% if subcategory.image %}
-                        <img src="{{ subcategory.image.url }}">
+                        {% if item.image %}
+                        <img src="{{ item.image.url }}">
                         {% else %}
                         <img src="{% static 'core/images/no_photo.jpeg' %}">
                         {% endif %}
@@ -27,22 +28,20 @@
                         <span class="icon">
                             <ion-icon name="eye-outline"></ion-icon>
                         </span>
-                        <span>
-                            {{ views|get_value:subcategory }}
-                        </span>
+                        <span>{{ item.views }}</span>
 
                         <span class="icon">
                             <ion-icon name="heart-outline"></ion-icon>
                         </span>
-                        <span>{{ likes|get_value:subcategory }}</span>
+                        <span>{{ item.total_likes }}</span>
                     </span>
 
                     <div class="card-content">
                         <div class="content">
-                            {% if subcategory.description %}
-                                {{ subcategory.description }}
+                            {% if item.description %}
+                            {{ item.description }}
                             {% else %}
-                                no description
+                            no description
                             {% endif %}
                         </div>
                     </div>
