@@ -106,6 +106,7 @@
 {% endblock content %}
 
 {% block scripts %}
+
 <script>
 var likes = new Vue({
     el: '#vue',
@@ -116,10 +117,11 @@ var likes = new Vue({
             unauthMessage: false,
             likes_count: {{ likes_count }},
             already_liked: {{ already_liked }},
-            heart_img: null,
             media_id: '{{ media_item.id }}',
-            img_dislike : "{% static 'core/images/heart-dislike-outline.svg' %}",
-            img_like : "{% static 'core/images/heart-outline.svg' %}"
+            heart_img: null,
+            img_dislike : "{% static 'core/images/dislike-pink.PNG' %}",
+            img_like_gif : "{% static 'core/images/like.GIF' %}",
+            img_like : "{% static 'core/images/like-pink.PNG' %}"
         }
     },
 
@@ -151,7 +153,10 @@ var likes = new Vue({
                     .then(response => response.json())
                     .then(data => {
                         if ((data.success == true)&(data.liked == true)) {
-                            this.heart_img = this.img_dislike,
+                            this.heart_img = this.img_like_gif,
+                            setTimeout(() => {
+                                this.heart_img = this.img_dislike;
+                                }, 650),
                             this.likes_count += 1;
 
                         } else if ((data.success == true)&(data.liked == false)) {
@@ -173,13 +178,6 @@ var likes = new Vue({
             }
         }
     })
-
-
-
-
-
-
-
 </script>
 
 {% endblock scripts %}
