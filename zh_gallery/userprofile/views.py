@@ -3,5 +3,5 @@ from django.shortcuts import render
 
 
 @login_required
-def my_account(request):
+def my_account(request, username):
     return render(request, 'userprofile/my_account.html')
