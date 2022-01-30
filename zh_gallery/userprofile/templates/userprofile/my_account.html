@@ -1,12 +1,18 @@
 {% extends 'core/base.html' %}
 {% load static %}
+{% load socialaccount %}
+{% load i18n %}
+
 {% block content %}
 
 <div class="content media_item_bottom">
+    <div class="title">
+        <p style="text-align: center;">My account</p>
+    </div>
     <div class="columns">
 
         <div class="column is-8">
-            <p style="margin: 0 10px;">Your added comments:</p>
+            <p class="subtitle" style="margin: 0 10px;">Your added comments:</p>
 
             {% for review in request.user.reviews.all %}
             <div class="notification space-below review">
@@ -27,12 +33,14 @@
                     <p class="review_body">{{ review.content }}</p>
                 </div>
             </div>
+            {% empty %}
+                <p style="margin: 0 10px;">No reviews yet...</p>
             {% endfor %}
 
         </div>
 
         <div class="column is-4 column_frontpage">
-            <p style="margin: 0 10px;">Your liked items:</p>
+            <p class="subtitle" style="margin: 0 10px;">Your liked items:</p>
 
             {% for item in request.user.likes.all %}
 
@@ -72,9 +80,19 @@
                     </div>
                 </div>
             </a>
+            {% empty %}
+                <p style="margin: 0 10px;">No likes yet...</p>
             {% endfor %}
 
         </div>
+    </div>
+    <div class="navbar-item account_button">
+        <a class="button" style="margin: 0 5px;" href="{% url 'account_email' %}">E-mail</a>
+        <form method="POST" action="{% url 'account_change_password' %}" class="password_change">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button" type="submit" name="action">{% trans "Change Password" %}</button>
+        </form>
     </div>
 </div>
 

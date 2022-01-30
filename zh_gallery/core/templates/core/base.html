@@ -67,7 +67,7 @@
         {% if user.is_authenticated %}
             <div class="navbar-item my_account">
                 Welcome,
-                <a href="{% url 'my_account_view' %}" class="button is-info is-inverted is small" style="padding: 0 5px;">
+                <a href="{% url 'my_account_view' user.username %}" class="button is-info is-inverted is small" style="padding: 0 5px;">
                     {{ user }}!
                 </a>
                 <a href="{% url 'account_logout' %}" class="button is-danger is-inverted" style="padding: 0 5px; margin-left: 7px;">
