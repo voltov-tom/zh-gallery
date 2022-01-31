@@ -17,6 +17,8 @@ The meaning of this project is study django and help creative person to collect 
 ***
 #### The site has the ability to log in under a third-party account using django allauth.
 ***
+Сonfigured email.
+***
 Project has reactive *vue.js* like system.
 ***
 Ovewrited some django-allauth templates, forms.
