@@ -22,19 +22,19 @@ def frontpage_view(request):
         'last_reviews': last_reviews,
         'last_liked_items': last_liked_items
     }
-    return render(request, 'frontpage.html', context)
+    return render(request, 'core/frontpage.html', context)
 
 
 def terms_and_conditions_view(request):
-    return render(request, 'terms_and_conditions.html')
+    return render(request, 'core/terms_and_conditions.html')
 
 
 def privacy_policy_view(request):
-    return render(request, 'privacy_policy.html')
+    return render(request, 'core/privacy_policy.html')
 
 
 def about_view(request):
-    return render(request, 'about.html')
+    return render(request, 'core/about.html')
 
 
 def category_view(request, slug):
@@ -63,7 +63,7 @@ def category_view(request, slug):
         'views': views,
         'likes': likes
     }
-    return render(request, 'category_detail.html', content)
+    return render(request, 'core/category_detail.html', content)
 
 
 def subcategory_view(request, category_slug, slug):
@@ -73,7 +73,7 @@ def subcategory_view(request, category_slug, slug):
         'subcategory': subcategory,
         'media_items': media_items
     }
-    return render(request, 'subcategory_detail.html', content)
+    return render(request, 'core/subcategory_detail.html', content)
 
 
 def media_item_view(request, category_slug, subcategory_slug, slug):
@@ -103,7 +103,7 @@ def media_item_view(request, category_slug, subcategory_slug, slug):
         'already_liked': json.dumps(already_liked),
         'likes_count': media_item.total_likes
     }
-    return render(request, 'media_item_detail.html', content)
+    return render(request, 'core/media_item_detail.html', content)
 
 
 def like_button(request):
