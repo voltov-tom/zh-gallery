@@ -26,3 +26,5 @@ Ovewrited some django-allauth templates, forms.
 Site has flex css.
 ***
 There is a plan to do e-commerce on this site in the future.
+***
+![CSS](https://bulma.io/images/bulma-logo.png)
