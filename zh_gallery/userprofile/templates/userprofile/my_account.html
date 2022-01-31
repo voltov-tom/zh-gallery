@@ -1,0 +1,99 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="content media_item_bottom">
+    <div class="title">
+        <p style="text-align: center;">My account</p>
+    </div>
+    <div class="columns">
+
+        <div class="column is-8">
+            <p class="subtitle" style="margin: 0 10px;">Your added comments:</p>
+
+            {% for review in request.user.reviews.all %}
+            <div class="notification space-below review">
+                <p class="has-text-centered"><strong>{{ review.media_item.title }}</strong></p>
+
+                <a href="{{ review.media_item.get_absolute_url }}">
+                    <figure class="image is-64x64" style="margin: auto;">
+                        {% if review.media_item.image %}
+                        <img src="{{ review.media_item.image.url }}">
+                        {% else %}
+                        <img src="{% static 'core/images/no_photo.jpeg' %}">
+                        {% endif %}
+                    </figure>
+                </a>
+
+                <div style="margin-top: 20px; padding-bottom: 10px;">
+                    <strong>{{ review.date_added|date:"H:i d.m.y" }}</strong>
+                    <p class="review_body">{{ review.content }}</p>
+                </div>
+            </div>
+            {% empty %}
+                <p style="margin: 0 10px;">No reviews yet...</p>
+            {% endfor %}
+
+        </div>
+
+        <div class="column is-4 column_frontpage">
+            <p class="subtitle" style="margin: 0 10px;">Your liked items:</p>
+
+            {% for item in request.user.likes.all %}
+
+            <a href="{{ item.get_absolute_url }}" style="width: 100%;">
+                <div class="card" style=" margin-bottom: 10px;">
+                    <div class="card-content" style="padding: 0;">
+                        <div class="media" style="align-items: center;">
+
+                            <div class="media-left" style="align-items: center;">
+                                <figure class="image is-48x48">
+                                    {% if item.image %}
+                                    <img src="{{ item.image.url }}">
+                                    {% else %}
+                                    <img src="{% static 'core/images/no_photo.jpeg' %}">
+                                    {% endif %}
+                                </figure>
+                            </div>
+
+                            <div class="media-content">
+                                <p class="title is-4" style="padding: 5px;">{{ item.title }}</p>
+                                <p class="subtitle is-6" style="padding: 5px;">{{ item.subcategory }}</p>
+
+                                <span class="icon-text views_likes">
+                                    <span class="icon">
+                                        <ion-icon name="eye-outline"></ion-icon>
+                                    </span>
+                                    <span>{{ item.views }}</span>
+
+                                    <figure class="icon image is-16x16" style="margin: 1px;">
+                                        <img src="{% static 'core/images/dislike-pink.PNG' %}" alt="dislike">
+                                    </figure>
+                                    <span>{{ item.total_likes }}</span>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+                <p style="margin: 0 10px;">No likes yet...</p>
+            {% endfor %}
+
+        </div>
+    </div>
+    <div class="navbar-item account_button">
+        <a class="button" style="margin: 0 5px;" href="{% url 'account_email' %}">E-mail</a>
+        <form method="POST" action="{% url 'account_change_password' %}" class="password_change">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button" type="submit" name="action">{% trans "Change Password" %}</button>
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

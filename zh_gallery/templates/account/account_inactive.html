@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 
 {% load socialaccount %}
 {% load i18n %}
@@ -7,8 +7,8 @@
 {% block head_title %}{% trans "Account Inactive" %}{% endblock %}
 
 {% block content %}
-<div class="content media_item_bottom">
-    <h1>{% trans "Account Inactive" %}</h1>
+<div class="column is-6 is-offset-3">
+    <h1 class="subtitle has-text-centered">{% trans "Account Inactive" %}</h1>
     <p>{% trans "This account is inactive." %}</p>
 </div>
 {% endblock %}

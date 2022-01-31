@@ -9,12 +9,14 @@
 }
 
 .navigation {
+    padding: 0 200px;
     display: flex;
     align-items: left;
     justify-content: start;
 }
     @media screen and (max-width: 1114px) {
         .navigation {
+            padding: 0px;
             justify-content: center;
         }
     }
@@ -37,7 +39,7 @@
     }
 
 .navbar-menu {
-    justify-content: space-around;
+    justify-content: center;
     padding: 0 200px;
 }
     @media screen and (max-width: 1114px) {
@@ -181,4 +183,15 @@
 
 .media-left {
     margin: 0;
+}
+
+.my_account {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.account_button {
+    display: flex;
+    justify-content: flex-end;
 }
