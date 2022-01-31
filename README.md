@@ -17,14 +17,17 @@ The meaning of this project is study django and help creative person to collect 
 ***
 #### The site has the ability to log in under a third-party account using django allauth.
 ***
-Сonfigured email.
+- Сonfigured email.
 ***
-Project has reactive *vue.js* like system.
+- Project has reactive *vue.js* like system.
 ***
-Ovewrited some django-allauth templates, forms.
+- Ovewrited some django-allauth templates, forms.
 ***
-Site has flex css.
+- Site has flex css.
 ***
-There is a plan to do e-commerce on this site in the future.
+- There is a plan to do e-commerce on this site in the future.
 ***
-![CSS](https://bulma.io/images/bulma-logo.png)
+- CSS by:  
+    
+<a href="https://bulma.io/"><img src="https://bulma.io/images/bulma-logo.png" align="BULMA" height="36" width="144"></a>
+***
