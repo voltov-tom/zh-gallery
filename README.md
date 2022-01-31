@@ -1,3 +1,22 @@
+![LOGO](https://zh-gallery.ru/static/core/images/logo120x120.png)
 ### [zh-gallery.ru](https://zh-gallery.ru/ "zh-gallery.ru")
-This project - a storage of media content for creative person.  
+This project - a storage of media content for creative person.
+***
+The meaning of this project is study django and help creative person to collect his project.
+***
+### Stack:
+- Django
+- django-allauth
+- PostgeSQL
+- Vue.js(like system)
 
+### On server:
+- gunicorn(soket)
+- nginx
+
+***
+#### The site has the ability to log in under a third-party account using django allauth.
+***
+Project has reactive *vue.js* like system.
+***
+There is a plan to do e-commerce on this site in the future.
