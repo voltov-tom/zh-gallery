@@ -9,10 +9,24 @@
     <div class="title">
         <p style="text-align: center;">My account</p>
     </div>
+
+    <div class="navbar-item account_button">
+        <a class="button is-small" style="margin: 0 5px;" href="{% url 'socialaccount_connections' %}">Socialaccount</a>
+        <a class="button is-small" style="margin: 0 5px;" href="{% url 'account_email' %}">E-mail</a>
+        <form method="POST" action="{% url 'account_change_password' %}" class="password_change">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button is-small" type="submit" name="action">{% trans "Change Password" %}</button>
+        </form>
+        <a href="{% url 'account_logout' %}" class="button is-danger is-inverted" style="padding: 0 5px; margin-left: 7px;">
+            <ion-icon name="log-out-outline"></ion-icon>
+        </a>
+    </div>
+
     <div class="columns">
 
         <div class="column is-8">
-            <p class="subtitle" style="margin: 0 10px;">Your added comments:</p>
+            <p class="subtitle" style="margin: 10px;">Your added comments:</p>
 
             {% for review in request.user.reviews.all %}
             <div class="notification space-below review">
@@ -40,7 +54,7 @@
         </div>
 
         <div class="column is-4 column_frontpage">
-            <p class="subtitle" style="margin: 0 10px;">Your liked items:</p>
+            <p class="subtitle" style="margin: 10px;">Your liked items:</p>
 
             {% for item in request.user.likes.all %}
 
@@ -85,14 +99,6 @@
             {% endfor %}
 
         </div>
-    </div>
-    <div class="navbar-item account_button">
-        <a class="button" style="margin: 0 5px;" href="{% url 'account_email' %}">E-mail</a>
-        <form method="POST" action="{% url 'account_change_password' %}" class="password_change">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button class="button" type="submit" name="action">{% trans "Change Password" %}</button>
-        </form>
     </div>
 </div>
 
