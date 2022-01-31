@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'core/base.html' %}
 
 {% load socialaccount %}
 {% load i18n %}
@@ -7,8 +7,8 @@
 {% block head_title %}{% trans "Confirm E-mail Address" %}{% endblock %}
 
 {% block content %}
-<div class="content media_item_bottom">
-    <h1>{% trans "Confirm E-mail Address" %}</h1>
+<div class="column is-6 is-offset-3">
+    <h1 class="subtitle has-text-centered">{% trans "Confirm E-mail Address" %}</h1>
 
     {% if confirmation %}
 
@@ -18,7 +18,7 @@
 
     <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
         {% csrf_token %}
-        <button type="submit">{% trans 'Confirm' %}</button>
+        <button class="button is-success is-light" type="submit" style="margin-top: 10px;">{% trans 'Confirm' %}</button>
     </form>
 
     {% else %}
