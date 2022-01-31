@@ -193,5 +193,13 @@
 
 .account_button {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
 }
+    @media screen and (max-width: 767px) {
+        .account_button {
+            justify-content: center;
+            display: flex;
+            align-items: center;
+        }
+    }
