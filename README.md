@@ -19,4 +19,8 @@ The meaning of this project is study django and help creative person to collect 
 ***
 Project has reactive *vue.js* like system.
 ***
+Ovewrited some django-allauth templates, forms.
+***
+Site has flex css.
+***
 There is a plan to do e-commerce on this site in the future.
