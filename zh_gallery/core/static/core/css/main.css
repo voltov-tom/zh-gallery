@@ -143,10 +143,11 @@
 
 .review {
     text-align: justify;
+    padding: 24px;
 }
     @media screen and (max-width: 1114px) {
         .review {
-            padding: 0 15px;
+            padding: 0 15 24px;
             margin-bottom: 10px;
             text-align: justify;
         }

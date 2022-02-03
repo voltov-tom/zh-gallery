@@ -29,7 +29,7 @@
             <p class="subtitle" style="margin: 10px;">Your added comments:</p>
 
             {% for review in request.user.reviews.all %}
-            <div class="notification space-below review">
+            <div id="review" class="notification space-below review">
                 <p class="has-text-centered"><strong>{{ review.media_item.title }}</strong></p>
 
                 <a href="{{ review.media_item.get_absolute_url }}">
@@ -46,6 +46,14 @@
                     <strong>{{ review.date_added|date:"H:i d.m.y" }}</strong>
                     <p class="review_body">{{ review.content }}</p>
                 </div>
+
+                <a @click="deleteReview([[ review.id ]])" href="{% url 'delete_review' %}" style="position: absolute; right: 0.5rem; top: 0.5rem;">
+                    <button class="delete"></button>
+                </a>
+
+                <a href="{% url 'edit_review' %}" style="position: absolute; right: 0.5rem; bottom: 0.5rem;">
+                    <ion-icon name="create-outline"></ion-icon>
+                </a>
             </div>
             {% empty %}
                 <p style="margin: 0 10px;">No reviews yet...</p>
@@ -103,3 +111,65 @@
 </div>
 
 {% endblock content %}
+
+{% block scripts %}
+
+<script>
+var review = new Vue({
+    el: '#review',
+    delimiters: ['[[', ']]'],
+
+    data() {
+        return {
+            reviews = {{ reviews_data|safe }}
+        }
+    },
+
+    methods: {
+        like() {
+            var data =  {
+                "media_id": this.media_id,
+                "operation": 'like_submit'
+            };
+            if ({% if request.user.is_authenticated %}true{% else %}false{% endif %}) {
+                fetch("{% url 'like_button' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify(data)
+                    })
+
+                    .then(response => response.json())
+                    .then(data => {
+                        if ((data.success == true)&(data.liked == true)) {
+                            this.heart_img = this.img_like_gif,
+                            setTimeout(() => {
+                                this.heart_img = this.img_dislike;
+                                }, 650),
+                            this.likes_count += 1;
+
+                        } else if ((data.success == true)&(data.liked == false)) {
+                            this.heart_img = this.img_like,
+                            this.likes_count -= 1;
+
+                        } else {
+                            console.log(response.data)
+                        }
+                    })
+
+                    .catch(function (error) {
+                        console.log('error:', error);
+                    })
+                } else {
+                    console.log('user.is_authenticated')
+                    this.unauthMessage = true;
+                }
+            }
+        }
+    })
+</script>
+
+{% endblock scripts %}
