@@ -1,10 +1,7 @@
 import json
 
-from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-
 from django.template.defaulttags import register
-from django.utils import timezone
 
 from .models import MainCategory, MediaItem, SubCategory, MediaItemReview
 
@@ -104,33 +101,3 @@ def media_item_view(request, category_slug, subcategory_slug, slug):
         'likes_count': media_item.total_likes
     }
     return render(request, 'core/media_item_detail.html', content)
-
-
-def like_button(request):
-    if request.method == 'POST' and request.user.is_authenticated:
-        data = json.loads(request.body)
-
-        if data['operation'] == 'like_submit':
-            media_id = data['media_id']
-            media_item = get_object_or_404(MediaItem, id=media_id)
-
-            if media_item.likes.filter(id=request.user.id):
-                media_item.likes.remove(request.user)
-                liked = False
-            else:
-                if not media_item.likes:
-                    media_item.likes.create()
-                media_item.likes.add(request.user.id)
-                media_item.like_time = timezone.now()
-                media_item.save()
-                liked = True
-
-            context = {
-                'likes_count': media_item.total_likes,
-                'liked': liked,
-                'media_id': media_id,
-                'success': True
-            }
-            return HttpResponse(json.dumps(context), content_type='application/json')
-
-    return HttpResponse(json.dumps({'success': False}), content_type='application/json')
