@@ -18,46 +18,43 @@
             {{ form.as_p }}
             <button class="button is-small" type="submit" name="action">{% trans "Change Password" %}</button>
         </form>
-        <a href="{% url 'account_logout' %}" class="button is-danger is-inverted" style="padding: 0 5px; margin-left: 7px;">
+        <a href="{% url 'account_logout' %}" class="button is-danger is-inverted"
+           style="padding: 0 5px; margin-left: 7px;">
             <ion-icon name="log-out-outline"></ion-icon>
         </a>
     </div>
 
     <div class="columns">
 
-        <div class="column is-8">
+        <div id="reviews" class="column is-8">
             <p class="subtitle" style="margin: 10px;">Your added comments:</p>
 
-            {% for review in request.user.reviews.all %}
-            <div id="review" class="notification space-below review">
-                <p class="has-text-centered"><strong>{{ review.media_item.title }}</strong></p>
+            <p v-if="reviews.length === 0" style="margin: 0 10px;">No reviews yet...</p>
 
-                <a href="{{ review.media_item.get_absolute_url }}">
+            <div v-for="review in reviews" :key="review.id" id="review_id_{{ review_id }}"
+                 class="notification space-below review">
+                <p class="has-text-centered"><strong>[[ review.media_item_title ]]</strong></p>
+
+                <a :href="review.media_item_url">
                     <figure class="image is-64x64" style="margin: auto;">
-                        {% if review.media_item.image %}
-                        <img src="{{ review.media_item.image.url }}">
-                        {% else %}
-                        <img src="{% static 'core/images/no_photo.jpeg' %}">
-                        {% endif %}
+                        <img v-if="review.media_item_img" :src="review.media_item_img">
+                        <img v-else src="{% static 'core/images/no_photo.jpeg' %}">
                     </figure>
                 </a>
 
                 <div style="margin-top: 20px; padding-bottom: 10px;">
-                    <strong>{{ review.date_added|date:"H:i d.m.y" }}</strong>
-                    <p class="review_body">{{ review.content }}</p>
+                    <strong>[[ review.date_added ]]</strong>
+                    <p class="review_body">[[ review.content ]]</p>
                 </div>
 
-                <a @click="deleteReview([[ review.id ]])" href="{% url 'delete_review' %}" style="position: absolute; right: 0.5rem; top: 0.5rem;">
+                <a @click="deleteReview(review.id)" style="position: absolute; right: 0.5rem; top: 0.5rem;">
                     <button class="delete"></button>
                 </a>
 
-                <a href="{% url 'edit_review' %}" style="position: absolute; right: 0.5rem; bottom: 0.5rem;">
+                <a @click="editReview(review.id)" style="position: absolute; right: 0.5rem; bottom: 0.5rem;">
                     <ion-icon name="create-outline"></ion-icon>
                 </a>
             </div>
-            {% empty %}
-                <p style="margin: 0 10px;">No reviews yet...</p>
-            {% endfor %}
 
         </div>
 
@@ -103,7 +100,7 @@
                 </div>
             </a>
             {% empty %}
-                <p style="margin: 0 10px;">No likes yet...</p>
+            <p style="margin: 0 10px;">No likes yet...</p>
             {% endfor %}
 
         </div>
@@ -115,61 +112,52 @@
 {% block scripts %}
 
 <script>
-var review = new Vue({
-    el: '#review',
-    delimiters: ['[[', ']]'],
 
+Vue.config.ignoredElements = [/^ion-/]
+
+var review = new Vue({
+    el: '#reviews',
+    delimiters: ['[[', ']]'],
     data() {
         return {
-            reviews = {{ reviews_data|safe }}
+            reviews : {{ reviews_data|safe }}
         }
     },
 
     methods: {
-        like() {
+        deleteReview(review_id) {
             var data =  {
-                "media_id": this.media_id,
-                "operation": 'like_submit'
+                'operation': 'delete_review',
+                'review_id': review_id
             };
-            if ({% if request.user.is_authenticated %}true{% else %}false{% endif %}) {
-                fetch("{% url 'like_button' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}'
-                        },
-                        credentials: 'same-origin',
-                        body: JSON.stringify(data)
-                    })
 
-                    .then(response => response.json())
-                    .then(data => {
-                        if ((data.success == true)&(data.liked == true)) {
-                            this.heart_img = this.img_like_gif,
-                            setTimeout(() => {
-                                this.heart_img = this.img_dislike;
-                                }, 650),
-                            this.likes_count += 1;
+            fetch("{% url 'delete_review' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(data)
+            })
 
-                        } else if ((data.success == true)&(data.liked == false)) {
-                            this.heart_img = this.img_like,
-                            this.likes_count -= 1;
-
-                        } else {
-                            console.log(response.data)
-                        }
-                    })
-
-                    .catch(function (error) {
-                        console.log('error:', error);
-                    })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success == true) {
+                    console.log('element review_id_' + review_id + ' deleted'),
+                    this.reviews.splice(this.reviews.indexOf(review_id), 1);
                 } else {
-                    console.log('user.is_authenticated')
-                    this.unauthMessage = true;
+                    console.log(response.data)
                 }
-            }
+            })
+
+            .catch(function (error) {
+                console.log('error:', error);
+            })
         }
-    })
+    }
+})
+
 </script>
 
 {% endblock scripts %}
