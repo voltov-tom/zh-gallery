@@ -61,7 +61,7 @@ def delete_review(request):
             review_id = data['review_id']
             user = request.user
             media_item_review = get_object_or_404(MediaItemReview, id=review_id, user=user)
-            media_item_review.remove()
+            media_item_review.delete()
 
             return HttpResponse(json.dumps({'success': True}), content_type='application/json')
 
