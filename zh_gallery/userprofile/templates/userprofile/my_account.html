@@ -31,8 +31,7 @@
 
             <p v-if="reviews.length === 0" style="margin: 0 10px;">No reviews yet...</p>
 
-            <div v-for="review in reviews" :key="review.id" id="review_id_{{ review_id }}"
-                 class="notification space-below review">
+            <div v-for="review, index in reviews" v-bind:key="review.id" class="notification space-below review">
                 <p class="has-text-centered"><strong>[[ review.media_item_title ]]</strong></p>
 
                 <a :href="review.media_item_url">
@@ -47,11 +46,11 @@
                     <p class="review_body">[[ review.content ]]</p>
                 </div>
 
-                <a @click="deleteReview(review.id)" style="position: absolute; right: 0.5rem; top: 0.5rem;">
+                <a v-on:click="deleteReview(review.id, index)" style="position: absolute; right: 0.5rem; top: 0.5rem;">
                     <button class="delete"></button>
                 </a>
 
-                <a @click="editReview(review.id)" style="position: absolute; right: 0.5rem; bottom: 0.5rem;">
+                <a v-on:click="editReview(review.id, index)" style="position: absolute; right: 0.5rem; bottom: 0.5rem;">
                     <ion-icon name="create-outline"></ion-icon>
                 </a>
             </div>
@@ -125,7 +124,7 @@ var review = new Vue({
     },
 
     methods: {
-        deleteReview(review_id) {
+        deleteReview(review_id, index) {
             var data =  {
                 'operation': 'delete_review',
                 'review_id': review_id
@@ -144,8 +143,8 @@ var review = new Vue({
             .then(response => response.json())
             .then(data => {
                 if (data.success == true) {
-                    console.log('element review_id_' + review_id + ' deleted'),
-                    this.reviews.splice(this.reviews.indexOf(review_id), 1);
+                    console.log('element review_id_' + review_id + ' was deleted'),
+                    this.reviews.splice(index, 1);
                 } else {
                     console.log(response.data)
                 }
