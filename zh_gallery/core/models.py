@@ -92,6 +92,7 @@ class MediaItemReview(models.Model):
     user = models.ForeignKey(User, related_name='reviews', on_delete=models.CASCADE)
     content = models.TextField(blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
+    edited = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('-date_added',)
