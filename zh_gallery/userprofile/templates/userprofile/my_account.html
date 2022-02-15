@@ -31,31 +31,70 @@
 
             <p v-if="reviews.length === 0" style="margin: 0 10px;">No reviews yet...</p>
 
-            <div v-for="review in reviews" :key="review.id" id="review_id_{{ review_id }}"
-                 class="notification space-below review">
-                <p class="has-text-centered"><strong>[[ review.media_item_title ]]</strong></p>
+            <div v-for="review, index in reviews" v-bind:key="review.id" class="notification space-below review">
 
-                <a :href="review.media_item_url">
-                    <figure class="image is-64x64" style="margin: auto;">
-                        <img v-if="review.media_item_img" :src="review.media_item_img">
-                        <img v-else src="{% static 'core/images/no_photo.jpeg' %}">
-                    </figure>
-                </a>
+                <div v-show="review.editReview">
+                    <p class="has-text-centered"><strong>[[ review.media_item_title ]]</strong></p>
 
-                <div style="margin-top: 20px; padding-bottom: 10px;">
-                    <strong>[[ review.date_added ]]</strong>
-                    <p class="review_body">[[ review.content ]]</p>
+                    <a :href="review.media_item_url">
+                        <figure class="image is-64x64" style="margin: auto;">
+                            <img v-if="review.media_item_img" :src="review.media_item_img">
+                            <img v-else src="{% static 'core/images/no_photo.jpeg' %}">
+                        </figure>
+                    </a>
+
+                    <span><strong>[[ review.date_added ]]</strong><i v-show="review.edited"> edited</i></span>
+                    <div style="margin-top: 20px;">
+                        <textarea class="textarea" v-model="review.content"></textarea>
+
+                        <div style="display: flex; justify-content: flex-end;">
+
+                            <a v-on:click="cancelEditReview(index)" class="button is-danger is-light"
+                               style="align-self: end; margin: 14px 5px 0 0;">
+                                Cancel changes
+                            </a>
+
+                            <a v-on:click="submitEditReview(review.id, index)" class="button is-success is-light"
+                               style="align-self: end; margin-top: 14px;">
+                                Submit changes
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <a v-on:click="deleteReview(review.id, index)"
+                       style="position: absolute; right: 0.5rem; top: 0.5rem;">
+                        <button class="delete"></button>
+                    </a>
                 </div>
 
-                <a @click="deleteReview(review.id)" style="position: absolute; right: 0.5rem; top: 0.5rem;">
-                    <button class="delete"></button>
-                </a>
+                <div v-show="review.showContent">
+                    <p class="has-text-centered"><strong>[[ review.media_item_title ]]</strong></p>
 
-                <a @click="editReview(review.id)" style="position: absolute; right: 0.5rem; bottom: 0.5rem;">
-                    <ion-icon name="create-outline"></ion-icon>
-                </a>
+                    <a :href="review.media_item_url">
+                        <figure class="image is-64x64" style="margin: auto;">
+                            <img v-if="review.media_item_img" :src="review.media_item_img">
+                            <img v-else src="{% static 'core/images/no_photo.jpeg' %}">
+                        </figure>
+                    </a>
+
+                    <span><strong>[[ review.date_added ]]</strong><i v-show="review.edited"> edited</i></span>
+                    <div style="margin-top: 20px; padding-bottom: 10px;">
+                        <p class="review_body">[[ review.content ]]</p>
+                    </div>
+
+                    <a v-on:click="deleteReview(review.id, index)"
+                       style="position: absolute; right: 0.5rem; top: 0.5rem;">
+                        <button class="delete"></button>
+                    </a>
+
+                    <a v-on:click="showEditReview(index)"
+                       style="position: absolute; right: 0.5rem; bottom: 0.5rem;">
+                        <ion-icon name="create-outline"></ion-icon>
+                    </a>
+                </div>
+
             </div>
-
         </div>
 
         <div class="column is-4 column_frontpage">
@@ -115,17 +154,83 @@
 
 Vue.config.ignoredElements = [/^ion-/]
 
-var review = new Vue({
+var vue = new Vue({
     el: '#reviews',
     delimiters: ['[[', ']]'],
     data() {
         return {
-            reviews : {{ reviews_data|safe }}
+            reviews: {{ reviews_data|safe }},
+            savedContent: ''
         }
     },
 
+    created(){
+        this.prepareList();
+    },
+
     methods: {
-        deleteReview(review_id) {
+        prepareList() {
+            for (var i = 0; i < this.reviews.length; i++) {
+                Vue.set(this.reviews[i], 'editReview', false),
+                Vue.set(this.reviews[i], 'showContent', true)
+            };
+        },
+
+        showEditReview(index) {
+            this.reviews[index].editReview = true,
+            this.reviews[index].showContent = false,
+            this.savedContent = this.reviews[index].content
+        },
+
+        cancelEditReview(index) {
+            this.reviews[index].editReview = false,
+            this.reviews[index].showContent = true,
+            this.reviews[index].content = this.savedContent
+        },
+
+        submitEditReview(review_id, index) {
+            var data =  {
+                'operation': 'edit_review',
+                'review_id': review_id,
+                'content': this.reviews[index].content
+            };
+
+            if (data.content != this.savedContent) {
+
+                fetch("{% url 'edit_review' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify(data)
+                })
+
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success === true) {
+                        this.reviews[index].content = data.content,
+                        this.reviews[index].editReview = false,
+                        this.reviews[index].showContent = true,
+                        this.reviews[index].edited = data.edited,
+                        this.savedContent = ''
+                    } else {
+                        console.log(response.data)
+                    }
+                })
+                .catch(function (error) {
+                    console.log('error:', error);
+                });
+
+            } else {
+                this.reviews[index].editReview = false,
+                this.reviews[index].showContent = true,
+                this.savedContent = ''
+            };
+        },
+
+        deleteReview(review_id, index) {
             var data =  {
                 'operation': 'delete_review',
                 'review_id': review_id
@@ -144,8 +249,8 @@ var review = new Vue({
             .then(response => response.json())
             .then(data => {
                 if (data.success == true) {
-                    console.log('element review_id_' + review_id + ' deleted'),
-                    this.reviews.splice(this.reviews.indexOf(review_id), 1);
+                    console.log('element review_id_' + review_id + ' was deleted'),
+                    this.reviews.splice(index, 1);
                 } else {
                     console.log(response.data)
                 }
