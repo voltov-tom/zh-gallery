@@ -31,6 +31,9 @@
                 <div style="margin-top: 20px; padding-bottom: 10px;">
                     <strong>{{ review.user }}</strong>
                     {{ review.date_added|date:"H:i d.m.y" }}
+                    {% if review.edited %}
+                        <span><i> edited</i></span>
+                    {% endif %}
                     <p class="review_body">{{ review.content }}</p>
                 </div>
             </div>
