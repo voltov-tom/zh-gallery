@@ -61,6 +61,9 @@
                 <p>
                     <strong>User: </strong>{{ review.user }},
                     <strong>Date: </strong>{{ review.date_added|date:"d.m.Y" }}
+                    {% if review.edited %}
+                        <span><i> edited</i></span>
+                    {% endif %}
                 </p>
                 {{ review.content }}
             </div>

@@ -46,9 +46,15 @@ def edit_review(request):
             user = request.user
             media_item_review = get_object_or_404(MediaItemReview, id=review_id, user=user)
             media_item_review.content = data['content']
+            media_item_review.edited = True
             media_item_review.save()
 
-            return HttpResponse(json.dumps({'success': True}), content_type='application/json')
+            context = {
+                'success': True,
+                'edited': True,
+                'content': media_item_review.content
+            }
+            return HttpResponse(json.dumps(context), content_type='application/json')
 
     return HttpResponse(json.dumps({'success': False}), content_type='application/json')
 
