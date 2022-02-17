@@ -1,7 +1,7 @@
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
-from .models import MainCategory, SubCategory, MediaItem
+from .models import MainCategory, SubCategory
 
 
 def lastmod(obj):
@@ -38,11 +38,3 @@ class SubCategorySitemap(Sitemap):
 
     def items(self):
         return SubCategory.objects.all()
-
-
-class MediaItemSitemap(Sitemap):
-    changefreq = "monthly"
-    priority = 0.5
-
-    def items(self):
-        return MediaItem.objects.all()
