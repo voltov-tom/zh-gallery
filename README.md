@@ -8,7 +8,7 @@ The meaning of this project is study django and help creative person to collect 
 - Django
 - django-allauth
 - PostgeSQL
-- Vue.js(like system)
+- Vue.js
 
 ### On server:
 - gunicorn(soket)
@@ -19,7 +19,7 @@ The meaning of this project is study django and help creative person to collect 
 ***
 - Сonfigured email.
 ***
-- Project has reactive *vue.js* like system.
+- Project has reactive system by *vue.js*.
 ***
 - Ovewrited some django-allauth templates, forms.
 ***

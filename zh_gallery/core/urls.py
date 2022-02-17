@@ -1,7 +1,7 @@
 from django.contrib.sitemaps.views import sitemap
 from django.urls import path
 
-from .sitemaps import StaticViewSitemap, SubCategorySitemap, MediaItemSitemap, MainCategorySitemap
+from .sitemaps import StaticViewSitemap, SubCategorySitemap, MainCategorySitemap
 from .views import frontpage_view, about_view, terms_and_conditions_view, privacy_policy_view, category_view, \
     subcategory_view, media_item_view
 from .api import like_button, delete_review, edit_review
@@ -9,8 +9,7 @@ from .api import like_button, delete_review, edit_review
 sitemaps = {
     'static': StaticViewSitemap,
     'category': MainCategorySitemap,
-    'subcategory': SubCategorySitemap,
-    'media_item': MediaItemSitemap,
+    'subcategory': SubCategorySitemap
 }
 
 urlpatterns = [
