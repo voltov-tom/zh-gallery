@@ -7,7 +7,7 @@ The meaning of this project is study django and help creative person to collect 
 ### Stack:
 - Django
 - django-allauth
-- PostgeSQL
+- PostgreSQL
 - Vue.js
 
 ### On server:
