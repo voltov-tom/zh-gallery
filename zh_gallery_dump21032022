@@ -1,0 +1,2395 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.9 (Ubuntu 12.9-0ubuntu0.20.04.1)
+-- Dumped by pg_dump version 12.9 (Ubuntu 12.9-0ubuntu0.20.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: account_emailaddress; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.account_emailaddress (
+    id integer NOT NULL,
+    email character varying(254) NOT NULL,
+    verified boolean NOT NULL,
+    "primary" boolean NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.account_emailaddress OWNER TO voltov;
+
+--
+-- Name: account_emailaddress_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.account_emailaddress_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.account_emailaddress_id_seq OWNER TO voltov;
+
+--
+-- Name: account_emailaddress_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.account_emailaddress_id_seq OWNED BY public.account_emailaddress.id;
+
+
+--
+-- Name: account_emailconfirmation; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.account_emailconfirmation (
+    id integer NOT NULL,
+    created timestamp with time zone NOT NULL,
+    sent timestamp with time zone,
+    key character varying(64) NOT NULL,
+    email_address_id integer NOT NULL
+);
+
+
+ALTER TABLE public.account_emailconfirmation OWNER TO voltov;
+
+--
+-- Name: account_emailconfirmation_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.account_emailconfirmation_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.account_emailconfirmation_id_seq OWNER TO voltov;
+
+--
+-- Name: account_emailconfirmation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.account_emailconfirmation_id_seq OWNED BY public.account_emailconfirmation.id;
+
+
+--
+-- Name: auth_group; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.auth_group (
+    id integer NOT NULL,
+    name character varying(150) NOT NULL
+);
+
+
+ALTER TABLE public.auth_group OWNER TO voltov;
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.auth_group_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_id_seq OWNER TO voltov;
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.auth_group_id_seq OWNED BY public.auth_group.id;
+
+
+--
+-- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.auth_group_permissions (
+    id bigint NOT NULL,
+    group_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_group_permissions OWNER TO voltov;
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.auth_group_permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_permissions_id_seq OWNER TO voltov;
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.auth_group_permissions_id_seq OWNED BY public.auth_group_permissions.id;
+
+
+--
+-- Name: auth_permission; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.auth_permission (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    content_type_id integer NOT NULL,
+    codename character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.auth_permission OWNER TO voltov;
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.auth_permission_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_permission_id_seq OWNER TO voltov;
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.auth_permission_id_seq OWNED BY public.auth_permission.id;
+
+
+--
+-- Name: auth_user; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.auth_user (
+    id integer NOT NULL,
+    password character varying(128) NOT NULL,
+    last_login timestamp with time zone,
+    is_superuser boolean NOT NULL,
+    username character varying(150) NOT NULL,
+    first_name character varying(150) NOT NULL,
+    last_name character varying(150) NOT NULL,
+    email character varying(254) NOT NULL,
+    is_staff boolean NOT NULL,
+    is_active boolean NOT NULL,
+    date_joined timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.auth_user OWNER TO voltov;
+
+--
+-- Name: auth_user_groups; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.auth_user_groups (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    group_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_user_groups OWNER TO voltov;
+
+--
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.auth_user_groups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_user_groups_id_seq OWNER TO voltov;
+
+--
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.auth_user_groups_id_seq OWNED BY public.auth_user_groups.id;
+
+
+--
+-- Name: auth_user_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.auth_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_user_id_seq OWNER TO voltov;
+
+--
+-- Name: auth_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.auth_user_id_seq OWNED BY public.auth_user.id;
+
+
+--
+-- Name: auth_user_user_permissions; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.auth_user_user_permissions (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_user_user_permissions OWNER TO voltov;
+
+--
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.auth_user_user_permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_user_user_permissions_id_seq OWNER TO voltov;
+
+--
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_user_user_permissions.id;
+
+
+--
+-- Name: core_about; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.core_about (
+    id bigint NOT NULL,
+    body text,
+    image character varying(100)
+);
+
+
+ALTER TABLE public.core_about OWNER TO voltov;
+
+--
+-- Name: core_about_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.core_about_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_about_id_seq OWNER TO voltov;
+
+--
+-- Name: core_about_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.core_about_id_seq OWNED BY public.core_about.id;
+
+
+--
+-- Name: core_maincategory; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.core_maincategory (
+    id bigint NOT NULL,
+    title character varying(255) NOT NULL,
+    slug character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.core_maincategory OWNER TO voltov;
+
+--
+-- Name: core_maincategory_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.core_maincategory_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_maincategory_id_seq OWNER TO voltov;
+
+--
+-- Name: core_maincategory_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.core_maincategory_id_seq OWNED BY public.core_maincategory.id;
+
+
+--
+-- Name: core_mediaitem; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.core_mediaitem (
+    id bigint NOT NULL,
+    title character varying(255) NOT NULL,
+    slug character varying(255) NOT NULL,
+    description character varying(255),
+    image character varying(100) NOT NULL,
+    subcategory_id bigint,
+    views integer NOT NULL,
+    like_time timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.core_mediaitem OWNER TO voltov;
+
+--
+-- Name: core_mediaitem_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.core_mediaitem_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_mediaitem_id_seq OWNER TO voltov;
+
+--
+-- Name: core_mediaitem_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.core_mediaitem_id_seq OWNED BY public.core_mediaitem.id;
+
+
+--
+-- Name: core_mediaitem_likes; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.core_mediaitem_likes (
+    id bigint NOT NULL,
+    mediaitem_id bigint NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.core_mediaitem_likes OWNER TO voltov;
+
+--
+-- Name: core_mediaitem_likes_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.core_mediaitem_likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_mediaitem_likes_id_seq OWNER TO voltov;
+
+--
+-- Name: core_mediaitem_likes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.core_mediaitem_likes_id_seq OWNED BY public.core_mediaitem_likes.id;
+
+
+--
+-- Name: core_mediaitemreview; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.core_mediaitemreview (
+    id bigint NOT NULL,
+    content text,
+    date_added timestamp with time zone NOT NULL,
+    media_item_id bigint NOT NULL,
+    user_id integer NOT NULL,
+    edited boolean NOT NULL
+);
+
+
+ALTER TABLE public.core_mediaitemreview OWNER TO voltov;
+
+--
+-- Name: core_mediaitemreview_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.core_mediaitemreview_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_mediaitemreview_id_seq OWNER TO voltov;
+
+--
+-- Name: core_mediaitemreview_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.core_mediaitemreview_id_seq OWNED BY public.core_mediaitemreview.id;
+
+
+--
+-- Name: core_subcategory; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.core_subcategory (
+    id bigint NOT NULL,
+    title character varying(255) NOT NULL,
+    slug character varying(255) NOT NULL,
+    category_id bigint,
+    image character varying(100),
+    description character varying(255)
+);
+
+
+ALTER TABLE public.core_subcategory OWNER TO voltov;
+
+--
+-- Name: core_subcategory_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.core_subcategory_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.core_subcategory_id_seq OWNER TO voltov;
+
+--
+-- Name: core_subcategory_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.core_subcategory_id_seq OWNED BY public.core_subcategory.id;
+
+
+--
+-- Name: django_admin_log; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.django_admin_log (
+    id integer NOT NULL,
+    action_time timestamp with time zone NOT NULL,
+    object_id text,
+    object_repr character varying(200) NOT NULL,
+    action_flag smallint NOT NULL,
+    change_message text NOT NULL,
+    content_type_id integer,
+    user_id integer NOT NULL,
+    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
+);
+
+
+ALTER TABLE public.django_admin_log OWNER TO voltov;
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.django_admin_log_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_admin_log_id_seq OWNER TO voltov;
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.django_admin_log_id_seq OWNED BY public.django_admin_log.id;
+
+
+--
+-- Name: django_content_type; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.django_content_type (
+    id integer NOT NULL,
+    app_label character varying(100) NOT NULL,
+    model character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.django_content_type OWNER TO voltov;
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.django_content_type_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_content_type_id_seq OWNER TO voltov;
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.django_content_type_id_seq OWNED BY public.django_content_type.id;
+
+
+--
+-- Name: django_migrations; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.django_migrations (
+    id bigint NOT NULL,
+    app character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    applied timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_migrations OWNER TO voltov;
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.django_migrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_migrations_id_seq OWNER TO voltov;
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.django_migrations_id_seq OWNED BY public.django_migrations.id;
+
+
+--
+-- Name: django_session; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.django_session (
+    session_key character varying(40) NOT NULL,
+    session_data text NOT NULL,
+    expire_date timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_session OWNER TO voltov;
+
+--
+-- Name: django_site; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.django_site (
+    id integer NOT NULL,
+    domain character varying(100) NOT NULL,
+    name character varying(50) NOT NULL
+);
+
+
+ALTER TABLE public.django_site OWNER TO voltov;
+
+--
+-- Name: django_site_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.django_site_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_site_id_seq OWNER TO voltov;
+
+--
+-- Name: django_site_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.django_site_id_seq OWNED BY public.django_site.id;
+
+
+--
+-- Name: socialaccount_socialaccount; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.socialaccount_socialaccount (
+    id integer NOT NULL,
+    provider character varying(30) NOT NULL,
+    uid character varying(191) NOT NULL,
+    last_login timestamp with time zone NOT NULL,
+    date_joined timestamp with time zone NOT NULL,
+    extra_data text NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.socialaccount_socialaccount OWNER TO voltov;
+
+--
+-- Name: socialaccount_socialaccount_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.socialaccount_socialaccount_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.socialaccount_socialaccount_id_seq OWNER TO voltov;
+
+--
+-- Name: socialaccount_socialaccount_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.socialaccount_socialaccount_id_seq OWNED BY public.socialaccount_socialaccount.id;
+
+
+--
+-- Name: socialaccount_socialapp; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.socialaccount_socialapp (
+    id integer NOT NULL,
+    provider character varying(30) NOT NULL,
+    name character varying(40) NOT NULL,
+    client_id character varying(191) NOT NULL,
+    secret character varying(191) NOT NULL,
+    key character varying(191) NOT NULL
+);
+
+
+ALTER TABLE public.socialaccount_socialapp OWNER TO voltov;
+
+--
+-- Name: socialaccount_socialapp_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.socialaccount_socialapp_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.socialaccount_socialapp_id_seq OWNER TO voltov;
+
+--
+-- Name: socialaccount_socialapp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.socialaccount_socialapp_id_seq OWNED BY public.socialaccount_socialapp.id;
+
+
+--
+-- Name: socialaccount_socialapp_sites; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.socialaccount_socialapp_sites (
+    id bigint NOT NULL,
+    socialapp_id integer NOT NULL,
+    site_id integer NOT NULL
+);
+
+
+ALTER TABLE public.socialaccount_socialapp_sites OWNER TO voltov;
+
+--
+-- Name: socialaccount_socialapp_sites_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.socialaccount_socialapp_sites_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.socialaccount_socialapp_sites_id_seq OWNER TO voltov;
+
+--
+-- Name: socialaccount_socialapp_sites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.socialaccount_socialapp_sites_id_seq OWNED BY public.socialaccount_socialapp_sites.id;
+
+
+--
+-- Name: socialaccount_socialtoken; Type: TABLE; Schema: public; Owner: voltov
+--
+
+CREATE TABLE public.socialaccount_socialtoken (
+    id integer NOT NULL,
+    token text NOT NULL,
+    token_secret text NOT NULL,
+    expires_at timestamp with time zone,
+    account_id integer NOT NULL,
+    app_id integer NOT NULL
+);
+
+
+ALTER TABLE public.socialaccount_socialtoken OWNER TO voltov;
+
+--
+-- Name: socialaccount_socialtoken_id_seq; Type: SEQUENCE; Schema: public; Owner: voltov
+--
+
+CREATE SEQUENCE public.socialaccount_socialtoken_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.socialaccount_socialtoken_id_seq OWNER TO voltov;
+
+--
+-- Name: socialaccount_socialtoken_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voltov
+--
+
+ALTER SEQUENCE public.socialaccount_socialtoken_id_seq OWNED BY public.socialaccount_socialtoken.id;
+
+
+--
+-- Name: account_emailaddress id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.account_emailaddress ALTER COLUMN id SET DEFAULT nextval('public.account_emailaddress_id_seq'::regclass);
+
+
+--
+-- Name: account_emailconfirmation id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.account_emailconfirmation ALTER COLUMN id SET DEFAULT nextval('public.account_emailconfirmation_id_seq'::regclass);
+
+
+--
+-- Name: auth_group id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_group ALTER COLUMN id SET DEFAULT nextval('public.auth_group_id_seq'::regclass);
+
+
+--
+-- Name: auth_group_permissions id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_group_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_group_permissions_id_seq'::regclass);
+
+
+--
+-- Name: auth_permission id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_permission ALTER COLUMN id SET DEFAULT nextval('public.auth_permission_id_seq'::regclass);
+
+
+--
+-- Name: auth_user id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user ALTER COLUMN id SET DEFAULT nextval('public.auth_user_id_seq'::regclass);
+
+
+--
+-- Name: auth_user_groups id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user_groups ALTER COLUMN id SET DEFAULT nextval('public.auth_user_groups_id_seq'::regclass);
+
+
+--
+-- Name: auth_user_user_permissions id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_user_user_permissions_id_seq'::regclass);
+
+
+--
+-- Name: core_about id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_about ALTER COLUMN id SET DEFAULT nextval('public.core_about_id_seq'::regclass);
+
+
+--
+-- Name: core_maincategory id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_maincategory ALTER COLUMN id SET DEFAULT nextval('public.core_maincategory_id_seq'::regclass);
+
+
+--
+-- Name: core_mediaitem id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitem ALTER COLUMN id SET DEFAULT nextval('public.core_mediaitem_id_seq'::regclass);
+
+
+--
+-- Name: core_mediaitem_likes id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitem_likes ALTER COLUMN id SET DEFAULT nextval('public.core_mediaitem_likes_id_seq'::regclass);
+
+
+--
+-- Name: core_mediaitemreview id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitemreview ALTER COLUMN id SET DEFAULT nextval('public.core_mediaitemreview_id_seq'::regclass);
+
+
+--
+-- Name: core_subcategory id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_subcategory ALTER COLUMN id SET DEFAULT nextval('public.core_subcategory_id_seq'::regclass);
+
+
+--
+-- Name: django_admin_log id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_admin_log ALTER COLUMN id SET DEFAULT nextval('public.django_admin_log_id_seq'::regclass);
+
+
+--
+-- Name: django_content_type id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval('public.django_content_type_id_seq'::regclass);
+
+
+--
+-- Name: django_migrations id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_migrations ALTER COLUMN id SET DEFAULT nextval('public.django_migrations_id_seq'::regclass);
+
+
+--
+-- Name: django_site id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_site ALTER COLUMN id SET DEFAULT nextval('public.django_site_id_seq'::regclass);
+
+
+--
+-- Name: socialaccount_socialaccount id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialaccount ALTER COLUMN id SET DEFAULT nextval('public.socialaccount_socialaccount_id_seq'::regclass);
+
+
+--
+-- Name: socialaccount_socialapp id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp ALTER COLUMN id SET DEFAULT nextval('public.socialaccount_socialapp_id_seq'::regclass);
+
+
+--
+-- Name: socialaccount_socialapp_sites id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp_sites ALTER COLUMN id SET DEFAULT nextval('public.socialaccount_socialapp_sites_id_seq'::regclass);
+
+
+--
+-- Name: socialaccount_socialtoken id; Type: DEFAULT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialtoken ALTER COLUMN id SET DEFAULT nextval('public.socialaccount_socialtoken_id_seq'::regclass);
+
+
+--
+-- Data for Name: account_emailaddress; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.account_emailaddress (id, email, verified, "primary", user_id) FROM stdin;
+3	zhenya@zh-gallery.ru	t	t	2
+5	voltovtom92@gmail.com	t	t	6
+6	voltov-tom@mail.ru	t	t	7
+\.
+
+
+--
+-- Data for Name: account_emailconfirmation; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.account_emailconfirmation (id, created, sent, key, email_address_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.auth_group (id, name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_group_permissions; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_permission; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
+1	Can add log entry	1	add_logentry
+2	Can change log entry	1	change_logentry
+3	Can delete log entry	1	delete_logentry
+4	Can view log entry	1	view_logentry
+5	Can add permission	2	add_permission
+6	Can change permission	2	change_permission
+7	Can delete permission	2	delete_permission
+8	Can view permission	2	view_permission
+9	Can add group	3	add_group
+10	Can change group	3	change_group
+11	Can delete group	3	delete_group
+12	Can view group	3	view_group
+13	Can add user	4	add_user
+14	Can change user	4	change_user
+15	Can delete user	4	delete_user
+16	Can view user	4	view_user
+17	Can add content type	5	add_contenttype
+18	Can change content type	5	change_contenttype
+19	Can delete content type	5	delete_contenttype
+20	Can view content type	5	view_contenttype
+21	Can add session	6	add_session
+22	Can change session	6	change_session
+23	Can delete session	6	delete_session
+24	Can view session	6	view_session
+25	Can add main category	7	add_maincategory
+26	Can change main category	7	change_maincategory
+27	Can delete main category	7	delete_maincategory
+28	Can view main category	7	view_maincategory
+29	Can add sub category	8	add_subcategory
+30	Can change sub category	8	change_subcategory
+31	Can delete sub category	8	delete_subcategory
+32	Can view sub category	8	view_subcategory
+33	Can add media item	9	add_mediaitem
+34	Can change media item	9	change_mediaitem
+35	Can delete media item	9	delete_mediaitem
+36	Can view media item	9	view_mediaitem
+37	Can add site	10	add_site
+38	Can change site	10	change_site
+39	Can delete site	10	delete_site
+40	Can view site	10	view_site
+41	Can add email address	11	add_emailaddress
+42	Can change email address	11	change_emailaddress
+43	Can delete email address	11	delete_emailaddress
+44	Can view email address	11	view_emailaddress
+45	Can add email confirmation	12	add_emailconfirmation
+46	Can change email confirmation	12	change_emailconfirmation
+47	Can delete email confirmation	12	delete_emailconfirmation
+48	Can view email confirmation	12	view_emailconfirmation
+49	Can add social account	13	add_socialaccount
+50	Can change social account	13	change_socialaccount
+51	Can delete social account	13	delete_socialaccount
+52	Can view social account	13	view_socialaccount
+53	Can add social application	14	add_socialapp
+54	Can change social application	14	change_socialapp
+55	Can delete social application	14	delete_socialapp
+56	Can view social application	14	view_socialapp
+57	Can add social application token	15	add_socialtoken
+58	Can change social application token	15	change_socialtoken
+59	Can delete social application token	15	delete_socialtoken
+60	Can view social application token	15	view_socialtoken
+61	Can add media item review	16	add_mediaitemreview
+62	Can change media item review	16	change_mediaitemreview
+63	Can delete media item review	16	delete_mediaitemreview
+64	Can view media item review	16	view_mediaitemreview
+65	Can add about	17	add_about
+66	Can change about	17	change_about
+67	Can delete about	17	delete_about
+68	Can view about	17	view_about
+\.
+
+
+--
+-- Data for Name: auth_user; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
+2	pbkdf2_sha256$320000$NZgrGHsnhJhMInJzaoNLlU$XNU/iQzAKmZhfF09JmuYlHGzDu6AbfmScQmMc4YFmVg=	2022-03-11 17:09:32.438985+00	t	zhenya			zhenya@zh-gallery.ru	t	t	2021-12-31 00:03:30+00
+6	!aC3HI59HJIz9CV4XBdRkzlHMInfnmXIAo6luiVEJ	2022-02-20 11:23:52.723314+00	f	timofei	Timofei	Voltov	voltovtom92@gmail.com	f	t	2022-01-28 21:25:06.707203+00
+7	pbkdf2_sha256$320000$aEqawK4Yl0ftPtxtlMyIG4$fUck4DYk7L+pPIo4z9XFz6j2n0skLztW7O0VVOGqopc=	2022-02-21 17:08:20.431772+00	f	voltov-tom			voltov-tom@mail.ru	f	t	2022-01-28 21:30:02.466806+00
+\.
+
+
+--
+-- Data for Name: auth_user_groups; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.auth_user_groups (id, user_id, group_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_user_user_permissions; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: core_about; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.core_about (id, body, image) FROM stdin;
+1	Hello and welcome to my gallery!\r\nMy name is Evgeniya or a simple Zhenya, so that’s why ZH in the title… Usually I take a film photos and a digital illustrations for myself, just because I like it…but also I create a sketchbooks a planners a photo albums and the other stationary staff for sale , whose you can see at my instagram. \r\nIn  this gallery I would like prefer to you my crazy pink visuals… actually not only these but it’s really my favourite colour! \r\nI’m really appreciate for your attention and support !	2C616B84-40FC-4829-A16A-F37B062EF3DF.jpeg
+\.
+
+
+--
+-- Data for Name: core_maincategory; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.core_maincategory (id, title, slug) FROM stdin;
+1	GALLERIES	galleries
+2	IN THE INTERIOR	in-the-interior
+\.
+
+
+--
+-- Data for Name: core_mediaitem; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.core_mediaitem (id, title, slug, description, image, subcategory_id, views, like_time) FROM stdin;
+20	DojaCat	dojacat	SaySo	BD7ED998-58F7-4F35-9068-ECFEE1F78A32.jpeg	2	40	2022-03-18 03:19:35.912229+00
+24	Holographic cover	holographic-cover	With BTS	D2E9883A-6D8A-48CC-BA49-FF80BEC9FEE7.jpeg	3	48	2022-03-18 03:19:36.261506+00
+11	Sky	sky	God of the mountains	33841CB3-260A-4825-AAE9-2870137BA282.jpeg	1	30	2022-03-18 14:26:38.695266+00
+8	In the tree’s shadow	in-the-trees-shadow	Sunny girl	6819C955-94FA-4E08-8451-9EE4706559F4.jpeg	1	30	2022-03-18 14:26:39.050372+00
+7	Supernatural	supernatural	Small black dress	F61641C2-414C-40C6-88A2-90DA28862167.jpeg	1	26	2022-03-18 14:26:39.137143+00
+6	Witches	witches	My friends is a best photomodels	5A0B631F-1175-442A-A654-77EA67AB0B37.jpeg	1	34	2022-03-18 14:26:39.365693+00
+21	NingNing	ningning	Aespa	49BB43C2-3E32-4ADB-AC6E-E582FBF48963.jpeg	2	26	2022-03-18 14:26:39.968832+00
+18	Flowers	flowers	Part of the heart	98E86A3D-0C2F-49F5-8675-1A1A24ABAEA7.jpeg	2	57	2022-03-18 19:10:15.434564+00
+2	Rock	rock	God of the forest	DEA9AAFC-2CAD-4FED-A56E-D5CAD952F621.jpeg	1	28	2022-03-03 14:36:43.332542+00
+17	VHS	vhs	VHS cassette and retro photo	7FDBA194-9521-411C-B842-626EA1C339A3.jpeg	2	35	2022-03-03 16:46:19.231824+00
+19	Mark	mark	Child	997F3BD0-F323-4BDB-97E3-EC9F7EC91CED.jpeg	2	37	2022-03-20 06:19:53.267541+00
+23	Suga	suga	Sketchbook and keychain	0C6931CA-EC28-4A3E-B9A7-CACC8E269C96.jpeg	3	25	2022-03-20 12:57:17.752393+00
+22	AvuChan	avuchan	QueenBee	D1BDC4BB-51FA-478B-AC28-6C1149727C12.jpeg	2	26	2022-03-03 14:35:25.218265+00
+15	Dance girl	dance-girl	Drunk and beautiful	0E94492E-4BDD-4FC3-8F0C-B2B5AABF6422.jpeg	2	44	2022-03-21 17:18:15.24408+00
+10	Baby black	baby-black	Pink wall	8CEE188A-7248-4966-9715-5ED68EEAFB43.jpeg	1	46	2022-03-21 17:18:28.234032+00
+12	Hey girl	hey-girl	Cutie	2FC80D87-6BB7-4B33-A7B6-A4DB2BC26CD1.jpeg	1	29	2022-03-06 00:00:06.988574+00
+16	Lisa	lisa	LaLisa Manoban	F864326E-2C11-4C6B-A504-25B2069CC94D.jpeg	2	35	2022-03-16 15:04:56.850443+00
+5	Baby black 4	baby-black-4	Soft angel in black	BB04605A-DD3B-44C1-8925-5492E217B6AC.jpeg	1	30	2022-03-06 08:07:36.1286+00
+3	Baby black  2	baby-black-2	Strict eyes	686A889C-E70F-43A4-8A7A-DBD774A206CB.jpeg	1	32	2022-03-06 14:29:11.507585+00
+13	In the corner	in-the-corner	This is me in the Gallery	E29AD2F5-6632-4E22-BA64-97383290CF43.jpeg	1	29	2022-03-06 17:19:46.711228+00
+1	Sun chilling	sun-chilling	Sunlight portrait	F4831A09-9407-48AD-ABAD-1DEBBCDDB65C.jpeg	1	28	2022-03-07 00:13:00.705545+00
+9	Baby black 3	baby-black-3	Cotton candy	F70B6E0C-AB38-4C89-8F5F-0396B5DEB837.jpeg	1	27	2022-03-07 03:10:37.341606+00
+4	Rain	rain	The grey beautiful rain	9AEB0284-F36A-4061-BB41-A55AA727AF22.jpeg	1	30	2022-03-09 02:23:13.613659+00
+25	“Y” keychain	y-keychain	Epoxy resin	4C21C6E6-BD53-4977-8D61-F43CCD0CC290.jpeg	3	44	2022-03-18 03:19:35.575519+00
+\.
+
+
+--
+-- Data for Name: core_mediaitem_likes; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.core_mediaitem_likes (id, mediaitem_id, user_id) FROM stdin;
+19	17	2
+20	18	2
+21	10	2
+22	1	2
+23	10	6
+25	6	6
+26	18	6
+27	5	6
+28	5	7
+29	10	7
+30	6	7
+31	20	6
+33	20	2
+34	20	7
+35	22	7
+36	23	2
+37	25	2
+38	24	2
+39	25	7
+40	23	7
+41	24	7
+42	15	7
+43	18	7
+44	16	7
+46	9	7
+47	25	6
+48	19	7
+49	17	7
+50	16	6
+51	15	6
+52	19	6
+53	3	6
+54	21	2
+55	19	2
+\.
+
+
+--
+-- Data for Name: core_mediaitemreview; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.core_mediaitemreview (id, content, date_added, media_item_id, user_id, edited) FROM stdin;
+3	So nice	2022-01-31 16:17:40.995735+00	20	6	f
+2	В принципе мне тоже нравится, да и вообще сайт офигенный, я так понял сайт молодой, желаю развития!!	2022-01-28 21:31:46.763166+00	18	7	t
+1	Мне нравится масштаб, видно объем	2022-01-28 21:28:44.953129+00	18	6	t
+5	Like it!	2022-02-06 09:50:23.282282+00	25	6	t
+\.
+
+
+--
+-- Data for Name: core_subcategory; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.core_subcategory (id, title, slug, category_id, image, description) FROM stdin;
+1	FilmPhotography	filmphotography	1	404BDDFD-316C-422D-9256-11F370F08FFF.jpeg	\N
+2	Graphics	graphics	1	2DDD439D-3669-41F3-80CD-E452E658EB34.jpeg	Digital graphics
+3	Notebooks	notebooks	1	9BE7E73F-D547-424F-B919-2AF667F03B78.jpeg	Sketchbooks, keychains, photo albums
+\.
+
+
+--
+-- Data for Name: django_admin_log; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
+1	2021-12-31 00:05:55.698663+00	1	root	3		4	2
+2	2021-12-31 21:24:35.936443+00	1	FilmPHOTO	1	[{"added": {}}]	7	2
+3	2021-12-31 21:26:23.07443+00	1	Galleries	2	[{"changed": {"fields": ["Title"]}}]	7	2
+4	2021-12-31 21:33:48.647501+00	1	FilmPhotography	1	[{"added": {}}]	8	2
+5	2021-12-31 21:51:51.050977+00	1	FilmPhotography	2	[]	8	2
+6	2022-01-01 08:31:58.679497+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+7	2022-01-01 08:32:07.430791+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+8	2022-01-01 11:57:21.324095+00	1	Sun chilling	1	[{"added": {}}]	9	2
+9	2022-01-01 11:58:21.170631+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+10	2022-01-01 11:59:29.631355+00	1	Sun chilling	2	[{"changed": {"fields": ["Image"]}}]	9	2
+11	2022-01-01 12:00:19.360573+00	2	Rock	1	[{"added": {}}]	9	2
+12	2022-01-01 12:00:56.264818+00	3	K-pop	1	[{"added": {}}]	9	2
+13	2022-01-01 12:01:33.594669+00	4	Metall	1	[{"added": {}}]	9	2
+14	2022-01-01 12:01:59.104165+00	5	Baby	1	[{"added": {}}]	9	2
+15	2022-01-01 12:02:44.184281+00	6	Meat	1	[{"added": {}}]	9	2
+16	2022-01-01 13:14:16.214747+00	5	Baby black	2	[{"changed": {"fields": ["Title", "Description", "Image"]}}]	9	2
+17	2022-01-01 13:23:23.518491+00	3	Baby black	2	[{"changed": {"fields": ["Title", "Description", "Image"]}}]	9	2
+18	2022-01-01 14:30:04.843918+00	3	Pink wall	2	[{"changed": {"fields": ["Title"]}}]	9	2
+19	2022-01-01 14:34:36.840779+00	6	Witches	2	[{"changed": {"fields": ["Title", "Description", "Image"]}}]	9	2
+20	2022-01-01 14:51:23.817633+00	4	Rain	2	[{"changed": {"fields": ["Title", "Description", "Image"]}}]	9	2
+21	2022-01-01 14:54:12.625446+00	2	Rock	2	[{"changed": {"fields": ["Description", "Image"]}}]	9	2
+22	2022-01-01 14:57:20.371963+00	1	Sun chilling	2	[{"changed": {"fields": ["Description", "Image"]}}]	9	2
+23	2022-01-01 15:08:57.239625+00	7	Supernatural	1	[{"added": {}}]	9	2
+24	2022-01-01 15:35:49.795597+00	8	In the tree’s shadow	1	[{"added": {}}]	9	2
+25	2022-01-01 15:42:53.642743+00	9	Baby black 3	1	[{"added": {}}]	9	2
+26	2022-01-01 15:43:14.287809+00	3	Baby pink 2	2	[{"changed": {"fields": ["Title"]}}]	9	2
+27	2022-01-01 15:43:59.559834+00	10	Baby black	1	[{"added": {}}]	9	2
+28	2022-01-01 15:55:02.542623+00	11	Rock	1	[{"added": {}}]	9	2
+29	2022-01-01 15:55:21.094989+00	3	Baby black  2	2	[{"changed": {"fields": ["Title"]}}]	9	2
+30	2022-01-01 15:55:31.689891+00	5	Baby black 4	2	[{"changed": {"fields": ["Title"]}}]	9	2
+31	2022-01-01 16:01:02.510615+00	12	Hey girl	1	[{"added": {}}]	9	2
+32	2022-01-01 16:07:38.801599+00	13	In the corner	1	[{"added": {}}]	9	2
+33	2022-01-02 19:19:50.564981+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+34	2022-01-02 19:28:05.085298+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+35	2022-01-02 19:28:25.216841+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+36	2022-01-02 19:31:28.050239+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+37	2022-01-02 19:31:42.323015+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+38	2022-01-02 19:32:56.115013+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+39	2022-01-02 19:33:49.26839+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+40	2022-01-02 19:35:30.192279+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+41	2022-01-02 19:35:37.135752+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+42	2022-01-02 19:48:26.029659+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+43	2022-01-02 19:48:32.383414+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+44	2022-01-02 20:06:32.00718+00	14	1221	1	[{"added": {}}]	9	2
+45	2022-01-02 20:06:54.48508+00	14	1221	3		9	2
+46	2022-01-05 15:26:21.356444+00	1	FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+47	2022-01-05 20:42:59.031621+00	8	In the tree’s shadow	2	[]	9	2
+48	2022-01-05 20:44:08.17645+00	8	In the tree’s shadow	2	[]	9	2
+49	2022-01-08 06:45:00.508196+00	1	GALLERIES	2	[{"changed": {"fields": ["Title"]}}]	7	2
+50	2022-01-08 06:46:01.415421+00	2	GRAPHICS	1	[{"added": {}}]	7	2
+51	2022-01-08 06:47:21.582799+00	2	IN INTERIOR	2	[{"changed": {"fields": ["Title"]}}]	7	2
+52	2022-01-08 06:49:11.38427+00	2	GALLERIES: GRAPHICS	1	[{"added": {}}]	8	2
+53	2022-01-08 07:09:42.663536+00	15	GALLERIES: GRAPHICS: Dance girl	1	[{"added": {}}]	9	2
+54	2022-01-08 07:11:30.543891+00	16	GALLERIES: GRAPHICS: Lisa	1	[{"added": {}}]	9	2
+55	2022-01-08 07:18:16.126232+00	17	GALLERIES: GRAPHICS: VHS	1	[{"added": {}}]	9	2
+56	2022-01-08 07:20:18.351307+00	18	GALLERIES: GRAPHICS: Flowers	1	[{"added": {}}]	9	2
+57	2022-01-08 10:11:03.834354+00	2	GALLERIES: GRAPHICS	2	[{"changed": {"fields": ["Image"]}}]	8	2
+58	2022-01-08 10:12:42.72499+00	1	GALLERIES: FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+59	2022-01-10 18:13:04.945979+00	1	zh-gallery.ru	2	[{"changed": {"fields": ["Domain name", "Display name"]}}]	10	2
+60	2022-01-10 18:14:42.097827+00	1	zh-gallery	1	[{"added": {}}]	14	2
+61	2022-01-21 10:38:27.965408+00	1	GALLERIES: FilmPhotography	2	[{"changed": {"fields": ["Image"]}}]	8	2
+62	2022-01-21 10:57:08.79683+00	11	11, GALLERIES: FilmPhotography: Sky	2	[{"changed": {"fields": ["Title", "Likes"]}}]	9	2
+63	2022-01-21 10:58:13.790103+00	11	11, GALLERIES: FilmPhotography: Sky	2	[{"changed": {"fields": ["Likes"]}}]	9	2
+64	2022-01-21 12:10:36.417141+00	1	About object (1)	1	[{"added": {}}]	17	2
+65	2022-01-21 18:05:41.231499+00	1	About object (1)	2	[{"changed": {"fields": ["Image"]}}]	17	2
+66	2022-01-27 14:42:01.619574+00	2	zhenya	2	[{"changed": {"fields": ["Email address"]}}]	4	2
+67	2022-01-27 14:42:14.556199+00	2	zhenyapopova96@gmail.com	3		11	2
+68	2022-01-27 14:42:14.571129+00	1	voltovtom92@gmail.com	3		11	2
+69	2022-01-27 14:42:22.582226+00	4	jenya	3		4	2
+70	2022-01-27 14:42:22.586151+00	3	timofei	3		4	2
+71	2022-01-28 21:22:32.935384+00	5	voltov-tom	3		4	2
+72	2022-01-31 14:47:43.857599+00	1	About object (1)	2	[{"changed": {"fields": ["Image"]}}]	17	2
+73	2022-01-31 14:50:22.801102+00	2	GALLERIES: Graphics	2	[{"changed": {"fields": ["Title"]}}]	8	2
+74	2022-01-31 14:51:27.179005+00	19	19, GALLERIES: Graphics: Mark	1	[{"added": {}}]	9	2
+75	2022-01-31 14:52:00.646865+00	20	20, GALLERIES: Graphics: DojaCat	1	[{"added": {}}]	9	2
+76	2022-01-31 18:27:14.832874+00	21	21, GALLERIES: Graphics: NingNing	1	[{"added": {}}]	9	2
+77	2022-01-31 18:28:55.164687+00	22	22, GALLERIES: Graphics: AvuChan	1	[{"added": {}}]	9	2
+78	2022-01-31 18:31:33.608824+00	2	IN THE INTERIOR	2	[{"changed": {"fields": ["Title"]}}]	7	2
+79	2022-01-31 18:31:53.606949+00	3	NOTEBOOKS	1	[{"added": {}}]	7	2
+80	2022-01-31 18:32:47.388437+00	3	NOTEBOOKS	3		7	2
+81	2022-01-31 18:37:13.941133+00	3	GALLERIES: NOTEBOOKS	1	[{"added": {}}]	8	2
+82	2022-01-31 18:39:34.335262+00	23	23, GALLERIES: NOTEBOOKS: Suga	1	[{"added": {}}]	9	2
+83	2022-01-31 18:42:47.030818+00	24	24, GALLERIES: NOTEBOOKS: Holographic cover	1	[{"added": {}}]	9	2
+84	2022-01-31 18:44:32.466228+00	25	25, GALLERIES: NOTEBOOKS: “Y” keychain	1	[{"added": {}}]	9	2
+85	2022-01-31 18:59:19.60037+00	2	GALLERIES: Graphics	2	[{"changed": {"fields": ["Image"]}}]	8	2
+86	2022-01-31 18:59:51.645472+00	3	GALLERIES: Notebooks	2	[{"changed": {"fields": ["Title"]}}]	8	2
+\.
+
+
+--
+-- Data for Name: django_content_type; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.django_content_type (id, app_label, model) FROM stdin;
+1	admin	logentry
+2	auth	permission
+3	auth	group
+4	auth	user
+5	contenttypes	contenttype
+6	sessions	session
+7	core	maincategory
+8	core	subcategory
+9	core	mediaitem
+10	sites	site
+11	account	emailaddress
+12	account	emailconfirmation
+13	socialaccount	socialaccount
+14	socialaccount	socialapp
+15	socialaccount	socialtoken
+16	core	mediaitemreview
+17	core	about
+\.
+
+
+--
+-- Data for Name: django_migrations; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.django_migrations (id, app, name, applied) FROM stdin;
+1	contenttypes	0001_initial	2021-12-27 18:20:17.161381+00
+2	auth	0001_initial	2021-12-27 18:20:17.748355+00
+3	admin	0001_initial	2021-12-27 18:20:17.91175+00
+4	admin	0002_logentry_remove_auto_add	2021-12-27 18:20:17.971545+00
+5	admin	0003_logentry_add_action_flag_choices	2021-12-27 18:20:18.018034+00
+6	contenttypes	0002_remove_content_type_name	2021-12-27 18:20:18.125377+00
+7	auth	0002_alter_permission_name_max_length	2021-12-27 18:20:18.158552+00
+8	auth	0003_alter_user_email_max_length	2021-12-27 18:20:18.178553+00
+9	auth	0004_alter_user_username_opts	2021-12-27 18:20:18.192595+00
+10	auth	0005_alter_user_last_login_null	2021-12-27 18:20:18.210549+00
+11	auth	0006_require_contenttypes_0002	2021-12-27 18:20:18.21517+00
+12	auth	0007_alter_validators_add_error_messages	2021-12-27 18:20:18.236762+00
+13	auth	0008_alter_user_username_max_length	2021-12-27 18:20:18.271403+00
+14	auth	0009_alter_user_last_name_max_length	2021-12-27 18:20:18.30085+00
+15	auth	0010_alter_group_name_max_length	2021-12-27 18:20:18.331633+00
+16	auth	0011_update_proxy_permissions	2021-12-27 18:20:18.356043+00
+17	auth	0012_alter_user_first_name_max_length	2021-12-27 18:20:18.392891+00
+18	sessions	0001_initial	2021-12-27 18:20:18.426764+00
+19	core	0001_initial	2021-12-31 00:00:26.999227+00
+20	core	0002_subcategory_image	2021-12-31 00:00:27.054571+00
+21	core	0003_mediaitem_likes_mediaitem_views	2022-01-07 17:29:47.64566+00
+22	core	0004_subcategory_description	2022-01-07 17:29:47.664675+00
+23	account	0001_initial	2022-01-10 18:12:27.035825+00
+24	account	0002_email_max_length	2022-01-10 18:12:27.077109+00
+25	sites	0001_initial	2022-01-10 18:12:27.099428+00
+26	sites	0002_alter_domain_unique	2022-01-10 18:12:27.138875+00
+27	socialaccount	0001_initial	2022-01-10 18:12:27.411361+00
+28	socialaccount	0002_token_max_lengths	2022-01-10 18:12:27.449151+00
+29	socialaccount	0003_extra_data_default_dict	2022-01-10 18:12:27.466838+00
+30	core	0005_mediaitemreview	2022-01-12 07:21:53.801845+00
+31	core	0006_remove_mediaitem_likes_mediaitemlike	2022-01-18 16:13:20.416775+00
+32	core	0007_mediaitem_likes_delete_mediaitemlike	2022-01-18 16:13:20.524904+00
+33	core	0008_alter_maincategory_title_alter_mediaitem_title_and_more	2022-01-21 10:57:38.986629+00
+34	core	0009_alter_mediaitemreview_options_mediaitem_like_time	2022-01-21 10:57:39.032278+00
+35	core	0010_alter_mediaitem_likes	2022-01-21 10:57:39.060559+00
+36	core	0011_alter_mediaitem_like_time	2022-01-21 10:57:39.083944+00
+37	core	0012_about_alter_mediaitem_like_time	2022-01-21 10:57:39.116511+00
+38	core	0013_about_image_alter_about_body_and_more	2022-01-21 10:57:39.146668+00
+39	core	0014_alter_mediaitem_like_time	2022-01-21 10:57:39.170888+00
+40	core	0015_alter_mediaitem_like_time	2022-01-21 23:42:25.278422+00
+41	core	0016_alter_mediaitem_like_time	2022-01-21 23:42:25.304171+00
+42	core	0017_alter_mediaitemreview_user	2022-01-31 13:05:03.870438+00
+43	core	0018_mediaitemreview_edited	2022-02-15 17:25:18.176058+00
+\.
+
+
+--
+-- Data for Name: django_session; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
+b490ezsvrhx8o5w8in1orgiz6pq3lplw	.eJxVjMsOwiAQRf-FtSHyZly67zeQYQCpGkhKuzL-uzbpQrf3nHNfLOC21rCNvIQ5sQsT7PS7RaRHbjtId2y3zqm3dZkj3xV-0MGnnvLzerh_BxVH_dbKakXCeJTJgDaevMEIYLLwWaKTirTTCi0gKcIibQGgqM5gkxDJFfb-AMZVN4Q:1n1xOn:ipWa7mg0YB5sGO6Ncuj1J_fxjY_VKolallmZyr-I4fU	2022-01-10 21:19:17.405563+00
+t1onbkoxfw59bzh9c6b749emrgb5s9pk	.eJxVjMsOwiAURP-FtWmQZ3Fnf4TcC5fQ2NBEYGX8d6npQpdzzsy8mIfesu-Vnn6N7MYMu_wyhPCgcgjYtgNPEMLeS5u-nVPX6T4SlbYGaOtelnP1d5Wh5vEzWyVmba0BAp60RBvjlUvAmBA5SHLkJFeISRkHMw6bknBKC7RGAbH3B8ulPQo:1nLkJk:siHqakT9OFl0Lv3XmUzwdQ-bgexY4Lj9PgfWUKbDIgs	2022-03-06 11:23:52.731954+00
+lqh7utae8q7foqlfkfenvtxczofjwbgv	.eJxVjDsOwjAQBe_iGlnxb2NT0nMGa71e4wBypDipEHeHSCmgfTPzXiLitta4dV7ilMVZaHH63RLSg9sO8h3bbZY0t3WZktwVedAur3Pm5-Vw_w4q9vqtHQIlY4gYCqeigrZeFbTjoMEkZ5wPXoHSwY4QhhLQESTW2jDlAADi_QHfWjdX:1n3B1Z:bBFFiNTluboEvEm6hXWQRltyXk4gMO08hs3pUikk4n8	2022-01-14 06:04:21.22577+00
+9n5gzekrt4mkfutlre4i8v3zs5qlaxm3	.eJxVjDsOwjAQBe_iGlnxb2NT0nMGa71e4wBypDipEHeHSCmgfTPzXiLitta4dV7ilMVZaHH63RLSg9sO8h3bbZY0t3WZktwVedAur3Pm5-Vw_w4q9vqtHQIlY4gYCqeigrZeFbTjoMEkZ5wPXoHSwY4QhhLQESTW2jDlAADi_QHfWjdX:1nNPdX:aGqPQaQMH27bmz0nkTGvGYdKNfxEzDOUCehhh9OGVD0	2022-03-11 01:43:11.899268+00
+aoe76x5asdfw8iwj13tdbzfzij6j8qwa	.eJxVjDsOwjAQBe_iGln-xJtsSnrOYPmzJgZkoziRQIi7Q6QU0L6ZNy9m3bpMdm002xzZyBQ7_G7ehSuVDcSLK-fKQy3LnD3fFL7Txk810u24u3-BybXp-zYOgtc6BIJEPklU3SCT63qhQHujzYCDBKmw6wFFQmcCeFJKU4gIAFu0UWu5FkuPe56fbJRKIAjx_gD2gD_G:1nSilg:gdS8jLhRHTnLKzm8nFVmp_TC3-U-ChAcnPcz4zUgScI	2022-03-25 17:09:32.481516+00
+v7t26r9vpcs0bt6tmfzy31dx3o9dsioh	.eJxVjDsOwjAQBe_iGlnxb2NT0nMGa71e4wBypDipEHeHSCmgfTPzXiLitta4dV7ilMVZaHH63RLSg9sO8h3bbZY0t3WZktwVedAur3Pm5-Vw_w4q9vqtHQIlY4gYCqeigrZeFbTjoMEkZ5wPXoHSwY4QhhLQESTW2jDlAADi_QHfWjdX:1nArFp:Ez9PeImFh3KeLTr9t6qb3_5bYWnIa-NGOxHvdoyMGyE	2022-02-04 10:34:49.337292+00
+j8nqzhrtiwuir93hc6umm2nffj7stsef	.eJxVjU1uwyAQhe_CurUwOANkmX3PgGZgqJ1UJmIcNVHUu9dIWbR6u-_9PVXE2zbHm3CLS1ZH5dTbX0aYLrx2I59x_axDquvWFhp6ZHi5MnzUzF-nV_bfwIwy721KxjOOBAwe2bsuRpfsiKaMlG0JHg9hcp5sBgo7BgiAXntiZ7GPCossdY18vy7toY56Z1cU-a4tx8bCW7zwo5_pKbnzOxcsifigzWTGYqegdTGQKFhI3gCqn18zN1Mq:1nEXEx:ooLvm1_XTPcc6jVk417S-8MaWD9nF1phvlY0__0FYxE	2022-02-14 14:01:07.342638+00
+26nn36djccogz1kqnbijq9p9p83k2yd0	.eJxVjMsOwiAURP-FtWmQZ3Fnf4TcC5fQ2NBEYGX8d6npQpdzzsy8mIfesu-Vnn6N7MYMu_wyhPCgcgjYtgNPEMLeS5u-nVPX6T4SlbYGaOtelnP1d5Wh5vEzWyVmba0BAp60RBvjlUvAmBA5SHLkJFeISRkHMw6bknBKC7RGAbH3B8ulPQo:1nEZMX:FUmj0ZtsVdgO7OjB7bFHFUMXKPC1Hi_mm69Im3krJBM	2022-02-14 16:17:05.257747+00
+hz2na9fmxxesg01ee0v9wd6ceu4hlqht	.eJxVjMsOwiAURP-FtWmQZ3Fnf4TcC5fQ2NBEYGX8d6npQpdzzsy8mIfesu-Vnn6N7MYMu_wyhPCgcgjYtgNPEMLeS5u-nVPX6T4SlbYGaOtelnP1d5Wh5vEzWyVmba0BAp60RBvjlUvAmBA5SHLkJFeISRkHMw6bknBKC7RGAbH3B8ulPQo:1nHmeB:JPGvRPszIp28wusfMIP4JGnh9-x0_T3vjOmVzvxyQNk	2022-02-23 13:04:35.971267+00
+489uxfhfzt62s6r1b7v8vs5kqm2uw2os	.eJxVjDsOwjAQBe_iGln-xJtsSnrOYPmzJgZkoziRQIi7Q6QU0L6ZNy9m3bpMdm002xzZyBQ7_G7ehSuVDcSLK-fKQy3LnD3fFL7Txk810u24u3-BybXp-zYOgtc6BIJEPklU3SCT63qhQHujzYCDBKmw6wFFQmcCeFJKU4gIAFu0UWu5FkuPe56fbJRKIAjx_gD2gD_G:1nInRO:YSgc-GXnTL3uNN3wK_C8sXy7yY9jI8e_sjalOh1RX9U	2022-02-26 08:07:34.505946+00
+\.
+
+
+--
+-- Data for Name: django_site; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.django_site (id, domain, name) FROM stdin;
+1	zh-gallery.ru	zh-gallery.ru
+\.
+
+
+--
+-- Data for Name: socialaccount_socialaccount; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.socialaccount_socialaccount (id, provider, uid, last_login, date_joined, extra_data, user_id) FROM stdin;
+3	google	104890244786077332574	2022-02-20 11:23:52.696635+00	2022-01-28 21:25:06.922211+00	{"id": "104890244786077332574", "email": "voltovtom92@gmail.com", "verified_email": true, "name": "Timofei Voltov", "given_name": "Timofei", "family_name": "Voltov", "picture": "https://lh3.googleusercontent.com/a-/AOh14GjkwmASd8cjv1R2n3CxxJMPrc6lNSF3JnpOSricyQ=s96-c", "locale": "ru"}	6
+\.
+
+
+--
+-- Data for Name: socialaccount_socialapp; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.socialaccount_socialapp (id, provider, name, client_id, secret, key) FROM stdin;
+1	google	zh-gallery	412447480251-vvqq6rnnk06494tq5cbb9qtu9l4m73u9.apps.googleusercontent.com	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	
+\.
+
+
+--
+-- Data for Name: socialaccount_socialapp_sites; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.socialaccount_socialapp_sites (id, socialapp_id, site_id) FROM stdin;
+1	1	1
+\.
+
+
+--
+-- Data for Name: socialaccount_socialtoken; Type: TABLE DATA; Schema: public; Owner: voltov
+--
+
+COPY public.socialaccount_socialtoken (id, token, token_secret, expires_at, account_id, app_id) FROM stdin;
+3	ya29.A0ARrdaM8mh6xaZ8cXwfwAi4WJPUZkiXJNDV4vgrYeUtaI5rj5zO51QlbilzYItLgivFJfCdvE_lUERJuDoUdmFXixw7DUDHYOytfVwiQLjeTA6mdzvovP_Why9UEqkyWkMSFxIhRGWsDd5scsVzj0omnpL6_aUSQ		2022-02-20 12:23:51.617372+00	3	1
+\.
+
+
+--
+-- Name: account_emailaddress_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.account_emailaddress_id_seq', 6, true);
+
+
+--
+-- Name: account_emailconfirmation_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.account_emailconfirmation_id_seq', 1, false);
+
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.auth_group_id_seq', 1, false);
+
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 1, false);
+
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 68, true);
+
+
+--
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.auth_user_groups_id_seq', 1, false);
+
+
+--
+-- Name: auth_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.auth_user_id_seq', 7, true);
+
+
+--
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 1, false);
+
+
+--
+-- Name: core_about_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.core_about_id_seq', 1, true);
+
+
+--
+-- Name: core_maincategory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.core_maincategory_id_seq', 3, true);
+
+
+--
+-- Name: core_mediaitem_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.core_mediaitem_id_seq', 25, true);
+
+
+--
+-- Name: core_mediaitem_likes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.core_mediaitem_likes_id_seq', 55, true);
+
+
+--
+-- Name: core_mediaitemreview_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.core_mediaitemreview_id_seq', 7, true);
+
+
+--
+-- Name: core_subcategory_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.core_subcategory_id_seq', 3, true);
+
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 86, true);
+
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 17, true);
+
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 43, true);
+
+
+--
+-- Name: django_site_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.django_site_id_seq', 1, true);
+
+
+--
+-- Name: socialaccount_socialaccount_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.socialaccount_socialaccount_id_seq', 3, true);
+
+
+--
+-- Name: socialaccount_socialapp_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.socialaccount_socialapp_id_seq', 1, true);
+
+
+--
+-- Name: socialaccount_socialapp_sites_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.socialaccount_socialapp_sites_id_seq', 1, true);
+
+
+--
+-- Name: socialaccount_socialtoken_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
+--
+
+SELECT pg_catalog.setval('public.socialaccount_socialtoken_id_seq', 3, true);
+
+
+--
+-- Name: account_emailaddress account_emailaddress_email_key; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.account_emailaddress
+    ADD CONSTRAINT account_emailaddress_email_key UNIQUE (email);
+
+
+--
+-- Name: account_emailaddress account_emailaddress_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.account_emailaddress
+    ADD CONSTRAINT account_emailaddress_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_emailconfirmation account_emailconfirmation_key_key; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.account_emailconfirmation
+    ADD CONSTRAINT account_emailconfirmation_key_key UNIQUE (key);
+
+
+--
+-- Name: account_emailconfirmation account_emailconfirmation_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.account_emailconfirmation
+    ADD CONSTRAINT account_emailconfirmation_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_name_key UNIQUE (name);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_group_id_permission_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_permission_id_0cd325b0_uniq UNIQUE (group_id, permission_id);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_permission auth_permission_content_type_id_codename_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_codename_01ab375a_uniq UNIQUE (content_type_id, codename);
+
+
+--
+-- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_user_groups auth_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_user_groups auth_user_groups_user_id_group_id_94350c0c_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_user_id_group_id_94350c0c_uniq UNIQUE (user_id, group_id);
+
+
+--
+-- Name: auth_user auth_user_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user
+    ADD CONSTRAINT auth_user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_user_user_permissions auth_user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_user_user_permissions auth_user_user_permissions_user_id_permission_id_14a6b632_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_user_id_permission_id_14a6b632_uniq UNIQUE (user_id, permission_id);
+
+
+--
+-- Name: auth_user auth_user_username_key; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user
+    ADD CONSTRAINT auth_user_username_key UNIQUE (username);
+
+
+--
+-- Name: core_about core_about_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_about
+    ADD CONSTRAINT core_about_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_maincategory core_maincategory_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_maincategory
+    ADD CONSTRAINT core_maincategory_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_maincategory core_maincategory_title_28ea58c2_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_maincategory
+    ADD CONSTRAINT core_maincategory_title_28ea58c2_uniq UNIQUE (title);
+
+
+--
+-- Name: core_mediaitem_likes core_mediaitem_likes_mediaitem_id_user_id_abb76088_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitem_likes
+    ADD CONSTRAINT core_mediaitem_likes_mediaitem_id_user_id_abb76088_uniq UNIQUE (mediaitem_id, user_id);
+
+
+--
+-- Name: core_mediaitem_likes core_mediaitem_likes_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitem_likes
+    ADD CONSTRAINT core_mediaitem_likes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_mediaitem core_mediaitem_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitem
+    ADD CONSTRAINT core_mediaitem_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_mediaitem core_mediaitem_title_bb91c568_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitem
+    ADD CONSTRAINT core_mediaitem_title_bb91c568_uniq UNIQUE (title);
+
+
+--
+-- Name: core_mediaitemreview core_mediaitemreview_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitemreview
+    ADD CONSTRAINT core_mediaitemreview_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_subcategory core_subcategory_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_subcategory
+    ADD CONSTRAINT core_subcategory_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: core_subcategory core_subcategory_title_b4574e7f_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_subcategory
+    ADD CONSTRAINT core_subcategory_title_b4574e7f_uniq UNIQUE (title);
+
+
+--
+-- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_content_type django_content_type_app_label_model_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_app_label_model_76bd3d3b_uniq UNIQUE (app_label, model);
+
+
+--
+-- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_migrations
+    ADD CONSTRAINT django_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_session
+    ADD CONSTRAINT django_session_pkey PRIMARY KEY (session_key);
+
+
+--
+-- Name: django_site django_site_domain_a2e37b91_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_site
+    ADD CONSTRAINT django_site_domain_a2e37b91_uniq UNIQUE (domain);
+
+
+--
+-- Name: django_site django_site_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_site
+    ADD CONSTRAINT django_site_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: socialaccount_socialaccount socialaccount_socialaccount_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialaccount
+    ADD CONSTRAINT socialaccount_socialaccount_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: socialaccount_socialaccount socialaccount_socialaccount_provider_uid_fc810c6e_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialaccount
+    ADD CONSTRAINT socialaccount_socialaccount_provider_uid_fc810c6e_uniq UNIQUE (provider, uid);
+
+
+--
+-- Name: socialaccount_socialapp_sites socialaccount_socialapp__socialapp_id_site_id_71a9a768_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp_sites
+    ADD CONSTRAINT socialaccount_socialapp__socialapp_id_site_id_71a9a768_uniq UNIQUE (socialapp_id, site_id);
+
+
+--
+-- Name: socialaccount_socialapp socialaccount_socialapp_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp
+    ADD CONSTRAINT socialaccount_socialapp_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: socialaccount_socialapp_sites socialaccount_socialapp_sites_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp_sites
+    ADD CONSTRAINT socialaccount_socialapp_sites_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: socialaccount_socialtoken socialaccount_socialtoken_app_id_account_id_fca4e0ac_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialtoken
+    ADD CONSTRAINT socialaccount_socialtoken_app_id_account_id_fca4e0ac_uniq UNIQUE (app_id, account_id);
+
+
+--
+-- Name: socialaccount_socialtoken socialaccount_socialtoken_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialtoken
+    ADD CONSTRAINT socialaccount_socialtoken_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: account_emailaddress_email_03be32b2_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX account_emailaddress_email_03be32b2_like ON public.account_emailaddress USING btree (email varchar_pattern_ops);
+
+
+--
+-- Name: account_emailaddress_user_id_2c513194; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX account_emailaddress_user_id_2c513194 ON public.account_emailaddress USING btree (user_id);
+
+
+--
+-- Name: account_emailconfirmation_email_address_id_5b7f8c58; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX account_emailconfirmation_email_address_id_5b7f8c58 ON public.account_emailconfirmation USING btree (email_address_id);
+
+
+--
+-- Name: account_emailconfirmation_key_f43612bd_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX account_emailconfirmation_key_f43612bd_like ON public.account_emailconfirmation USING btree (key varchar_pattern_ops);
+
+
+--
+-- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX auth_group_name_a6ea08ec_like ON public.auth_group USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: auth_group_permissions_group_id_b120cbf9; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX auth_group_permissions_group_id_b120cbf9 ON public.auth_group_permissions USING btree (group_id);
+
+
+--
+-- Name: auth_group_permissions_permission_id_84c5c92e; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON public.auth_group_permissions USING btree (permission_id);
+
+
+--
+-- Name: auth_permission_content_type_id_2f476e4b; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX auth_permission_content_type_id_2f476e4b ON public.auth_permission USING btree (content_type_id);
+
+
+--
+-- Name: auth_user_groups_group_id_97559544; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX auth_user_groups_group_id_97559544 ON public.auth_user_groups USING btree (group_id);
+
+
+--
+-- Name: auth_user_groups_user_id_6a12ed8b; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX auth_user_groups_user_id_6a12ed8b ON public.auth_user_groups USING btree (user_id);
+
+
+--
+-- Name: auth_user_user_permissions_permission_id_1fbb5f2c; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX auth_user_user_permissions_permission_id_1fbb5f2c ON public.auth_user_user_permissions USING btree (permission_id);
+
+
+--
+-- Name: auth_user_user_permissions_user_id_a95ead1b; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX auth_user_user_permissions_user_id_a95ead1b ON public.auth_user_user_permissions USING btree (user_id);
+
+
+--
+-- Name: auth_user_username_6821ab7c_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX auth_user_username_6821ab7c_like ON public.auth_user USING btree (username varchar_pattern_ops);
+
+
+--
+-- Name: core_maincategory_slug_a22ff210; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_maincategory_slug_a22ff210 ON public.core_maincategory USING btree (slug);
+
+
+--
+-- Name: core_maincategory_slug_a22ff210_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_maincategory_slug_a22ff210_like ON public.core_maincategory USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: core_maincategory_title_28ea58c2_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_maincategory_title_28ea58c2_like ON public.core_maincategory USING btree (title varchar_pattern_ops);
+
+
+--
+-- Name: core_mediaitem_likes_mediaitem_id_55d433e8; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_mediaitem_likes_mediaitem_id_55d433e8 ON public.core_mediaitem_likes USING btree (mediaitem_id);
+
+
+--
+-- Name: core_mediaitem_likes_user_id_d3e6993f; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_mediaitem_likes_user_id_d3e6993f ON public.core_mediaitem_likes USING btree (user_id);
+
+
+--
+-- Name: core_mediaitem_slug_41eb649a; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_mediaitem_slug_41eb649a ON public.core_mediaitem USING btree (slug);
+
+
+--
+-- Name: core_mediaitem_slug_41eb649a_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_mediaitem_slug_41eb649a_like ON public.core_mediaitem USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: core_mediaitem_subcategory_id_bfbe9eb8; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_mediaitem_subcategory_id_bfbe9eb8 ON public.core_mediaitem USING btree (subcategory_id);
+
+
+--
+-- Name: core_mediaitem_title_bb91c568_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_mediaitem_title_bb91c568_like ON public.core_mediaitem USING btree (title varchar_pattern_ops);
+
+
+--
+-- Name: core_mediaitemreview_media_item_id_d236d440; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_mediaitemreview_media_item_id_d236d440 ON public.core_mediaitemreview USING btree (media_item_id);
+
+
+--
+-- Name: core_mediaitemreview_user_id_471ad867; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_mediaitemreview_user_id_471ad867 ON public.core_mediaitemreview USING btree (user_id);
+
+
+--
+-- Name: core_subcategory_category_id_ca17dbdb; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_subcategory_category_id_ca17dbdb ON public.core_subcategory USING btree (category_id);
+
+
+--
+-- Name: core_subcategory_slug_10630aef; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_subcategory_slug_10630aef ON public.core_subcategory USING btree (slug);
+
+
+--
+-- Name: core_subcategory_slug_10630aef_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_subcategory_slug_10630aef_like ON public.core_subcategory USING btree (slug varchar_pattern_ops);
+
+
+--
+-- Name: core_subcategory_title_b4574e7f_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_subcategory_title_b4574e7f_like ON public.core_subcategory USING btree (title varchar_pattern_ops);
+
+
+--
+-- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_log USING btree (content_type_id);
+
+
+--
+-- Name: django_admin_log_user_id_c564eba6; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
+
+
+--
+-- Name: django_session_expire_date_a5c62663; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX django_session_expire_date_a5c62663 ON public.django_session USING btree (expire_date);
+
+
+--
+-- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session USING btree (session_key varchar_pattern_ops);
+
+
+--
+-- Name: django_site_domain_a2e37b91_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX django_site_domain_a2e37b91_like ON public.django_site USING btree (domain varchar_pattern_ops);
+
+
+--
+-- Name: socialaccount_socialaccount_user_id_8146e70c; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX socialaccount_socialaccount_user_id_8146e70c ON public.socialaccount_socialaccount USING btree (user_id);
+
+
+--
+-- Name: socialaccount_socialapp_sites_site_id_2579dee5; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX socialaccount_socialapp_sites_site_id_2579dee5 ON public.socialaccount_socialapp_sites USING btree (site_id);
+
+
+--
+-- Name: socialaccount_socialapp_sites_socialapp_id_97fb6e7d; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX socialaccount_socialapp_sites_socialapp_id_97fb6e7d ON public.socialaccount_socialapp_sites USING btree (socialapp_id);
+
+
+--
+-- Name: socialaccount_socialtoken_account_id_951f210e; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX socialaccount_socialtoken_account_id_951f210e ON public.socialaccount_socialtoken USING btree (account_id);
+
+
+--
+-- Name: socialaccount_socialtoken_app_id_636a42d7; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX socialaccount_socialtoken_app_id_636a42d7 ON public.socialaccount_socialtoken USING btree (app_id);
+
+
+--
+-- Name: account_emailaddress account_emailaddress_user_id_2c513194_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.account_emailaddress
+    ADD CONSTRAINT account_emailaddress_user_id_2c513194_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: account_emailconfirmation account_emailconfirm_email_address_id_5b7f8c58_fk_account_e; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.account_emailconfirmation
+    ADD CONSTRAINT account_emailconfirm_email_address_id_5b7f8c58_fk_account_e FOREIGN KEY (email_address_id) REFERENCES public.account_emailaddress(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_group_permissions auth_group_permissio_permission_id_84c5c92e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissio_permission_id_84c5c92e_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_permission auth_permission_content_type_id_2f476e4b_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_user_groups auth_user_groups_group_id_97559544_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_group_id_97559544_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_user_groups auth_user_groups_user_id_6a12ed8b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_user_id_6a12ed8b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_user_user_permissions auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_user_user_permissions auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_mediaitem_likes core_mediaitem_likes_mediaitem_id_55d433e8_fk_core_mediaitem_id; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitem_likes
+    ADD CONSTRAINT core_mediaitem_likes_mediaitem_id_55d433e8_fk_core_mediaitem_id FOREIGN KEY (mediaitem_id) REFERENCES public.core_mediaitem(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_mediaitem_likes core_mediaitem_likes_user_id_d3e6993f_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitem_likes
+    ADD CONSTRAINT core_mediaitem_likes_user_id_d3e6993f_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_mediaitem core_mediaitem_subcategory_id_bfbe9eb8_fk_core_subcategory_id; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitem
+    ADD CONSTRAINT core_mediaitem_subcategory_id_bfbe9eb8_fk_core_subcategory_id FOREIGN KEY (subcategory_id) REFERENCES public.core_subcategory(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_mediaitemreview core_mediaitemreview_media_item_id_d236d440_fk_core_medi; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitemreview
+    ADD CONSTRAINT core_mediaitemreview_media_item_id_d236d440_fk_core_medi FOREIGN KEY (media_item_id) REFERENCES public.core_mediaitem(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_mediaitemreview core_mediaitemreview_user_id_471ad867_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitemreview
+    ADD CONSTRAINT core_mediaitemreview_user_id_471ad867_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: core_subcategory core_subcategory_category_id_ca17dbdb_fk_core_maincategory_id; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_subcategory
+    ADD CONSTRAINT core_subcategory_category_id_ca17dbdb_fk_core_maincategory_id FOREIGN KEY (category_id) REFERENCES public.core_maincategory(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_log_user_id_c564eba6_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: socialaccount_socialtoken socialaccount_social_account_id_951f210e_fk_socialacc; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialtoken
+    ADD CONSTRAINT socialaccount_social_account_id_951f210e_fk_socialacc FOREIGN KEY (account_id) REFERENCES public.socialaccount_socialaccount(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: socialaccount_socialtoken socialaccount_social_app_id_636a42d7_fk_socialacc; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialtoken
+    ADD CONSTRAINT socialaccount_social_app_id_636a42d7_fk_socialacc FOREIGN KEY (app_id) REFERENCES public.socialaccount_socialapp(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: socialaccount_socialapp_sites socialaccount_social_site_id_2579dee5_fk_django_si; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp_sites
+    ADD CONSTRAINT socialaccount_social_site_id_2579dee5_fk_django_si FOREIGN KEY (site_id) REFERENCES public.django_site(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: socialaccount_socialapp_sites socialaccount_social_socialapp_id_97fb6e7d_fk_socialacc; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialapp_sites
+    ADD CONSTRAINT socialaccount_social_socialapp_id_97fb6e7d_fk_socialacc FOREIGN KEY (socialapp_id) REFERENCES public.socialaccount_socialapp(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: socialaccount_socialaccount socialaccount_socialaccount_user_id_8146e70c_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.socialaccount_socialaccount
+    ADD CONSTRAINT socialaccount_socialaccount_user_id_8146e70c_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
