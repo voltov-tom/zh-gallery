@@ -1,5 +1,6 @@
 {% load static %}
-{% load socialaccount %}
+{% load account socialaccount %}
+{% load i18n %}
 <!DOCTYPE html>
 <html>
 
@@ -37,6 +38,21 @@
     </figure>
 </div>
 
+<div class="lang_switcher">
+    <form action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.path }}"/>
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
+        {% get_language_info_list for LANGUAGES as languages %}
+        {% for language in languages %}
+        <button name="language" value="{{ language.code }}" type="submit" class="button is-white is-small" style="padding: 0px 5px">
+            <span style="color: #ae7394;">{{ language.code }}</span>
+        </button>
+        {% endfor %}
+    </form>
+</div>
+
 <nav class="navbar" role="navigation" aria-label="main navigation">
 
     <div class="navbar-brand">
@@ -62,13 +78,13 @@
 
         <div class="navbar-item">
             <a href="{% url 'about_view' %}">
-                <button class="button is-white">ABOUT<span style="color: #ae7394;">&nbsp;ZH-GALLERY</span></button>
+                <button class="button is-white">{% trans "ABOUT" %}<span style="color: #ae7394;">&nbsp;ZH-GALLERY</span></button>
             </a>
         </div>
 
         {% if user.is_authenticated %}
             <div class="navbar-item my_account">
-                Welcome,
+                {% trans "Welcome," %}
                 <a href="{% url 'my_account_view' %}" class="button is-info is-inverted is small" style="padding: 0 5px;">
                     {{ user }}!
                 </a>
@@ -79,10 +95,10 @@
         {% else %}
             <div class="navbar-item my_account">
                 <a href="{% url 'account_login' %}" class="button is-info is-light" style="margin: 2px;">
-                    Sign In
+                    {% trans "Sign In" %}
                 </a>
                 <a href="{% url 'account_signup' %}" class="button is-info is-light" style="margin: 2px;">
-                    Sign Up
+                    {% trans "Sign Up" %}
                 </a>
             </div>
         {% endif %}
@@ -97,11 +113,11 @@
     <div class="columns">
         <div class="has-text-centered">
             <ul>
-                <li><a href="{% url 'about_view' %}">ABOUT<span style="color: #ae7394;">&nbsp;ZH-GALLERY</span></a></li>
-                <li><a href="{% url 'terms_and_conditions_view' %}">Terms and Conditions</a></li>
-                <li><a href="{% url 'privacy_policy_view' %}">Privacy Policy</a></li>
+                <li><a href="{% url 'about_view' %}">{% trans "ABOUT" %}<span style="color: #ae7394;">&nbsp;ZH-GALLERY</span></a></li>
+                <li><a href="{% url 'terms_and_conditions_view' %}">{% trans "Terms and Conditions" %}</a></li>
+                <li><a href="{% url 'privacy_policy_view' %}">{% trans "Privacy Policy" %}</a></li>
                 <li><address>e-mail: <a>zhenya@zh-gallery.ru</a></address></li>
-                <li>Social links:</li>
+                <li>{% trans "Social links" %}:</li>
             </ul>
 
             <div class="navbar-item footer-contact">
