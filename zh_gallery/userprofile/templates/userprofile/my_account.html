@@ -7,11 +7,11 @@
 
 <div class="content media_item_bottom">
     <div class="title">
-        <p style="text-align: center;">My account</p>
+        <p style="text-align: center;">{% trans "My account" %}</p>
     </div>
 
     <div class="navbar-item account_button">
-        <a class="button is-small" style="margin: 0 5px;" href="{% url 'socialaccount_connections' %}">Socialaccount</a>
+        <a class="button is-small" style="margin: 0 5px;" href="{% url 'socialaccount_connections' %}">{% trans "Socialaccount" %}</a>
         <a class="button is-small" style="margin: 0 5px;" href="{% url 'account_email' %}">E-mail</a>
         <form method="POST" action="{% url 'account_change_password' %}" class="password_change">
             {% csrf_token %}
@@ -27,9 +27,9 @@
     <div class="columns">
 
         <div id="reviews" class="column is-8">
-            <p class="subtitle" style="margin: 10px;">Your added comments:</p>
+            <p class="subtitle" style="margin: 10px;">{% trans "Your added comments" %}:</p>
 
-            <p v-if="reviews.length === 0" style="margin: 0 10px;">No reviews yet...</p>
+            <p v-if="reviews.length === 0" style="margin: 0 10px;">{% trans "No comments yet" %}...</p>
 
             <div v-for="review, index in reviews" v-bind:key="review.id" class="notification space-below review">
 
@@ -43,7 +43,7 @@
                         </figure>
                     </a>
 
-                    <span><strong>[[ review.date_added ]]</strong><i v-show="review.edited"> edited</i></span>
+                    <span><strong>[[ review.date_added ]]</strong><i v-show="review.edited"> {% trans "edited" %}</i></span>
                     <div style="margin-top: 20px;">
                         <textarea class="textarea" v-model="review.content"></textarea>
 
@@ -51,12 +51,12 @@
 
                             <a v-on:click="cancelEditReview(index)" class="button is-danger is-light"
                                style="align-self: end; margin: 14px 5px 0 0;">
-                                Cancel changes
+                                {% trans "Cancel changes" %}
                             </a>
 
                             <a v-on:click="submitEditReview(review.id, index)" class="button is-success is-light"
                                style="align-self: end; margin-top: 14px;">
-                                Submit changes
+                                {% trans "Submit changes" %}
                             </a>
 
                         </div>
@@ -78,7 +78,7 @@
                         </figure>
                     </a>
 
-                    <span><strong>[[ review.date_added ]]</strong><i v-show="review.edited"> edited</i></span>
+                    <span><strong>[[ review.date_added ]]</strong><i v-show="review.edited"> {% trans "edited" %}</i></span>
                     <div style="margin-top: 20px; padding-bottom: 10px;">
                         <p class="review_body">[[ review.content ]]</p>
                     </div>
@@ -98,7 +98,7 @@
         </div>
 
         <div class="column is-4 column_frontpage">
-            <p class="subtitle" style="margin: 10px;">Your liked items:</p>
+            <p class="subtitle" style="margin: 10px;">{% trans "Your liked items" %}:</p>
 
             {% for item in request.user.likes.all %}
 
@@ -139,7 +139,7 @@
                 </div>
             </a>
             {% empty %}
-            <p style="margin: 0 10px;">No likes yet...</p>
+            <p style="margin: 0 10px;">{% trans "No likes yet" %}...</p>
             {% endfor %}
 
         </div>

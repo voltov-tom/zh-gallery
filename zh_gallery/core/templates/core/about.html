@@ -1,11 +1,13 @@
 {% extends 'core/base.html' %}
 {% block content %}
+{% load i18n %}
 
-{% with 'About' as item %}
+{% trans 'ABOUT' as about %}
+{% with about as item %}
 {% include 'core/parts/back_button_title.html' %}
 {% endwith %}
 <div class="content about">
-    <div class="subtitle">Some info about zh-gallery:</div>
+    <div class="subtitle">{% trans 'Some info about zh-gallery' %}:</div>
     <div class="columns">
         <div class="column is-9">{{ description.body }}</div>
         {% if description.image %}

@@ -1,6 +1,7 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% load socialaccount %}
+{% load i18n %}
 
 {% block content %}
 
@@ -45,31 +46,28 @@
         <div class="notification is-warning is-light" v-if="unauthMessage">
             <button v-on:click="unauthMessage = !unauthMessage" class="delete"></button>
             <p>
-                Please
-                <a href="{% url 'account_login' %}?next={{ request.path }}">
-                    <strong>log in</strong>
-                </a>
-                to like
+                {% url 'account_login' as account_login %}
+                {% blocktranslate with request.path as request_path %}Please <a href='{{ account_login }}?next={{ request_path }}'><strong>log in</strong></a> to like{% endblocktranslate %}
             </p>
         </div>
         <div class="content" style="padding: 0 15px;">{{ media_item.description }}</div>
 
-        <h2 class="subtitle" style="padding: 0 15px;">Reviews</h2>
+        <h2 class="subtitle" style="padding: 0 15px;">{% trans "Comments" %}</h2>
         <div class="reviews-wrapper">
             {% for review in media_item.reviews.all %}
             <div class="notification space-below review">
                 <p>
-                    <strong>User: </strong>{{ review.user }},
-                    <strong>Date: </strong>{{ review.date_added|date:"d.m.Y" }}
+                    <strong>{% trans "User" %}: </strong>{{ review.user }},
+                    <strong>{% trans "Date" %}: </strong>{{ review.date_added|date:"d.m.Y" }}
                     {% if review.edited %}
-                        <span><i> edited</i></span>
+                    <span><i>{% trans "edited" %}</i></span>
                     {% endif %}
                 </p>
                 {{ review.content }}
             </div>
             {% empty %}
             <div class="notification space-below">
-                No reviews yet.
+                {% trans "No comments yet" %}.
             </div>
             {% endfor %}
         </div>
@@ -79,14 +77,14 @@
             <form method="post" action=".">
                 {% csrf_token %}
                 <div class="field">
-                    <label>Leave the comment:</label>
+                    <label>{% trans "Leave the comment" %}:</label>
                     <div class="control">
                         <textarea class="textarea" name="content"></textarea>
                     </div>
                 </div>
                 <div class="field">
                     <div class="control">
-                        <button class="button is-success">Submit</button>
+                        <button class="button is-success">{% trans "Submit" %}</button>
                     </div>
                 </div>
             </form>
@@ -96,11 +94,7 @@
 
         <article class="message is-dark" style="margin: 24px 0;">
             <div class="message-body">
-                Please
-                <a href="{% url 'account_login' %}?next={{ request.path }}">
-                    <strong>log in</strong>
-                </a>
-                to leave a comment
+                {% blocktranslate with request.path as request_path %}Please <a href='{{ account_login }}?next={{ request_path }}'><strong>log in</strong></a> to leave a comment{% endblocktranslate %}
             </div>
         </article>
         {% endif %}
