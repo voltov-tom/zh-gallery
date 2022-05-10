@@ -1,21 +1,27 @@
 from django.contrib import admin
+from modeltranslation.admin import TranslationAdmin
+
 from .models import MainCategory, MediaItem, SubCategory, MediaItemReview, About
 
 
-@admin.register(MainCategory)
-class MainCategoryAdmin(admin.ModelAdmin):
-    exclude = ('slug',)
+class MainCategoryAdmin(TranslationAdmin):
+    pass
 
 
-@admin.register(SubCategory)
-class SubCategoryAdmin(admin.ModelAdmin):
-    exclude = ('slug',)
+class SubCategoryAdmin(TranslationAdmin):
+    pass
 
 
-@admin.register(MediaItem)
-class MediaItemAdmin(admin.ModelAdmin):
-    exclude = ('slug',)
+class MediaItemAdmin(TranslationAdmin):
+    pass
+
+
+class AboutAdmin(TranslationAdmin):
+    pass
 
 
 admin.site.register(MediaItemReview)
-admin.site.register(About)
+admin.site.register(About, AboutAdmin)
+admin.site.register(MainCategory, MainCategoryAdmin)
+admin.site.register(SubCategory, SubCategoryAdmin)
+admin.site.register(MediaItem, MediaItemAdmin)

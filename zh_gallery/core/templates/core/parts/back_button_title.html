@@ -5,16 +5,16 @@
             {% if item.likes %}
                 <a href="{{ item.subcategory.get_absolute_url }}"
                    class="button is-danger is-inverted" type="button">
-                    <ion-icon name="arrow-back-outline"></ion-icon>
+                    <ion-icon name="return-up-back-outline"></ion-icon>
                 </a>
             {% elif item.category %}
                 <a href="{{ item.category.get_absolute_url }}"
                     class="button is-danger is-inverted" type="button">
-                    <ion-icon name="arrow-back-outline"></ion-icon>
+                    <ion-icon name="return-up-back-outline"></ion-icon>
                 </a>
             {% else %}
                 <a href="/" class="button is-danger is-inverted" type="button">
-                    <ion-icon name="arrow-back-outline"></ion-icon>
+                    <ion-icon name="return-up-back-outline"></ion-icon>
                 </a>
             {% endif %}
         </form>

@@ -1,7 +1,7 @@
 {% extends 'core/base.html' %}
-{% block content %}
 {% load static %}
-
+{% load i18n %}
+{% block content %}
 <div style="margin-bottom: 24px;">
     <figure class="image">
         <img src="{% static '/core/images/main.JPG' %}">
@@ -12,7 +12,7 @@
     <div class="columns">
 
         <div class="column is-8">
-            <p style="margin: 0 10px;">Last added comments:</p>
+            <p style="margin: 0 10px;">{% trans "Last added comments" %}:</p>
 
             {% for review in last_reviews %}
             <div class="notification space-below review">
@@ -42,7 +42,7 @@
         </div>
 
         <div class="column is-4 column_frontpage">
-            <p style="margin: 0 10px;">Last liked items:</p>
+            <p style="margin: 0 10px;">{% trans "Last liked items" %}:</p>
 
             {% for item in last_liked_items %}
 

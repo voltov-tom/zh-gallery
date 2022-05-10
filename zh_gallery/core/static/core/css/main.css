@@ -204,3 +204,9 @@
             align-items: center;
         }
     }
+
+.lang_switcher {
+    position: absolute;
+    top: 1%;
+    right: 1%;
+}

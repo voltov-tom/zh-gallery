@@ -104,3 +104,9 @@ class MediaItemReview(models.Model):
 class About(models.Model):
     body = models.TextField(null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
+
+    class Meta:
+        verbose_name_plural = 'About'
+
+    def __str__(self):
+        return 'About'

@@ -16,15 +16,15 @@
         {% endfor %}
 
     {% endif %}
+    {% if provider.name == 'Google' %}
         <div>
-            <a title="{{ provider.name }}" class="socialaccount_provider {{ provider.id }} media_href"
-            href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
-            {% if provider.name == 'Google' %}
-                <figure class="image is-24x24">
+            <figure class="image is-24x24" style="margin: 20px">
+                <a title="{{ provider.name }}" class="socialaccount_provider {{ provider.id }} media_href"
+                href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
                     <img alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/512px-Google_%22G%22_Logo.svg.png">
-                </figure>
-            {% endif %}
-            </a>
+                </a>
+            </figure>
         </div>
+    {% endif %}
 
 {% endfor %}
