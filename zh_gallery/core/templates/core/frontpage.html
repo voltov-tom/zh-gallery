@@ -15,26 +15,29 @@
             <p style="margin: 0 10px;">{% trans "Last added comments" %}:</p>
 
             {% for review in last_reviews %}
-            <div class="notification space-below review">
-                <p class="has-text-centered"><strong>{{ review.media_item.title }}</strong></p>
+            <div class="notification" style="display: flex; min-width: 100%;">
+                <div style="display: inline-flex; justify-content: center;">
 
-                <a href="{{ review.media_item.get_absolute_url }}">
-                    <figure class="image is-64x64" style="margin: auto;">
-                        {% if review.media_item.image %}
-                        <img src="{{ review.media_item.image.url }}">
-                        {% else %}
-                        <img src="{% static 'core/images/no_photo.jpeg' %}">
+                    <a href="{{ review.media_item.get_absolute_url }}">
+                        <figure class="image is-128x128" style="display: flex; justify-content: center; margin: auto; min-width: 128px; height: auto;">
+                            {% if review.media_item.image %}
+                            <img src="{{ review.media_item.image.url }}" style="justify-content: center;">
+                            {% else %}
+                            <img src="{% static 'core/images/no_photo.jpeg' %}">
+                            {% endif %}
+                        </figure>
+                    </a>
+
+                    <div style="margin: 0 20px;">
+                        <strong>{{ review.media_item.title }}</strong>
+                        <br>
+                        <strong>{{ review.user }}</strong>
+                        {{ review.date_added|date:"H:i d.m.y" }}
+                        {% if review.edited %}
+                            <span><i> edited</i></span>
                         {% endif %}
-                    </figure>
-                </a>
-
-                <div style="margin-top: 20px; padding-bottom: 10px;">
-                    <strong>{{ review.user }}</strong>
-                    {{ review.date_added|date:"H:i d.m.y" }}
-                    {% if review.edited %}
-                        <span><i> edited</i></span>
-                    {% endif %}
-                    <p class="review_body">{{ review.content }}</p>
+                        <p class="review_body">{{ review.content }}</p>
+                    </div>
                 </div>
             </div>
             {% endfor %}
@@ -51,8 +54,8 @@
                     <div class="card-content" style="padding: 0;">
                         <div class="media" style="align-items: center;">
 
-                            <div class="media-left" style="align-items: center;">
-                                <figure class="image is-48x48">
+                            <div class="media-left">
+                                <figure class="image is-64x64" style="margin-top: 5px; margin-bottom: 5px; display: flex; justify-content: center; height: auto;">
                                     {% if item.image %}
                                     <img src="{{ item.image.url }}">
                                     {% else %}

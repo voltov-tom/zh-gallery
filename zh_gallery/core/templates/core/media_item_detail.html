@@ -10,8 +10,8 @@
 {% endwith %}
 
 <div id="vue">
-    <div class="content">
-        <figure class="image">
+    <div class="content" style="display: flex;">
+        <figure style="height: auto; max-width: 720px; margin-left: auto; margin-right: auto;">
             {% if media_item.image %}
             <img src="{{ media_item.image.url }}">
             {% else %}
@@ -57,8 +57,8 @@
             {% for review in media_item.reviews.all %}
             <div class="notification space-below review">
                 <p>
-                    <strong>{% trans "User" %}: </strong>{{ review.user }},
-                    <strong>{% trans "Date" %}: </strong>{{ review.date_added|date:"d.m.Y" }}
+                    <strong>{{ review.user }}</strong>
+                    {{ review.date_added|date:"d.m.Y" }}
                     {% if review.edited %}
                     <span><i>{% trans "edited" %}</i></span>
                     {% endif %}
