@@ -40,6 +40,7 @@ def category_view(request, slug):
 
     views = {}
     likes = {}
+    reviews = {}
 
     for sub in subcategories:
         media_items = MediaItem.objects.filter(subcategory=sub)
@@ -54,11 +55,19 @@ def category_view(request, slug):
                 category_likes += 1
         likes[sub] = category_likes
 
+        category_query = media_items.values_list('reviews', flat=True)
+        category_reviews = 0
+        for i in category_query:
+            if i is not None:
+                category_reviews += 1
+        reviews[sub] = category_reviews
+
     content = {
         'category': category,
         'subcategories': subcategories,
         'views': views,
-        'likes': likes
+        'likes': likes,
+        'reviews': reviews
     }
     return render(request, 'core/category_detail.html', content)
 
