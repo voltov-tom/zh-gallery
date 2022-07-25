@@ -25,11 +25,14 @@
 
                     <span class="icon-text views_likes">
                         <span class="icon">
+                            <ion-icon name="reader-outline"></ion-icon>
+                        </span>
+                        <span>{{ reviews|get_value:subcategory }}</span>
+
+                        <span class="icon">
                             <ion-icon name="eye-outline"></ion-icon>
                         </span>
-                        <span>
-                            {{ views|get_value:subcategory }}
-                        </span>
+                        <span>{{ views|get_value:subcategory }}</span>
 
                         <span class="icon">
                             <ion-icon name="heart-outline"></ion-icon>
