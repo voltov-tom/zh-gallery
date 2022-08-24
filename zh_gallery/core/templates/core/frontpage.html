@@ -15,7 +15,7 @@
             <p style="margin: 0 10px;">{% trans "Last added comments" %}:</p>
 
             {% for review in last_reviews %}
-            <div class="notification" style="display: flex; min-width: 100%;">
+            <div class="notification" style="display: flex; min-width: 100%; padding-right: 0px;">
                 <div style="display: inline-flex; justify-content: center;">
 
                     <a href="{{ review.media_item.get_absolute_url }}">
