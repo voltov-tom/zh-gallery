@@ -164,6 +164,7 @@
 
 .review_body {
     margin-bottom: 25px;
+    text-align: justify;
     overflow: hidden;
     text-overflow: ellipsis;
     -webkit-line-clamp: 4;
