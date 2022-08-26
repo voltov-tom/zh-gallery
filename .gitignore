@@ -55,3 +55,4 @@ docs/_build/
 /venv/
 .idea/
 /zh_gallery/.idea/
+/zh_gallery/zh_gallery/local_dev.py
