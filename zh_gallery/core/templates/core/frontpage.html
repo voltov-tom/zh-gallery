@@ -29,13 +29,14 @@
                     </a>
 
                     <div style="margin: 0 20px;">
-                        <strong>{{ review.media_item.title }}</strong>
+                        <strong style="font-size: 20px;">{{ review.media_item.title }}</strong>
                         <br>
-                        <strong>{{ review.user }}</strong>
+                        <p>{{ review.user }}
                         {{ review.date_added|date:"H:i d.m.y" }}
                         {% if review.edited %}
                             <span><i> edited</i></span>
                         {% endif %}
+                        </p>
                         <p class="review_body">{{ review.content }}</p>
                     </div>
 
