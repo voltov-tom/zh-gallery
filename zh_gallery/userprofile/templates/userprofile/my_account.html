@@ -249,7 +249,6 @@ var vue = new Vue({
             .then(response => response.json())
             .then(data => {
                 if (data.success == true) {
-                    console.log('element review_id_' + review_id + ' was deleted'),
                     this.reviews.splice(index, 1);
                 } else {
                     console.log(response.data)
