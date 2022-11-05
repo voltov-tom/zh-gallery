@@ -31,7 +31,7 @@
                     <div style="margin: 0 20px;">
                         <strong style="font-size: 20px;">{{ review.media_item.title }}</strong>
                         <br>
-                        <p>{{ review.user }}
+                        <p><a href="/accounts/{{ review.user }}">{{ review.user }}</a>
                         {{ review.date_added|date:"H:i d.m.y" }}
                         {% if review.edited %}
                             <span><i> edited</i></span>
