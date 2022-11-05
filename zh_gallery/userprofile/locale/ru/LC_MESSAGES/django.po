@@ -42,4 +42,10 @@ msgid "Your liked items"
 msgstr "Ваши лайки"
 
 msgid "No likes yet"
-msgstr "Вы пока ничего не лайкали"
+msgstr "Пока нет лайков"
+
+msgid "Total user's liked items"
+msgstr "Всего лайков пользователя"
+
+msgid "Total user's comments"
+msgstr "Всего комментариев пользователя"

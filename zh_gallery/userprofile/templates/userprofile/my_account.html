@@ -27,7 +27,7 @@
     <div class="columns">
 
         <div id="reviews" class="column is-8">
-            <p class="subtitle" style="margin: 10px;">{% trans "Your added comments" %}:</p>
+            <p class="subtitle" style="margin: 10px;">{% trans "Your added comments" %}: {{ context.reviews_count }}</p>
 
             <p v-if="reviews.length === 0" style="margin: 0 10px;">{% trans "No comments yet" %}...</p>
 
@@ -83,13 +83,11 @@
                         <p class="review_body">[[ review.content ]]</p>
                     </div>
 
-                    <a v-on:click="deleteReview(review.id, index)"
-                       style="position: absolute; right: 0.5rem; top: 0.5rem;">
+                    <a v-on:click="deleteReview(review.id, index)" style="position: absolute; right: 0.5rem; top: 0.5rem;">
                         <button class="delete"></button>
                     </a>
 
-                    <a v-on:click="showEditReview(index)"
-                       style="position: absolute; right: 0.5rem; bottom: 0.5rem;">
+                    <a v-on:click="showEditReview(index)" style="position: absolute; right: 0.5rem; bottom: 0.5rem;">
                         <ion-icon name="create-outline"></ion-icon>
                     </a>
                 </div>
@@ -98,7 +96,7 @@
         </div>
 
         <div class="column is-4 column_frontpage">
-            <p class="subtitle" style="margin: 10px;">{% trans "Your liked items" %}:</p>
+            <p class="subtitle" style="margin: 10px;">{% trans "Your liked items" %}: {{ context.likes_count }}</p>
 
             {% for item in request.user.likes.all %}
 
@@ -126,10 +124,9 @@
                                         <ion-icon name="eye-outline"></ion-icon>
                                     </span>
                                     <span>{{ item.views }}</span>
-
-                                    <figure class="icon image is-16x16" style="margin: 1px;">
-                                        <img src="{% static 'core/images/dislike-pink.PNG' %}" alt="dislike">
-                                    </figure>
+                                    <span class="icon">
+                                        <ion-icon name="heart-outline"></ion-icon>
+                                    </span>
                                     <span>{{ item.total_likes }}</span>
                                 </span>
                             </div>

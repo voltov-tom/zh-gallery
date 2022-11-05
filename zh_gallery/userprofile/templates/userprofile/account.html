@@ -1,0 +1,141 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load socialaccount %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="content media_item_bottom">
+    <div class="title">
+        <p style="text-align: center;">{{ context.username }}</p>
+    </div>
+
+    <div class="columns">
+
+        <div id="reviews" class="column is-8">
+            <p class="subtitle" style="margin: 10px;">{% trans "Total user's comments" %}: {{ context.reviews_count }}</p>
+
+            <p v-if="reviews.length === 0" style="margin: 0 10px;">{% trans "No comments yet" %}...</p>
+
+            <div v-for="review, index in reviews" v-bind:key="review.id" class="notification space-below review">
+
+                <div v-show="review.editReview">
+                    <p class="has-text-centered"><strong>[[ review.media_item_title ]]</strong></p>
+
+                    <a :href="review.media_item_url">
+                        <figure class="image is-64x64" style="margin: auto;">
+                            <img v-if="review.media_item_img" :src="review.media_item_img">
+                            <img v-else src="{% static 'core/images/no_photo.jpeg' %}">
+                        </figure>
+                    </a>
+
+                    <span><strong>[[ review.date_added ]]</strong><i v-show="review.edited"> {% trans "edited" %}</i></span>
+                    <div style="margin-top: 20px;">
+                        <textarea class="textarea" v-model="review.content"></textarea>
+                    </div>
+
+                </div>
+
+                <div v-show="review.showContent">
+                    <p class="has-text-centered"><strong>[[ review.media_item_title ]]</strong></p>
+
+                    <a :href="review.media_item_url">
+                        <figure class="image is-64x64" style="margin: auto;">
+                            <img v-if="review.media_item_img" :src="review.media_item_img">
+                            <img v-else src="{% static 'core/images/no_photo.jpeg' %}">
+                        </figure>
+                    </a>
+
+                    <span><strong>[[ review.date_added ]]</strong><i v-show="review.edited"> {% trans "edited" %}</i></span>
+                    <div style="margin-top: 20px; padding-bottom: 10px;">
+                        <p class="review_body">[[ review.content ]]</p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="column is-4 column_frontpage">
+            <p class="subtitle" style="margin: 10px;">{% trans "Total user's liked items" %}: {{ context.likes_count }}</p>
+
+            {% for item in context.user_likes %}
+
+            <a href="{{ item.get_absolute_url }}" style="width: 100%;">
+                <div class="card" style=" margin-bottom: 10px;">
+                    <div class="card-content" style="padding: 0;">
+                        <div class="media" style="align-items: center;">
+
+                            <div class="media-left" style="align-items: center;">
+                                <figure class="image is-48x48">
+                                    {% if item.image %}
+                                    <img src="{{ item.image.url }}">
+                                    {% else %}
+                                    <img src="{% static 'core/images/no_photo.jpeg' %}">
+                                    {% endif %}
+                                </figure>
+                            </div>
+
+                            <div class="media-content">
+                                <p class="title is-4" style="padding: 5px;">{{ item.title }}</p>
+                                <p class="subtitle is-6" style="padding: 5px;">{{ item.subcategory }}</p>
+
+                                <span class="icon-text views_likes">
+                                    <span class="icon">
+                                        <ion-icon name="eye-outline"></ion-icon>
+                                    </span>
+                                    <span>{{ item.views }}</span>
+                                    <span class="icon">
+                                        <ion-icon name="heart-outline"></ion-icon>
+                                    </span>
+                                    <span>{{ item.total_likes }}</span>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% empty %}
+            <p style="margin: 0 10px;">{% trans "No likes yet" %}...</p>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+
+<script>
+
+Vue.config.ignoredElements = [/^ion-/]
+
+var vue = new Vue({
+    el: '#reviews',
+    delimiters: ['[[', ']]'],
+    data() {
+        return {
+            reviews: {{ reviews_data|safe }},
+            savedContent: ''
+        }
+    },
+
+    created(){
+        this.prepareList();
+    },
+
+    methods: {
+        prepareList() {
+            for (var i = 0; i < this.reviews.length; i++) {
+                Vue.set(this.reviews[i], 'editReview', false),
+                Vue.set(this.reviews[i], 'showContent', true)
+            };
+        }
+    }
+})
+
+</script>
+
+{% endblock scripts %}

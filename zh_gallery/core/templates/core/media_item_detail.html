@@ -57,7 +57,7 @@
             {% for review in media_item.reviews.all %}
             <div class="notification space-below review">
                 <p>
-                    <strong>{{ review.user }}</strong>
+                    <strong><a href="/accounts/{{ review.user }}">{{ review.user }}</a></strong>
                     {{ review.date_added|date:"d.m.Y" }}
                     {% if review.edited %}
                     <span><i>{% trans "edited" %}</i></span>
