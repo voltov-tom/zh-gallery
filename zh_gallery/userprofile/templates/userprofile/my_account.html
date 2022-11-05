@@ -31,35 +31,36 @@
 
             <p v-if="reviews.length === 0" style="margin: 0 10px;">{% trans "No comments yet" %}...</p>
 
-            <div v-for="review, index in reviews" v-bind:key="review.id" class="notification space-below review">
+            <div v-for="review, index in reviews" v-bind:key="review.id" class="notification" style="display: flex; min-width: 100%; padding-right: 0px;">
 
-                <div v-show="review.editReview">
-                    <p class="has-text-centered"><strong>[[ review.media_item_title ]]</strong></p>
+                <div v-show="review.editReview" style="display: inline-flex; justify-content: center;">
 
                     <a :href="review.media_item_url">
-                        <figure class="image is-64x64" style="margin: auto;">
-                            <img v-if="review.media_item_img" :src="review.media_item_img">
-                            <img v-else src="{% static 'core/images/no_photo.jpeg' %}">
+                        <figure class="image is-128x128" style="display: flex; justify-content: center; margin: auto; min-width: 128px; height: auto;">
+                            <img v-if="review.media_item_img" :src="review.media_item_img" style="justify-content: center;">
+                            <img v-else src="{% static 'core/images/no_photo.jpeg' %}" style="justify-content: center;">
                         </figure>
                     </a>
 
-                    <span><strong>[[ review.date_added ]]</strong><i v-show="review.edited"> {% trans "edited" %}</i></span>
-                    <div style="margin-top: 20px;">
-                        <textarea class="textarea" v-model="review.content"></textarea>
+                    <div style="margin: 0 20px;">
+                        <strong style="font-size: 20px;">[[ review.media_item_title ]]</strong>
+                        <br>
+                        <p>
+                            [[ review.date_added ]]
+                            <span v-show="review.edited"><i> {% trans "edited" %}</i></span>
+                        </p>
 
-                        <div style="display: flex; justify-content: flex-end;">
+                        <textarea rows="4" style="min-width: 100%; resize: vertical; font-size: 1em; padding: 4px;" v-model="review.content"></textarea>
 
-                            <a v-on:click="cancelEditReview(index)" class="button is-danger is-light"
-                               style="align-self: end; margin: 14px 5px 0 0;">
-                                {% trans "Cancel changes" %}
-                            </a>
+                        <a v-on:click="submitEditReview(review.id, index)" class="button is-success is-light"
+                           style="align-self: end; margin-top: 14px;">
+                            {% trans "Submit changes" %}
+                        </a>
 
-                            <a v-on:click="submitEditReview(review.id, index)" class="button is-success is-light"
-                               style="align-self: end; margin-top: 14px;">
-                                {% trans "Submit changes" %}
-                            </a>
-
-                        </div>
+                        <a v-on:click="cancelEditReview(index)" class="button is-danger is-light"
+                           style="align-self: end; margin: 14px 5px 0 0;">
+                            {% trans "Cancel changes" %}
+                        </a>
                     </div>
 
                     <a v-on:click="deleteReview(review.id, index)"
@@ -68,18 +69,22 @@
                     </a>
                 </div>
 
-                <div v-show="review.showContent">
-                    <p class="has-text-centered"><strong>[[ review.media_item_title ]]</strong></p>
+                <div v-show="review.showContent" style="display: inline-flex; justify-content: center;">
 
                     <a :href="review.media_item_url">
-                        <figure class="image is-64x64" style="margin: auto;">
-                            <img v-if="review.media_item_img" :src="review.media_item_img">
-                            <img v-else src="{% static 'core/images/no_photo.jpeg' %}">
+                        <figure class="image is-128x128" style="display: flex; justify-content: center; margin: auto; min-width: 128px; height: auto;">
+                            <img v-if="review.media_item_img" :src="review.media_item_img" style="justify-content: center;">
+                            <img v-else src="{% static 'core/images/no_photo.jpeg' %}" style="justify-content: center;">
                         </figure>
                     </a>
 
-                    <span><strong>[[ review.date_added ]]</strong><i v-show="review.edited"> {% trans "edited" %}</i></span>
-                    <div style="margin-top: 20px; padding-bottom: 10px;">
+                    <div style="margin: 0 20px;">
+                        <strong style="font-size: 20px;">[[ review.media_item_title ]]</strong>
+                        <br>
+                        <p>
+                            [[ review.date_added ]]
+                            <span v-show="review.edited"><i> {% trans "edited" %}</i></span>
+                        </p>
                         <p class="review_body">[[ review.content ]]</p>
                     </div>
 
@@ -88,7 +93,7 @@
                     </a>
 
                     <a v-on:click="showEditReview(index)" style="position: absolute; right: 0.5rem; bottom: 0.5rem;">
-                        <ion-icon name="create-outline"></ion-icon>
+                        <ion-icon fill="currentColor" style="color: #ae7394;" name="create-outline"></ion-icon>
                     </a>
                 </div>
 
@@ -105,8 +110,8 @@
                     <div class="card-content" style="padding: 0;">
                         <div class="media" style="align-items: center;">
 
-                            <div class="media-left" style="align-items: center;">
-                                <figure class="image is-48x48">
+                            <div class="media-left">
+                                <figure class="image is-64x64" style="margin-top: 5px; margin-bottom: 5px; display: flex; justify-content: center; height: auto;">
                                     {% if item.image %}
                                     <img src="{{ item.image.url }}">
                                     {% else %}
@@ -116,16 +121,22 @@
                             </div>
 
                             <div class="media-content">
-                                <p class="title is-4" style="padding: 5px;">{{ item.title }}</p>
-                                <p class="subtitle is-6" style="padding: 5px;">{{ item.subcategory }}</p>
+                                <p class="title is-6" style="padding: 5px;">{{ item.title }}</p>
+                                <p class="subtitle is-7" style="padding: 5px;">{{ item.subcategory }}</p>
 
                                 <span class="icon-text views_likes">
                                     <span class="icon">
-                                        <ion-icon name="eye-outline"></ion-icon>
+                                        <ion-icon fill="currentColor" style="color: #ae7394;" name="reader-outline"></ion-icon>
+                                    </span>
+                                    <span>{{ item.reviews.all.count }}</span>
+
+                                    <span class="icon">
+                                        <ion-icon fill="currentColor" style="color: #ae7394;" name="eye-outline"></ion-icon>
                                     </span>
                                     <span>{{ item.views }}</span>
+
                                     <span class="icon">
-                                        <ion-icon name="heart-outline"></ion-icon>
+                                        <ion-icon fill="currentColor" style="color: #ae7394;" name="heart"></ion-icon>
                                     </span>
                                     <span>{{ item.total_likes }}</span>
                                 </span>
