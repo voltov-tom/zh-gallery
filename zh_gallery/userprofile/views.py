@@ -1,6 +1,6 @@
 import json
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
@@ -38,6 +38,9 @@ def my_account(request):
 
 
 def account(request, user_name):
+    if str(request.user) == user_name:
+        return redirect(my_account)
+
     user = get_object_or_404(User, username=user_name)
     reviews_data = []
 
