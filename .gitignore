@@ -1,3 +1,4 @@
+*.sql
 ../venv
 /zh_gallery/static
 
