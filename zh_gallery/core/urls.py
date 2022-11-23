@@ -2,6 +2,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import path
 
 from .sitemaps import StaticViewSitemap, SubCategorySitemap, MainCategorySitemap
+from .telegram_bot_api import telegram_bot_get_media_item
 from .views import frontpage_view, about_view, terms_and_conditions_view, privacy_policy_view, category_view, \
     subcategory_view, media_item_view
 from .api import like_button, delete_review, edit_review
@@ -23,6 +24,8 @@ urlpatterns = [
     path('api/like/', like_button, name='like_button'),
     path('api/delete-review/', delete_review, name='delete_review'),
     path('api/edit-review/', edit_review, name='edit_review'),
+
+    path('api/telegram_bot/get_media_item/<str:media_item_name>', telegram_bot_get_media_item, name='telegram_bot_get_media_item'),
 
     path('<slug:slug>/', category_view, name='category_view'),
     path('<slug:category_slug>/<slug:slug>/', subcategory_view, name='subcategory_view'),
