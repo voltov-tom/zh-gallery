@@ -15,7 +15,38 @@ def frontpage_view(request):
     last_reviews = MediaItemReview.objects.all()[:10]
     last_liked_items = MediaItem.objects.all().order_by('-like_time')[:10]
 
+    category = get_object_or_404(MainCategory, slug='galleries')
+    subcategories = SubCategory.objects.filter(category=category)
+
+    views = {}
+    likes = {}
+    reviews = {}
+
+    for sub in subcategories:
+        media_items = MediaItem.objects.filter(subcategory=sub)
+
+        category_views = sum(media_items.values_list('views', flat=True))
+        views[sub] = category_views
+
+        category_query = media_items.values_list('likes', flat=True)
+        category_likes = 0
+        for i in category_query:
+            if i is not None:
+                category_likes += 1
+        likes[sub] = category_likes
+
+        category_query = media_items.values_list('reviews', flat=True)
+        category_reviews = 0
+        for i in category_query:
+            if i is not None:
+                category_reviews += 1
+        reviews[sub] = category_reviews
+
     context = {
+        'subcategories': subcategories,
+        'views': views,
+        'likes': likes,
+        'reviews': reviews,
         'last_reviews': last_reviews,
         'last_liked_items': last_liked_items
     }
@@ -86,14 +117,15 @@ def media_item_view(request, category_slug, subcategory_slug, slug):
     media_item = get_object_or_404(MediaItem, slug=slug)
     media_item.views += 1
     media_item.save()
-
+    # TODO add JS form
     if request.method == 'POST' and request.user.is_authenticated:
         content = request.POST.get('content', '')
-        MediaItemReview.objects.create(
-            user=request.user,
-            media_item=media_item,
-            content=content
-        )
+        if content.replace(' ', '') != '':
+            MediaItemReview.objects.create(
+                user=request.user,
+                media_item=media_item,
+                content=content
+            )
 
         return redirect(
             'media_item_view',

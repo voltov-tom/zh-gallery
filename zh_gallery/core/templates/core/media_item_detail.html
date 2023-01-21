@@ -77,9 +77,10 @@
             <form method="post" action=".">
                 {% csrf_token %}
                 <div class="field">
-                    <label>{% trans "Leave the comment" %}:</label>
                     <div class="control">
-                        <textarea class="textarea" name="content"></textarea>
+                        <textarea required="true" placeholder="{% trans 'Leave the comment' %}:"
+                            class="textarea" name="content">
+                        </textarea>
                     </div>
                 </div>
                 <div class="field">

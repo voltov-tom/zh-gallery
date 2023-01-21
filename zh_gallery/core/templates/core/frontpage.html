@@ -3,20 +3,40 @@
 {% load i18n %}
 {% block content %}
 <div style="margin-bottom: 24px;">
-    <figure class="image">
+    <figure class="image-logo">
         <img src="{% static '/core/images/main.JPG' %}">
     </figure>
 </div>
 
 <div class="content media_item_bottom">
     <div class="columns">
+        <div class="columns is-multiline detail">
+            {% for subcategory in subcategories %}
+            <div class="column is-4" style="padding: 0;">
 
+                    <a class="media_href" href="{{ subcategory.get_absolute_url }}">
+                        <div class="subtitle has-text-centered" style="margin: 0;">{{ subcategory.title }}</div>
+                        <figure class="image front_media_href" style="margin: 2px;">
+                            {% if subcategory.image %}
+                            <img src="{{ subcategory.image.url }}" style="max-width: auto; max-height: 128px; object-fit: cover;">
+                            {% else %}
+                            <img src="{% static 'core/images/no_photo.jpeg' %}">
+                            {% endif %}
+                        </figure>
+                    </a>
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="columns">
         <div class="column is-8">
-            <p style="margin: 0 10px;">{% trans "Last added comments" %}:</p>
 
+            <p style="margin: 0 10px;">{% trans "Last added comments" %}:</p>
             {% for review in last_reviews %}
             <div class="notification" style="display: flex; min-width: 100%; padding-right: 0px;">
-                <div style="display: inline-flex; justify-content: center;">
+                <div style="display: inline-flex; justify-content: center; align-items: center;">
 
                     <a href="{{ review.media_item.get_absolute_url }}">
                         <figure class="image is-128x128" style="display: flex; justify-content: center; margin: auto; min-width: 128px; height: auto;">
@@ -74,7 +94,7 @@
                         <div class="media" style="align-items: center;">
 
                             <div class="media-left">
-                                <figure class="image is-64x64" style="margin-top: 5px; margin-bottom: 5px; display: flex; justify-content: center; height: auto;">
+                                <figure class="image is-64x64" style="margin: 10px; display: flex; justify-content: center; height: auto;">
                                     {% if item.image %}
                                     <img src="{{ item.image.url }}">
                                     {% else %}
