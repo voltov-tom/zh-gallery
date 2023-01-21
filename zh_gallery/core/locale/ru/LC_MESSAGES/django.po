@@ -48,7 +48,7 @@ msgid "edited"
 msgstr "изменено"
 
 msgid "Leave the comment"
-msgstr "Оставте комментарий"
+msgstr "Оставьте комментарий"
 
 msgid "Comments"
 msgstr "Комментарии"

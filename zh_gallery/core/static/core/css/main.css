@@ -2,6 +2,9 @@
     display: flex;
     justify-content: center;
 }
+.image:hover{
+    opacity: .6;
+}
 
 .footer-contact {
     display: flex;
@@ -76,6 +79,9 @@
 .media_href {
     text-decoration: none;
     color: inherit;
+}
+.front_media_href:hover {
+    opacity: .6;
 }
 
 .preloader {
