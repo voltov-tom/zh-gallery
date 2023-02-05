@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 12.9 (Ubuntu 12.9-0ubuntu0.20.04.1)
--- Dumped by pg_dump version 12.9 (Ubuntu 12.9-0ubuntu0.20.04.1)
+-- Dumped from database version 12.12 (Ubuntu 12.12-0ubuntu0.20.04.1)
+-- Dumped by pg_dump version 12.12 (Ubuntu 12.12-0ubuntu0.20.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -316,7 +316,9 @@ ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_use
 CREATE TABLE public.core_about (
     id bigint NOT NULL,
     body text,
-    image character varying(100)
+    image character varying(100),
+    body_en text,
+    body_ru text
 );
 
 
@@ -350,7 +352,9 @@ ALTER SEQUENCE public.core_about_id_seq OWNED BY public.core_about.id;
 CREATE TABLE public.core_maincategory (
     id bigint NOT NULL,
     title character varying(255) NOT NULL,
-    slug character varying(255) NOT NULL
+    slug character varying(255) NOT NULL,
+    title_en character varying(255),
+    title_ru character varying(255)
 );
 
 
@@ -389,7 +393,11 @@ CREATE TABLE public.core_mediaitem (
     image character varying(100) NOT NULL,
     subcategory_id bigint,
     views integer NOT NULL,
-    like_time timestamp with time zone NOT NULL
+    like_time timestamp with time zone NOT NULL,
+    description_en character varying(255),
+    description_ru character varying(255),
+    title_en character varying(255),
+    title_ru character varying(255)
 );
 
 
@@ -497,7 +505,11 @@ CREATE TABLE public.core_subcategory (
     slug character varying(255) NOT NULL,
     category_id bigint,
     image character varying(100),
-    description character varying(255)
+    description character varying(255),
+    description_en character varying(255),
+    description_ru character varying(255),
+    title_en character varying(255),
+    title_ru character varying(255)
 );
 
 
@@ -994,6 +1006,20 @@ COPY public.account_emailaddress (id, email, verified, "primary", user_id) FROM 
 3	zhenya@zh-gallery.ru	t	t	2
 5	voltovtom92@gmail.com	t	t	6
 6	voltov-tom@mail.ru	t	t	7
+7	bletmetest@gmail.com	f	t	8
+8	voltoff69@yandex.ru	t	t	9
+9	bletmetest@yandex.ru	t	t	10
+10	admin@msglaz.ru	f	t	11
+11	zh-gallery.ru@yandex.ru	f	t	12
+12	zh-gallery@yandex.ru	t	t	13
+13	merenkovamaria0802@yandex.ru	t	t	14
+14	test1996lena@yandex.ru	t	t	15
+15	ghpvebem@vdnh.online	f	t	16
+16	kat-servise56@yandex.ru	f	t	17
+17	creawert@rambler.ru	f	t	18
+18	cazackovkim@yandex.ru	f	t	19
+19	azat-fattakhov@inbox.ru	f	t	20
+20	ahmarlapin@yandex.ru	f	t	21
 \.
 
 
@@ -1102,9 +1128,23 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
-2	pbkdf2_sha256$320000$NZgrGHsnhJhMInJzaoNLlU$XNU/iQzAKmZhfF09JmuYlHGzDu6AbfmScQmMc4YFmVg=	2022-03-11 17:09:32.438985+00	t	zhenya			zhenya@zh-gallery.ru	t	t	2021-12-31 00:03:30+00
-6	!aC3HI59HJIz9CV4XBdRkzlHMInfnmXIAo6luiVEJ	2022-02-20 11:23:52.723314+00	f	timofei	Timofei	Voltov	voltovtom92@gmail.com	f	t	2022-01-28 21:25:06.707203+00
-7	pbkdf2_sha256$320000$aEqawK4Yl0ftPtxtlMyIG4$fUck4DYk7L+pPIo4z9XFz6j2n0skLztW7O0VVOGqopc=	2022-02-21 17:08:20.431772+00	f	voltov-tom			voltov-tom@mail.ru	f	t	2022-01-28 21:30:02.466806+00
+6	!aC3HI59HJIz9CV4XBdRkzlHMInfnmXIAo6luiVEJ	2022-07-20 10:29:28.85971+00	f	timofei	Timofei	Voltov	voltovtom92@gmail.com	f	t	2022-01-28 21:25:06.707203+00
+10	pbkdf2_sha256$320000$w8njpj3jBE94B2UWbi6RZX$buORyv/XcvPbfzm6q0YJecAHcoqIVAN1GuXgtRY9W7s=	\N	f	Letmetest			bletmetest@yandex.ru	f	t	2022-04-22 12:22:11.867943+00
+8	pbkdf2_sha256$320000$cBMAOltYE1c3pSCcY05NWA$XTRU3ZAxNKuR9h2e0nYW6a7Y8/L3o0UrqS0zuQRuXaU=	\N	f	Test			bletmetest@gmail.com	f	t	2022-04-20 11:31:42.036229+00
+11	pbkdf2_sha256$320000$Qe3WQvMnCVLzJwdedJaymU$vQYJXVnYy3sIYZcLoxCKuuzTBzqBzGegBwZfd4lndJU=	\N	f	admin			admin@msglaz.ru	f	t	2022-04-23 03:12:45.430328+00
+12	pbkdf2_sha256$320000$85etUfMO6RoRudgR9drI8s$R5tDtV2XwB/0cg0CYkWUGwKb6IxpAiHaboHskhGe66M=	\N	f	zh-gallery.ru			zh-gallery.ru@yandex.ru	f	t	2022-04-23 08:47:39.710745+00
+14	pbkdf2_sha256$320000$kzRaXIO8snfbtMFlHbXE95$0wGOkf4RD+3fcrsle167+imLfHYr8R+CuO4Duo8Trsg=	2022-04-26 11:54:35.806103+00	f	merenkovamaria0802			merenkovamaria0802@yandex.ru	f	t	2022-04-26 11:53:27.769024+00
+17	pbkdf2_sha256$320000$THq5wTyKqB0eJaUPuSTE6q$jO2x9OcVQvD66KMgPox6gQdTTb+9K/Ktfr9rXf0apJw=	\N	f	DanielNub			kat-servise56@yandex.ru	f	t	2022-11-08 22:41:43.177002+00
+18	pbkdf2_sha256$320000$eGvtcsYX09FdnGSAjygQcj$rCs++jIZqfJHgESq1gZUGk8fqmPQncfOKUAu4+uSv9U=	\N	f	Jeffreyfrede			creawert@rambler.ru	f	t	2022-11-17 06:47:26.774974+00
+19	pbkdf2_sha256$320000$e0QfoHXtWyN1yLW0VX222b$k5YL7WCwb/iS8vP9FcdmGpFGGra+SyXx8vsz/IHl7Dk=	\N	f	Svetlanaanewedomose			cazackovkim@yandex.ru	f	t	2022-11-19 02:51:10.499628+00
+7	pbkdf2_sha256$320000$GqHQaSzqT62Zwr4b5Ds62O$oQNDimHqLIlwM/vxvLnTsDAxnyHBEBaErYyQaAvCNg8=	2022-04-30 05:58:32.614803+00	f	voltov-tom			voltov-tom@mail.ru	f	t	2022-01-28 21:30:02.466806+00
+9	pbkdf2_sha256$320000$C3CaTjueVUm3adauPtQK7F$zvKoOsemZZc52N4Fdovdus/ibSVtW7yw/5ExYT3T1wE=	2022-11-23 12:29:12.519716+00	f	voltoff			voltoff69@yandex.ru	f	t	2022-04-20 15:02:59.674349+00
+2	pbkdf2_sha256$320000$NZgrGHsnhJhMInJzaoNLlU$XNU/iQzAKmZhfF09JmuYlHGzDu6AbfmScQmMc4YFmVg=	2022-11-26 21:15:20.877105+00	t	zhenya			zhenya@zh-gallery.ru	t	t	2021-12-31 00:03:30+00
+20	pbkdf2_sha256$320000$W58j6TFwFx0VQvdEagDzEg$IUIkRPjWLtRhhFfUPqEm4SGh74U3KMr3goZBsNnKE3c=	\N	f	Азат			azat-fattakhov@inbox.ru	f	t	2022-12-06 01:04:52.860854+00
+21	pbkdf2_sha256$320000$OsAF3u37CvvnwjQGcAy4ht$jM7/kOCs3jFOXFsiktwb+3jogLIN/qx6mqj1PSYDlAE=	\N	f	IrinaIndidence			ahmarlapin@yandex.ru	f	t	2022-12-23 13:14:42.718658+00
+15	pbkdf2_sha256$320000$x2LL3CMswmmQdGIV7wwCBk$h/d0wcDA5jL6xctxl4YVdbt8NU1MCi0jCIs1h1KfjIE=	2022-05-16 07:42:49.231707+00	f	Test123			test1996lena@yandex.ru	f	t	2022-05-16 07:41:31.699346+00
+13	pbkdf2_sha256$320000$K6joSVUL9XKlHgZMkCzfCR$pBfbii3Aqq73i+oDm33sorxLsqW1ci+Ud5QOBGFIBkU=	2022-05-16 07:45:33.244557+00	f	zh-gallery			zh-gallery@yandex.ru	f	t	2022-04-23 08:50:39.578984+00
+16	pbkdf2_sha256$320000$FC3CDSErhnSdsjv20igoLP$76UJxT6m0pEA5J01G08CKXlM88QmhoJNm0ezKIn8elo=	\N	f	Dzxetgob			ghpvebem@vdnh.online	f	t	2022-05-20 06:08:57.529828+00
 \.
 
 
@@ -1128,8 +1168,8 @@ COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
 -- Data for Name: core_about; Type: TABLE DATA; Schema: public; Owner: voltov
 --
 
-COPY public.core_about (id, body, image) FROM stdin;
-1	Hello and welcome to my gallery!\r\nMy name is Evgeniya or a simple Zhenya, so that’s why ZH in the title… Usually I take a film photos and a digital illustrations for myself, just because I like it…but also I create a sketchbooks a planners a photo albums and the other stationary staff for sale , whose you can see at my instagram. \r\nIn  this gallery I would like prefer to you my crazy pink visuals… actually not only these but it’s really my favourite colour! \r\nI’m really appreciate for your attention and support !	2C616B84-40FC-4829-A16A-F37B062EF3DF.jpeg
+COPY public.core_about (id, body, image, body_en, body_ru) FROM stdin;
+1	Привет и добро пожаловать в мою галерею! Меня зовут Евгения, но можно просто Женя, отсюда и появилось сокращение ZH в наименовании… Обычно я снимаю на плёнку и рисую иллюстрации для себя, просто потому что мне это нравится…но кроме этого я занимаюсь изготовлением скетчбуков, ежедневников , фотоальбомов и других различных канцелярских товаров на продажу, которые можно увидеть в моём Инстаграм аккаунте. А в этой галерее я бы хотела заполнить всё розовым…на самом деле не только розовым, хоть это и правда мой любимый цвет! Я буду, правда, очень благодарна вашему вниманию и поддержке!	2C616B84-40FC-4829-A16A-F37B062EF3DF.jpeg	Hello and welcome to my gallery! My name is Evgeniya or a simple Zhenya, so that’s why ZH in the title… Usually I take a film photos and a digital illustrations for myself, just because I like it…but also I create a sketchbooks a planners a photo albums and the other stationary staff for sale , whose you can see at my instagram. In this gallery I would like prefer to you my crazy pink visuals… actually not only these but it’s really my favourite colour! I’m really appreciate for your attention and support !	Привет и добро пожаловать в мою галерею! Меня зовут Евгения, но можно просто Женя, отсюда и появилось сокращение ZH в наименовании… Обычно я снимаю на плёнку и рисую иллюстрации для себя, просто потому что мне это нравится…но кроме этого я занимаюсь изготовлением скетчбуков, ежедневников , фотоальбомов и других различных канцелярских товаров на продажу, которые можно увидеть в моём Инстаграм аккаунте. А в этой галерее я бы хотела заполнить всё розовым…на самом деле не только розовым, хоть это и правда мой любимый цвет! Я буду, правда, очень благодарна вашему вниманию и поддержке!
 \.
 
 
@@ -1137,9 +1177,9 @@ COPY public.core_about (id, body, image) FROM stdin;
 -- Data for Name: core_maincategory; Type: TABLE DATA; Schema: public; Owner: voltov
 --
 
-COPY public.core_maincategory (id, title, slug) FROM stdin;
-1	GALLERIES	galleries
-2	IN THE INTERIOR	in-the-interior
+COPY public.core_maincategory (id, title, slug, title_en, title_ru) FROM stdin;
+1	GALLERIES	galleries	GALLERIES	ГАЛЕРЕИ
+2	IN THE INTERIOR	in-the-interior	IN THE INTERIOR	В ИНТЕРЬЕРЕ
 \.
 
 
@@ -1147,31 +1187,31 @@ COPY public.core_maincategory (id, title, slug) FROM stdin;
 -- Data for Name: core_mediaitem; Type: TABLE DATA; Schema: public; Owner: voltov
 --
 
-COPY public.core_mediaitem (id, title, slug, description, image, subcategory_id, views, like_time) FROM stdin;
-20	DojaCat	dojacat	SaySo	BD7ED998-58F7-4F35-9068-ECFEE1F78A32.jpeg	2	40	2022-03-18 03:19:35.912229+00
-24	Holographic cover	holographic-cover	With BTS	D2E9883A-6D8A-48CC-BA49-FF80BEC9FEE7.jpeg	3	48	2022-03-18 03:19:36.261506+00
-11	Sky	sky	God of the mountains	33841CB3-260A-4825-AAE9-2870137BA282.jpeg	1	30	2022-03-18 14:26:38.695266+00
-8	In the tree’s shadow	in-the-trees-shadow	Sunny girl	6819C955-94FA-4E08-8451-9EE4706559F4.jpeg	1	30	2022-03-18 14:26:39.050372+00
-7	Supernatural	supernatural	Small black dress	F61641C2-414C-40C6-88A2-90DA28862167.jpeg	1	26	2022-03-18 14:26:39.137143+00
-6	Witches	witches	My friends is a best photomodels	5A0B631F-1175-442A-A654-77EA67AB0B37.jpeg	1	34	2022-03-18 14:26:39.365693+00
-21	NingNing	ningning	Aespa	49BB43C2-3E32-4ADB-AC6E-E582FBF48963.jpeg	2	26	2022-03-18 14:26:39.968832+00
-18	Flowers	flowers	Part of the heart	98E86A3D-0C2F-49F5-8675-1A1A24ABAEA7.jpeg	2	57	2022-03-18 19:10:15.434564+00
-2	Rock	rock	God of the forest	DEA9AAFC-2CAD-4FED-A56E-D5CAD952F621.jpeg	1	28	2022-03-03 14:36:43.332542+00
-17	VHS	vhs	VHS cassette and retro photo	7FDBA194-9521-411C-B842-626EA1C339A3.jpeg	2	35	2022-03-03 16:46:19.231824+00
-19	Mark	mark	Child	997F3BD0-F323-4BDB-97E3-EC9F7EC91CED.jpeg	2	37	2022-03-20 06:19:53.267541+00
-23	Suga	suga	Sketchbook and keychain	0C6931CA-EC28-4A3E-B9A7-CACC8E269C96.jpeg	3	25	2022-03-20 12:57:17.752393+00
-22	AvuChan	avuchan	QueenBee	D1BDC4BB-51FA-478B-AC28-6C1149727C12.jpeg	2	26	2022-03-03 14:35:25.218265+00
-15	Dance girl	dance-girl	Drunk and beautiful	0E94492E-4BDD-4FC3-8F0C-B2B5AABF6422.jpeg	2	44	2022-03-21 17:18:15.24408+00
-10	Baby black	baby-black	Pink wall	8CEE188A-7248-4966-9715-5ED68EEAFB43.jpeg	1	46	2022-03-21 17:18:28.234032+00
-12	Hey girl	hey-girl	Cutie	2FC80D87-6BB7-4B33-A7B6-A4DB2BC26CD1.jpeg	1	29	2022-03-06 00:00:06.988574+00
-16	Lisa	lisa	LaLisa Manoban	F864326E-2C11-4C6B-A504-25B2069CC94D.jpeg	2	35	2022-03-16 15:04:56.850443+00
-5	Baby black 4	baby-black-4	Soft angel in black	BB04605A-DD3B-44C1-8925-5492E217B6AC.jpeg	1	30	2022-03-06 08:07:36.1286+00
-3	Baby black  2	baby-black-2	Strict eyes	686A889C-E70F-43A4-8A7A-DBD774A206CB.jpeg	1	32	2022-03-06 14:29:11.507585+00
-13	In the corner	in-the-corner	This is me in the Gallery	E29AD2F5-6632-4E22-BA64-97383290CF43.jpeg	1	29	2022-03-06 17:19:46.711228+00
-1	Sun chilling	sun-chilling	Sunlight portrait	F4831A09-9407-48AD-ABAD-1DEBBCDDB65C.jpeg	1	28	2022-03-07 00:13:00.705545+00
-9	Baby black 3	baby-black-3	Cotton candy	F70B6E0C-AB38-4C89-8F5F-0396B5DEB837.jpeg	1	27	2022-03-07 03:10:37.341606+00
-4	Rain	rain	The grey beautiful rain	9AEB0284-F36A-4061-BB41-A55AA727AF22.jpeg	1	30	2022-03-09 02:23:13.613659+00
-25	“Y” keychain	y-keychain	Epoxy resin	4C21C6E6-BD53-4977-8D61-F43CCD0CC290.jpeg	3	44	2022-03-18 03:19:35.575519+00
+COPY public.core_mediaitem (id, title, slug, description, image, subcategory_id, views, like_time, description_en, description_ru, title_en, title_ru) FROM stdin;
+12	Hey girl	hey-girl	Милашка	2FC80D87-6BB7-4B33-A7B6-A4DB2BC26CD1.jpeg	1	139	2023-01-02 07:37:06.123249+00	Cutie	Милашка	Hey girl	Hey girl
+19	Mark	mark	Child	997F3BD0-F323-4BDB-97E3-EC9F7EC91CED.jpeg	2	322	2023-01-04 15:52:55.253932+00	Child	Child	Mark	Mark
+20	DojaCat	dojacat	SaySo	BD7ED998-58F7-4F35-9068-ECFEE1F78A32.jpeg	2	159	2023-01-04 16:06:24.181522+00	SaySo	SaySo	DojaCat	DojaCat
+18	Flowers	flowers	Половинка сердца	98E86A3D-0C2F-49F5-8675-1A1A24ABAEA7.jpeg	2	166	2023-01-05 22:48:42.298656+00	Part of the heart	Половинка сердца	Flowers	Flowers
+6	Witches	witches	My friends is a best photomodels	5A0B631F-1175-442A-A654-77EA67AB0B37.jpeg	1	102	2023-01-01 08:01:17.78795+00	My friends is a best photomodels	Мои подруги-мои лучшие модели	Witches	Witches
+13	In the corner	in-the-corner	This is me in the Gallery	E29AD2F5-6632-4E22-BA64-97383290CF43.jpeg	1	101	2023-01-01 08:01:22.633074+00	This is me in the Gallery	Это я в картинной галерее	In the corner	In the corner
+25	“Y” keychain	y-keychain	Эпоксидная смола	4C21C6E6-BD53-4977-8D61-F43CCD0CC290.jpeg	3	270	2023-01-01 22:36:01.46922+00	Epoxy resin	Эпоксидная смола	“Y” keychain	“Y” keychain
+23	Suga	suga	Скетчбук и брелок	0C6931CA-EC28-4A3E-B9A7-CACC8E269C96.jpeg	3	110	2023-01-02 05:18:33.835552+00	Sketchbook and keychain	Скетчбук и брелок	Suga	Suga
+17	VHS	vhs	Кассета и старый снимок	7FDBA194-9521-411C-B842-626EA1C339A3.jpeg	2	116	2023-01-06 00:38:35.254219+00	VHS cassette and retro photo	Кассета и старый снимок	VHS	VHS
+21	NingNing	ningning	Aespa	49BB43C2-3E32-4ADB-AC6E-E582FBF48963.jpeg	2	91	2022-12-09 04:07:34.109655+00	Aespa	Aespa	NingNing	NingNing
+15	Party time	party-time	Молоды и свободны	0E94492E-4BDD-4FC3-8F0C-B2B5AABF6422.jpeg	2	145	2023-01-02 06:33:24.966031+00	young and free	Молоды и свободны	Party time	Party time
+5	In  black 4	in-black-4	Нежный ангел в чёрном	BB04605A-DD3B-44C1-8925-5492E217B6AC.jpeg	1	86	2023-01-06 06:25:09.861904+00	Soft angel in black	Нежный ангел в чёрном	In  black 4	In  black 4
+3	In black  2	in-black-2	Строгий взгляд	686A889C-E70F-43A4-8A7A-DBD774A206CB.jpeg	1	76	2023-01-03 01:35:18.302466+00	Strict eyes	Строгий взгляд	In black  2	In black  2
+22	AvuChan	avuchan	QueenBee	D1BDC4BB-51FA-478B-AC28-6C1149727C12.jpeg	2	121	2023-01-03 11:43:01.977183+00	QueenBee	QueenBee	AvuChan	AvuChan
+16	Lisa	lisa	ЛаЛиса Манобан	F864326E-2C11-4C6B-A504-25B2069CC94D.jpeg	2	78	2022-12-08 13:19:53.627288+00	LaLisa Manoban	ЛаЛиса Манобан	Lisa	Lisa
+10	In black	in-black	На фоне розовой стены	8CEE188A-7248-4966-9715-5ED68EEAFB43.jpeg	1	129	2023-01-04 00:01:28.134757+00	Pink wall	На фоне розовой стены	In black	In black
+4	Rain	rain	Красивый серый дождь	9AEB0284-F36A-4061-BB41-A55AA727AF22.jpeg	1	97	2023-01-04 07:31:43.763509+00	The grey beautiful rain	Красивый серый дождь	Rain	Rain
+8	In the tree’s shadow	in-the-trees-shadow	Солнечная девочка	6819C955-94FA-4E08-8451-9EE4706559F4.jpeg	1	90	2022-12-29 18:41:24.918784+00	Sunny girl	Солнечная девочка	In the tree’s shadow	In the tree’s shadow
+9	In black 3	in-black-3	Сахарная вата	F70B6E0C-AB38-4C89-8F5F-0396B5DEB837.jpeg	1	103	2023-01-05 02:16:12.965423+00	Cotton candy	Сахарная вата	In black 3	In black 3
+7	Supernatural	supernatural	Small black dress	F61641C2-414C-40C6-88A2-90DA28862167.jpeg	1	84	2023-01-01 08:01:31.755874+00	Small black dress	Маленькое чёрное платье	Supernatural	Supernatural
+1	Sun chilling	sun-chilling	Солнечный портрет	F4831A09-9407-48AD-ABAD-1DEBBCDDB65C.jpeg	1	95	2023-01-05 11:11:06.266589+00	Sunlight portrait	Солнечный портрет	Sun chilling	Sun chilling
+11	Sky	sky	Богиня гор	33841CB3-260A-4825-AAE9-2870137BA282.jpeg	1	98	2022-12-30 06:09:32.792054+00	God of the mountains	Богиня гор	Sky	Sky
+24	Holographic cover	holographic-cover	Голографическая-обложка	D2E9883A-6D8A-48CC-BA49-FF80BEC9FEE7.jpeg	3	128	2023-01-05 11:39:48.384202+00	With BTS	Голографическая-обложка	Holographic cover	Holographic cover
+2	Rock	rock	Богиня леса	DEA9AAFC-2CAD-4FED-A56E-D5CAD952F621.jpeg	1	61	2023-01-05 14:20:57.131113+00	God of the forest	Богиня леса	Rock	Rock
 \.
 
 
@@ -1181,7 +1221,6 @@ COPY public.core_mediaitem (id, title, slug, description, image, subcategory_id,
 
 COPY public.core_mediaitem_likes (id, mediaitem_id, user_id) FROM stdin;
 19	17	2
-20	18	2
 21	10	2
 22	1	2
 23	10	6
@@ -1192,13 +1231,11 @@ COPY public.core_mediaitem_likes (id, mediaitem_id, user_id) FROM stdin;
 29	10	7
 30	6	7
 31	20	6
-33	20	2
 34	20	7
 35	22	7
 36	23	2
 37	25	2
 38	24	2
-39	25	7
 40	23	7
 41	24	7
 42	15	7
@@ -1210,10 +1247,25 @@ COPY public.core_mediaitem_likes (id, mediaitem_id, user_id) FROM stdin;
 49	17	7
 50	16	6
 51	15	6
-52	19	6
 53	3	6
 54	21	2
-55	19	2
+56	20	2
+58	18	2
+59	19	6
+60	25	7
+61	3	7
+62	19	15
+63	11	15
+64	8	13
+65	2	13
+66	19	2
+67	24	6
+68	23	6
+69	17	6
+72	3	2
+73	15	2
+74	23	9
+75	4	2
 \.
 
 
@@ -1223,9 +1275,13 @@ COPY public.core_mediaitem_likes (id, mediaitem_id, user_id) FROM stdin;
 
 COPY public.core_mediaitemreview (id, content, date_added, media_item_id, user_id, edited) FROM stdin;
 3	So nice	2022-01-31 16:17:40.995735+00	20	6	f
-2	В принципе мне тоже нравится, да и вообще сайт офигенный, я так понял сайт молодой, желаю развития!!	2022-01-28 21:31:46.763166+00	18	7	t
-1	Мне нравится масштаб, видно объем	2022-01-28 21:28:44.953129+00	18	6	t
 5	Like it!	2022-02-06 09:50:23.282282+00	25	6	t
+8	Круто!	2022-04-04 07:43:32.332358+00	19	2	f
+1	Мне нравится масштаб, видно объем.	2022-01-28 21:28:44.953129+00	18	6	t
+11	очень хорошо	2022-07-20 15:57:42.663128+00	15	6	f
+13	замечательно	2022-11-21 05:45:08.262911+00	25	9	t
+12	прекрасно	2022-11-21 05:40:58.955563+00	19	9	t
+15	Bank 	2022-11-23 12:29:25.703864+00	23	9	f
 \.
 
 
@@ -1233,10 +1289,10 @@ COPY public.core_mediaitemreview (id, content, date_added, media_item_id, user_i
 -- Data for Name: core_subcategory; Type: TABLE DATA; Schema: public; Owner: voltov
 --
 
-COPY public.core_subcategory (id, title, slug, category_id, image, description) FROM stdin;
-1	FilmPhotography	filmphotography	1	404BDDFD-316C-422D-9256-11F370F08FFF.jpeg	\N
-2	Graphics	graphics	1	2DDD439D-3669-41F3-80CD-E452E658EB34.jpeg	Digital graphics
-3	Notebooks	notebooks	1	9BE7E73F-D547-424F-B919-2AF667F03B78.jpeg	Sketchbooks, keychains, photo albums
+COPY public.core_subcategory (id, title, slug, category_id, image, description, description_en, description_ru, title_en, title_ru) FROM stdin;
+2	Графика	grafika	1	2DDD439D-3669-41F3-80CD-E452E658EB34.jpeg	Графика	Digital graphics	Графика	Graphics	Графика
+1	Фотопленка	fotoplenka	1	404BDDFD-316C-422D-9256-11F370F08FFF.jpeg	Пленочные фото	FilmPhotography	Пленочные фото	FilmPhotography	Фотопленка
+3	Блокноты	bloknoty	1	9BE7E73F-D547-424F-B919-2AF667F03B78.jpeg	Блокноты ручной работы	Sketchbooks, keychains, photo albums	Блокноты ручной работы	Notebooks	Блокноты
 \.
 
 
@@ -1331,6 +1387,44 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 84	2022-01-31 18:44:32.466228+00	25	25, GALLERIES: NOTEBOOKS: “Y” keychain	1	[{"added": {}}]	9	2
 85	2022-01-31 18:59:19.60037+00	2	GALLERIES: Graphics	2	[{"changed": {"fields": ["Image"]}}]	8	2
 86	2022-01-31 18:59:51.645472+00	3	GALLERIES: Notebooks	2	[{"changed": {"fields": ["Title"]}}]	8	2
+87	2022-05-15 07:45:22.268647+00	9	9, : : В чёрном 3	2	[{"changed": {"fields": ["Title [ru]", "Title [en]", "Slug", "Description [ru]"]}}]	9	2
+88	2022-05-15 07:45:23.382444+00	9	9, : : В чёрном 3	2	[{"changed": {"fields": ["Slug"]}}]	9	2
+89	2022-05-15 07:46:33.290443+00	24	24, : : Голографическая обложка	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+90	2022-05-15 07:50:28.142896+00	15	15, : : Вечеринка	2	[{"changed": {"fields": ["Title [ru]", "Title [en]", "Slug", "Description [ru]", "Description [en]"]}}]	9	2
+91	2022-05-15 07:51:10.350976+00	4	4, : : Дождь	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+92	2022-05-15 07:52:13.410396+00	21	21, : : НинНин	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+93	2022-05-15 07:52:47.053181+00	19	19, : : Марк	2	[{"changed": {"fields": ["Title [ru]", "Slug", "Description [ru]"]}}]	9	2
+94	2022-05-15 07:54:05.625309+00	17	17, : : VHS кассета	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+95	2022-05-15 07:55:29.255734+00	23	23, : : Скетчбук  с Suga	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+96	2022-05-15 07:56:24.703655+00	7	7, : : Нереальная	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+97	2022-05-15 07:56:52.607558+00	13	13, : : В углу	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+98	2022-05-15 07:57:23.369565+00	6	6, : : Ведьмы	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+99	2022-05-15 07:57:59.699348+00	16	16, : : ЛаЛиса	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+100	2022-05-15 07:58:52.266964+00	25	25, : : Брелок с литерой “Y”	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+101	2022-05-15 07:59:15.323223+00	18	18, : : Цветы	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+102	2022-05-15 07:59:42.838475+00	20	20, : : ДожаКэт	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+103	2022-05-15 08:00:27.250169+00	2	2, : : Рок	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+104	2022-05-15 08:00:50.292397+00	8	8, : : В тени деревьев	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+105	2022-05-15 08:01:40.60142+00	5	5, : : В чёрном 4	2	[{"changed": {"fields": ["Title [ru]", "Title [en]", "Slug", "Description [ru]"]}}]	9	2
+106	2022-05-15 08:02:18.914314+00	22	22, : : Аву чан	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+107	2022-05-15 08:03:08.011022+00	10	10, : : В чёрном	2	[{"changed": {"fields": ["Title [ru]", "Title [en]", "Slug", "Description [ru]"]}}]	9	2
+108	2022-05-15 08:03:40.493376+00	3	3, : : В чёрном 2	2	[{"changed": {"fields": ["Title [ru]", "Title [en]", "Slug", "Description [ru]"]}}]	9	2
+109	2022-05-15 08:04:48.473839+00	12	12, : : Эй, девчонка!	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+110	2022-05-15 08:05:47.331075+00	1	1, : : Отдых под солнцем	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+111	2022-05-15 08:06:03.280492+00	11	11, : : Небо	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	9	2
+112	2022-05-15 08:06:04.191285+00	11	11, : : Небо	2	[{"changed": {"fields": ["Slug"]}}]	9	2
+113	2022-05-15 08:20:29.815519+00	1	About	2	[{"changed": {"fields": ["Body [ru]"]}}]	17	2
+114	2022-05-15 09:17:20.772143+00	1	GALLERIES	2	[{"changed": {"fields": ["Title [ru]"]}}]	7	2
+115	2022-05-15 09:17:46.570994+00	2	IN THE INTERIOR	2	[{"changed": {"fields": ["Title [ru]"]}}]	7	2
+116	2022-05-15 09:19:47.930358+00	1	ГАЛЕРЕИ: Пленочные фото	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]", "Description [en]"]}}]	8	2
+117	2022-05-15 09:20:02.359886+00	2	ГАЛЕРЕИ: Графика	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	8	2
+118	2022-05-15 09:20:20.258461+00	1	ГАЛЕРЕИ: Фотопленка	2	[{"changed": {"fields": ["Title [ru]"]}}]	8	2
+119	2022-05-15 09:20:48.930362+00	3	ГАЛЕРЕИ: Блокноты	2	[{"changed": {"fields": ["Title [ru]", "Description [ru]"]}}]	8	2
+120	2022-06-29 06:10:13.108723+00	9	19, ГАЛЕРЕИ: Графика: Марк, Test123	3		16	2
+121	2022-06-29 06:10:19.088132+00	10	8, ГАЛЕРЕИ: Фотопленка: В тени деревьев, zh-gallery	3		16	2
+122	2022-11-04 06:17:19.54994+00	17	17, ГАЛЕРЕИ: Графика: VHS	2	[{"changed": {"fields": ["Title [ru]"]}}]	9	2
+123	2022-11-22 19:22:03.675112+00	13	25, ГАЛЕРЕИ: Блокноты: “Y” keychain, voltoff	2	[{"changed": {"fields": ["Content", "Edited"]}}]	16	2
+124	2022-11-22 19:22:14.262727+00	12	19, ГАЛЕРЕИ: Графика: Mark, voltoff	2	[{"changed": {"fields": ["Content", "Edited"]}}]	16	2
 \.
 
 
@@ -1407,6 +1501,8 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 41	core	0016_alter_mediaitem_like_time	2022-01-21 23:42:25.304171+00
 42	core	0017_alter_mediaitemreview_user	2022-01-31 13:05:03.870438+00
 43	core	0018_mediaitemreview_edited	2022-02-15 17:25:18.176058+00
+44	core	0019_about_body_en_about_body_ru	2022-05-10 14:12:19.099173+00
+45	core	0020_alter_about_options_maincategory_title_en_and_more	2022-05-10 14:12:19.439163+00
 \.
 
 
@@ -1420,11 +1516,144 @@ t1onbkoxfw59bzh9c6b749emrgb5s9pk	.eJxVjMsOwiAURP-FtWmQZ3Fnf4TcC5fQ2NBEYGX8d6npQp
 lqh7utae8q7foqlfkfenvtxczofjwbgv	.eJxVjDsOwjAQBe_iGlnxb2NT0nMGa71e4wBypDipEHeHSCmgfTPzXiLitta4dV7ilMVZaHH63RLSg9sO8h3bbZY0t3WZktwVedAur3Pm5-Vw_w4q9vqtHQIlY4gYCqeigrZeFbTjoMEkZ5wPXoHSwY4QhhLQESTW2jDlAADi_QHfWjdX:1n3B1Z:bBFFiNTluboEvEm6hXWQRltyXk4gMO08hs3pUikk4n8	2022-01-14 06:04:21.22577+00
 9n5gzekrt4mkfutlre4i8v3zs5qlaxm3	.eJxVjDsOwjAQBe_iGlnxb2NT0nMGa71e4wBypDipEHeHSCmgfTPzXiLitta4dV7ilMVZaHH63RLSg9sO8h3bbZY0t3WZktwVedAur3Pm5-Vw_w4q9vqtHQIlY4gYCqeigrZeFbTjoMEkZ5wPXoHSwY4QhhLQESTW2jDlAADi_QHfWjdX:1nNPdX:aGqPQaQMH27bmz0nkTGvGYdKNfxEzDOUCehhh9OGVD0	2022-03-11 01:43:11.899268+00
 aoe76x5asdfw8iwj13tdbzfzij6j8qwa	.eJxVjDsOwjAQBe_iGln-xJtsSnrOYPmzJgZkoziRQIi7Q6QU0L6ZNy9m3bpMdm002xzZyBQ7_G7ehSuVDcSLK-fKQy3LnD3fFL7Txk810u24u3-BybXp-zYOgtc6BIJEPklU3SCT63qhQHujzYCDBKmw6wFFQmcCeFJKU4gIAFu0UWu5FkuPe56fbJRKIAjx_gD2gD_G:1nSilg:gdS8jLhRHTnLKzm8nFVmp_TC3-U-ChAcnPcz4zUgScI	2022-03-25 17:09:32.481516+00
+r2prxqywcy7x96bqnsjamrkk5qhkyec9	.eJxVjDsOwjAQBe_iGln-xJtsSnrOYPmzJgZkoziRQIi7Q6QU0L6ZNy9m3bpMdm002xzZyBQ7_G7ehSuVDcSLK-fKQy3LnD3fFL7Txk810u24u3-BybXp-zYOgtc6BIJEPklU3SCT63qhQHujzYCDBKmw6wFFQmcCeFJKU4gIAFu0UWu5FkuPe56fbJRKIAjx_gD2gD_G:1nbHLH:Zc75q8MeZnxRr0gcjCm2QjbqUkmMZxPVBISpSEe-2Jg	2022-04-18 07:41:39.027579+00
+8fwkoped3yx1cjvlo1f2ber5ec41blpu	.eJxVjMEOwiAQRP-FsyFtUVh69O43kF3YWtRAU9pEY_x3S9KDZm7vzcxbOFyX0a2FZxeD6IURh19G6O-cqgg3TNcsfU7LHEnWitxtkZcc-HHeu38HI5ZxW5PvgLElzRqQwdQwGq9a7IaWghos4MkeDZAKmuyGtbYaoQFio7CeFi4l5uT4OcX5Jfrm8wWpRz9g:1neDqr:t5Rr9yg-P9MIzev0oGonWkQm2DpDf37pKSh0y-7og9o	2022-04-26 10:34:25.94665+00
+dqs9oef78jg2teg7coxtt7o6znhkt0m2	eyJhY2NvdW50X3ZlcmlmaWVkX2VtYWlsIjpudWxsLCJhY2NvdW50X3VzZXIiOiI4In0:1nh8Yh:Ey7ql4oJrnPYOWYhAEF8z7RjrZm5bfsplTIND2xaOrU	2022-05-04 11:31:43.303764+00
 v7t26r9vpcs0bt6tmfzy31dx3o9dsioh	.eJxVjDsOwjAQBe_iGlnxb2NT0nMGa71e4wBypDipEHeHSCmgfTPzXiLitta4dV7ilMVZaHH63RLSg9sO8h3bbZY0t3WZktwVedAur3Pm5-Vw_w4q9vqtHQIlY4gYCqeigrZeFbTjoMEkZ5wPXoHSwY4QhhLQESTW2jDlAADi_QHfWjdX:1nArFp:Ez9PeImFh3KeLTr9t6qb3_5bYWnIa-NGOxHvdoyMGyE	2022-02-04 10:34:49.337292+00
+i7utwkmn8lfil1q486f39nx5sf5gnara	eyJhY2NvdW50X3ZlcmlmaWVkX2VtYWlsIjpudWxsLCJhY2NvdW50X3VzZXIiOiJhIn0:1nhsIf:2Jvwdnn9qiYT2Qhhx7VNXbVGzp3Scuj6HL6IuL7ndHY	2022-05-06 12:22:13.505811+00
+snlpep9wtingbs2tnyaff11sv638kf47	eyJfc2Vzc2lvbl9leHBpcnkiOjAsIl9wYXNzd29yZF9yZXNldF9rZXkiOiJiNGE3c2YtODIxNjBlMDIwYTczMDMzZTYxY2I3MmI0NTk1ZjA5ODgifQ:1nhsKr:5cXjDQP5xnvD0rPQ11-qDE83H0IKJJdetQNDjB-jKeA	2022-05-06 12:24:29.148974+00
+wnx9gaqu93iqcu68e1m9xxxvbxgiq0n3	eyJfcGFzc3dvcmRfcmVzZXRfa2V5IjoiYjRhN3dpLTcwN2NkMDZhMWNlNDA0YTQ1Zjc0NmUxNmRjYjE4YmNkIn0:1nhsNH:528BQLMrw5am71X6jPHQcBT31dpMc-2mYLOM3hKS_es	2022-05-06 12:26:59.619096+00
+i52latxx0gmx7x34omuoyiv99rdhci9h	eyJzb2NpYWxhY2NvdW50X3N0YXRlIjpbeyJwcm9jZXNzIjoibG9naW4iLCJzY29wZSI6IiIsImF1dGhfcGFyYW1zIjoiIn0sIjVBb0hDOFdjMExoayJdfQ:1nj8UG:ANLgO6v8T-HOUb7G1Ml-GeFstpOmmiSx8Nycadyn7yc	2022-05-09 23:51:24.459306+00
+ai2rrichslg6okjtekoi111r82xchd2b	.eJxVjMsOgjAQRf-la0JobXkt3fsNzcx0kCq2hoLRGP9dMMSE7Tn3nrcAojiHyT549J1nZ_kGfhBtmIch-9s58ShawSITFuap_wHr3cKk3kMEunJYjbtAOMecYphGj_k6yTeb8lN0PBy37S7QQ-qXNyJWiozpQEmlsJOGHEKp64MsmqIiXRmDlWbSSjvpuprr0ui6IQQJsqE1mjglH4Pl592PL9EWny_n8lEq:1njJm7:n9KEZXrgqPht2r7F_B3Rm7higftOZF4Hg0d9Wptc6BQ	2022-05-10 11:54:35.81894+00
+2g0kgjj1lzorajufderu0416jfrecv01	.eJxVjMsOwiAUBf-FtSFtuYC6dO83EO6jFjVgSptojP9um3Sh2zNz5q1CnKchzFXGkFgdVWvU7nfESDfJK-FrzJeiqeRpTKhXRW-06nNhuZ829y8wxDosb2vZGfS23VMrjSVEatC7DtzB05KBHqGPZLoFWmQDTM6DA3HAJopfo1VqTSUHeT7S-FLH5vMFx18_xw:1njJul:SvUviAq7-yqstcLFkxMZgjW4iz29BUJSbB-t3nxdMYE	2022-05-10 12:03:31.807738+00
+05d4i0eku9hu5t3gzijyyt4yyo3qtzeu	.eJxVjMsOwiAURP-FtWmQZ3Fnf4TcC5fQ2NBEYGX8d6npQpdzzsy8mIfesu-Vnn6N7MYMu_wyhPCgcgjYtgNPEMLeS5u-nVPX6T4SlbYGaOtelnP1d5Wh5vEzWyVmba0BAp60RBvjlUvAmBA5SHLkJFeISRkHMw6bknBKC7RGAbH3B8ulPQo:1njncQ:Hu7ookAy8bbbB9u8cRy9jBQDFhaB6-kjRtRyOLaSZRQ	2022-05-11 19:46:34.197569+00
+q70y9ov4bzkfzh28yb7abbcb51vjcnkz	.eJxVjMEOwiAQRP-FsyFtUVh69O43kF3YWtRAU9pEY_x3S9KDZm7vzcxbOFyX0a2FZxeD6IURh19G6O-cqgg3TNcsfU7LHEnWitxtkZcc-HHeu38HI5ZxW5PvgLElzRqQwdQwGq9a7IaWghos4MkeDZAKmuyGtbYaoQFio7CeFi4l5uT4OcX5Jfrm8wWpRz9g:1nkXSQ:bPvVox7BLpcPuY12TXQmRe_euhjJEYUB9qIVAuKIoWo	2022-05-13 20:43:18.70716+00
+4syhlmf0q8hxfag367zg1j77by2j6544	eyJfcGFzc3dvcmRfcmVzZXRfa2V5IjoiYjRvajZpLWRiNjBhNWM3MTIzOTNlNjE3MDRmYTA2N2I0MzBkYWRkIn0:1nkg6M:TiCs1WGhx_e3TyiEmDp7jhYww3PFUN3ZNlyMac99IVA	2022-05-14 05:57:06.585151+00
+a2qlvaj6m3l9zqx1x6i3sigfn8hrqysz	.eJxVj7FuwyAQQP_lZssCG5PgsXtUZa4qBAfEJC5YgKtWUf69UGXJdnfv6Ul3hxzRq1Uhxj0UmYsqFuaPO2wpos0ZZljjxQfoIGPcKoM6qr0sclNJfTUBHh28f2M48_F2nc4rfHYg_5U92yS9qc4BXm5a4c2GBsxVhUvsMYaSvO6b0j9p7k_R2PXt6b4EFpWXlh2cEYxYNhomhBsNOepBsLozNjHqmBPUojDcoNb0OFI3GCeQc82N0oepRXN908cg7c_m0y_MdCCCE_L4A9QqXbw:1nkg7k:izaGkGFwgZM8tpTHmhYjk9Qc6ViUcq39pTEWK9or46k	2022-05-14 05:58:32.623522+00
+eivnf5trtoodftlftnzy6j4q7p39qx8g	.eJwVi8EKgzAQBf_lnYXQS6F-SC-lyLIsMTRm426EqvjvTW_DMHPClRNlYtattMkbNcH4OlHk2zAiRMpZLImHaFTnxB4Wsk_AgGrK4t6rrDGVbpy19h0daWvzVMlo-Qe4Buy3XZ90P9bjseJ9_QChJSqP:1nn0r5:mAAXooryyacSNL2GfTmM5nuz6dvfQCTcF-AzyGri86I	2022-05-20 16:30:59.94203+00
+m031my0xwywci41a7t8sj8pcup1ejnrt	.eJxVjMsOwiAQRf-FtSHlNS1duvcbCAyDRQ2Y0iYa479rky50e8-558WcX5fJrY1mlyMbmWSH3y14vFLZQLz4cq4ca1nmHPim8J02fqqRbsfd_QtMvk3ft_GAQSlEgkQhCSv1IJLXfSdBBaPMYAcBQlrdg-2S9QYhkJSKMFoA2KKNWsu1OHrc8_xkY_f-AHx8PpQ:1noR8P:Pu7ls6eIsPpHSPYd_QIulSu6ofhKwh-ALubbiCue7r8	2022-05-24 14:46:45.787209+00
+8w3shz8fwb3qwg6ejui7ileftdm5gd9o	.eJxVjDsOwjAQBe_iGlnxb2NT0nMGa71e4wBypDipEHeHSCmgfTPzXiLitta4dV7ilMVZaHH63RLSg9sO8h3bbZY0t3WZktwVedAur3Pm5-Vw_w4q9vqtHQIlY4gYCqeigrZeFbTjoMEkZ5wPXoHSwY4QhhLQESTW2jDlAADi_QHfWjdX:1noRIw:IrKQ1YO6kKgqnbewMSW9eKvvYrUySoMtCI8UrA9JY2c	2022-05-24 14:57:38.030961+00
 j8nqzhrtiwuir93hc6umm2nffj7stsef	.eJxVjU1uwyAQhe_CurUwOANkmX3PgGZgqJ1UJmIcNVHUu9dIWbR6u-_9PVXE2zbHm3CLS1ZH5dTbX0aYLrx2I59x_axDquvWFhp6ZHi5MnzUzF-nV_bfwIwy721KxjOOBAwe2bsuRpfsiKaMlG0JHg9hcp5sBgo7BgiAXntiZ7GPCossdY18vy7toY56Z1cU-a4tx8bCW7zwo5_pKbnzOxcsifigzWTGYqegdTGQKFhI3gCqn18zN1Mq:1nEXEx:ooLvm1_XTPcc6jVk417S-8MaWD9nF1phvlY0__0FYxE	2022-02-14 14:01:07.342638+00
 26nn36djccogz1kqnbijq9p9p83k2yd0	.eJxVjMsOwiAURP-FtWmQZ3Fnf4TcC5fQ2NBEYGX8d6npQpdzzsy8mIfesu-Vnn6N7MYMu_wyhPCgcgjYtgNPEMLeS5u-nVPX6T4SlbYGaOtelnP1d5Wh5vEzWyVmba0BAp60RBvjlUvAmBA5SHLkJFeISRkHMw6bknBKC7RGAbH3B8ulPQo:1nEZMX:FUmj0ZtsVdgO7OjB7bFHFUMXKPC1Hi_mm69Im3krJBM	2022-02-14 16:17:05.257747+00
 hz2na9fmxxesg01ee0v9wd6ceu4hlqht	.eJxVjMsOwiAURP-FtWmQZ3Fnf4TcC5fQ2NBEYGX8d6npQpdzzsy8mIfesu-Vnn6N7MYMu_wyhPCgcgjYtgNPEMLeS5u-nVPX6T4SlbYGaOtelnP1d5Wh5vEzWyVmba0BAp60RBvjlUvAmBA5SHLkJFeISRkHMw6bknBKC7RGAbH3B8ulPQo:1nHmeB:JPGvRPszIp28wusfMIP4JGnh9-x0_T3vjOmVzvxyQNk	2022-02-23 13:04:35.971267+00
 489uxfhfzt62s6r1b7v8vs5kqm2uw2os	.eJxVjDsOwjAQBe_iGln-xJtsSnrOYPmzJgZkoziRQIi7Q6QU0L6ZNy9m3bpMdm002xzZyBQ7_G7ehSuVDcSLK-fKQy3LnD3fFL7Txk810u24u3-BybXp-zYOgtc6BIJEPklU3SCT63qhQHujzYCDBKmw6wFFQmcCeFJKU4gIAFu0UWu5FkuPe56fbJRKIAjx_gD2gD_G:1nInRO:YSgc-GXnTL3uNN3wK_C8sXy7yY9jI8e_sjalOh1RX9U	2022-02-26 08:07:34.505946+00
+szhsabu76axnt1oc3suwg0p50h34uyvd	.eJxVjMsOwiAQRf-FtSHlNS1duvcbCAyDRQ2Y0iYa479rky50e8-558WcX5fJrY1mlyMbmWSH3y14vFLZQLz4cq4ca1nmHPim8J02fqqRbsfd_QtMvk3ft_GAQSlEgkQhCSv1IJLXfSdBBaPMYAcBQlrdg-2S9QYhkJSKMFoA2KKNWsu1OHrc8_xkY_f-AHx8PpQ:1noRvf:sxt7imWqc7Fw-_APDTlo6wVBA33QYYzpAdaMMlmsNzg	2022-05-24 15:37:39.057628+00
+mu4ngicoi3kyy7yxh3mae3ahx7jidz9j	.eJxVjMsOwiAURP-FtWmQZ3Fnf4TcC5fQ2NBEYGX8d6npQpdzzsy8mIfesu-Vnn6N7MYMu_wyhPCgcgjYtgNPEMLeS5u-nVPX6T4SlbYGaOtelnP1d5Wh5vEzWyVmba0BAp60RBvjlUvAmBA5SHLkJFeISRkHMw6bknBKC7RGAbH3B8ulPQo:1o10td:BjZOgYhFGA62nLbU6iZb4-vQFN_tkxzSMdIYKDo-nlU	2022-06-28 07:23:29.827959+00
+jp6js427zvks1pl2fhv9ek0577txyqub	.eJxVjDsOwjAQBe_iGln-xJtsSnrOYPmzJgZkoziRQIi7Q6QU0L6ZNy9m3bpMdm002xzZyBQ7_G7ehSuVDcSLK-fKQy3LnD3fFL7Txk810u24u3-BybXp-zYOgtc6BIJEPklU3SCT63qhQHujzYCDBKmw6wFFQmcCeFJKU4gIAFu0UWu5FkuPe56fbJRKIAjx_gD2gD_G:1o6Qsz:D-8EhV-6Z1-q4xDDGE4770rJSsZQ0GpqhlhSpTAUsWw	2022-07-13 06:09:13.736991+00
+w7kf2airvaqb3uuki0elie8kn5chfmu3	.eJxVjMsOwiAQRf-FtSHlNS1duvcbCAyDRQ2Y0iYa479rky50e8-558WcX5fJrY1mlyMbmWSH3y14vFLZQLz4cq4ca1nmHPim8J02fqqRbsfd_QtMvk3ft_GAQSlEgkQhCSv1IJLXfSdBBaPMYAcBQlrdg-2S9QYhkJSKMFoA2KKNWsu1OHrc8_xkY_f-AHx8PpQ:1oADEU:J5IHQodbXo5h48AvKXMYIfytSf4M4fSTuefh93PtkqE	2022-07-23 16:23:02.441457+00
+br9cf6w5m5au6qsskmphgfbihcmc4448	.eJxVjMsOwiAURP-FtWmQZ3Fnf4TcC5fQ2NBEYGX8d6npQpdzzsy8mIfesu-Vnn6N7MYMu_wyhPCgcgjYtgNPEMLeS5u-nVPX6T4SlbYGaOtelnP1d5Wh5vEzWyVmba0BAp60RBvjlUvAmBA5SHLkJFeISRkHMw6bknBKC7RGAbH3B8ulPQo:1nqAS6:LeY99DfC0rcU79Mxmtd57sKTiR9dUCvUby4X90rcecE	2022-05-29 09:22:14.984873+00
+gpb0xzny8mxg43zi6zoyzaosspauch5j	.eJxVjDsOwjAQBe_iGlnxb2NT0nMGa71e4wBypDipEHeHSCmgfTPzXiLitta4dV7ilMVZaHH63RLSg9sO8h3bbZY0t3WZktwVedAur3Pm5-Vw_w4q9vqtHQIlY4gYCqeigrZeFbTjoMEkZ5wPXoHSwY4QhhLQESTW2jDlAADi_QHfWjdX:1oG2vQ:BCVGC3wQbfF3m75Ky3xKWvFRXN22OgeRoljObVKy3Ms	2022-08-08 18:35:28.280641+00
+ke5o8jijpbgec6uulvpnjkhn14b0tjlw	.eJxVjMsOwiAQRf-FtSHlNS1duvcbCAyDRQ2Y0iYa479rky50e8-558WcX5fJrY1mlyMbmWSH3y14vFLZQLz4cq4ca1nmHPim8J02fqqRbsfd_QtMvk3ft_GAQSlEgkQhCSv1IJLXfSdBBaPMYAcBQlrdg-2S9QYhkJSKMFoA2KKNWsu1OHrc8_xkY_f-AHx8PpQ:1oGHU4:o_BYuEmDHPX00d7ltJKJOIhWSwaPTg0EmyQynPunFNQ	2022-08-09 10:08:12.999108+00
+5hf3oo11jfodygd1pz2vzy4c0ouatmeg	eyJhY2NvdW50X3ZlcmlmaWVkX2VtYWlsIjpudWxsLCJhY2NvdW50X3VzZXIiOiJnIiwiX3Nlc3Npb25fZXhwaXJ5IjowfQ:1nrvor:8og58HqnMrMSXemfmp63-09J2cBwZwLrxxvY_tSeh1U	2022-06-03 06:09:01.378194+00
+ovne54nci8qe9lshzwuphx20f7i6xhhs	.eJxVjMsOwiAQRf-FtSHlNS1duvcbCAyDRQ2Y0iYa479rky50e8-558WcX5fJrY1mlyMbmWSH3y14vFLZQLz4cq4ca1nmHPim8J02fqqRbsfd_QtMvk3ft_GAQSlEgkQhCSv1IJLXfSdBBaPMYAcBQlrdg-2S9QYhkJSKMFoA2KKNWsu1OHrc8_xkY_f-AHx8PpQ:1oLgxc:17XRWucUVAmZyfw4KoidpCkTFvaRVA0Egj6NOS5dIzU	2022-08-24 08:21:04.49091+00
+2xxhv7q9wuh1xxui6qcy52avi9zzyxsf	eyJhY2NvdW50X3ZlcmlmaWVkX2VtYWlsIjpudWxsLCJhY2NvdW50X3VzZXIiOiJoIiwiX3Nlc3Npb25fZXhwaXJ5IjowfQ:1osXHu:jdJNlEGY_7f_cUeMYvOt1FGKEV7zaNu8lfeSxq9NYxA	2022-11-22 22:41:46.427988+00
+r1ykgwk2oomt98kme59d85hcav2rfikm	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osXIw:OQS8FNLzVuxe1cD6SO2ZXFMGidSCmxvX8Xyvt1y5WH4	2022-11-22 22:42:50.493959+00
+os3ehx0og5i7wd9uxqx5zt5mduncd5r5	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osXIw:OQS8FNLzVuxe1cD6SO2ZXFMGidSCmxvX8Xyvt1y5WH4	2022-11-22 22:42:50.706059+00
+ippz8wq1uyb6fn3spvi11vprjebl9s9k	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osXO8:_1wdXhMSZyLgBDuG-pBBufTQ3nfFy6poaSY9T1jHzLA	2022-11-22 22:48:12.924193+00
+rzqibduu7z392fww2c4137cz24g6950g	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osXTM:DU2mhEMkJKuqVmFUgBnMTrGaXCMPeSkIJQEJxwmtaDg	2022-11-22 22:53:36.82823+00
+o6z1ku5vdkwej5kavlqkoc3c1zkvo80j	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osXYa:TIv9tWAm1h5W0B170_LlraMkGA46QR_TOG_dF1ubjos	2022-11-22 22:59:00.281672+00
+jbceavdiieng6eicwqv23eji6ww2jcvj	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osXdt:SUIrPlwhApy5bLFn3sBGPC8ruCK9BxG1CkK63IeeiT4	2022-11-22 23:04:29.45956+00
+000qe8u6eq91rui0vj7i64jrm1gngzq4	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osXjC:5cH235Y4D40ToAavOZ6XkjghdYr3RclR_IJ7vcEy8tQ	2022-11-22 23:09:58.16476+00
+epdj80uf831lawj7um1ot6kcs027yjgn	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osXoO:jWkXMG2yfi4fnIRXx5RPu2Jx7S_5iY5p5zDPjBJwX_U	2022-11-22 23:15:20.551923+00
+lxhymlnwx107u87bauw34h8yfrz9z4wb	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osXtf:FwJesm-rHgxEWc5wrS5z9tuctbcZnGZOs4-7F9GYSyE	2022-11-22 23:20:47.92082+00
+mg42rnm1gfgndvocag9cvjnyrb3qaj1u	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osXyu:etREbrOsM-dN_AgEKGuxDw0K8Usj9MF91x1kDKAyBmo	2022-11-22 23:26:12.565347+00
+ji9uugn6fpazw3sv59mkxoey8rwyy2yq	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osY47:uvYMP2Lf-ZhkBsdmQEgxqOljYkPjrGGxZcQdKoGTMpc	2022-11-22 23:31:35.318252+00
+gmg7ks4571p95nlko2kcbkgn120pgmi2	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osY9L:QzvBHDtfwyH4yYKvD8b2xJviIj_HRKqKUYL2GQ7osok	2022-11-22 23:36:59.541609+00
+ruft6frrpfn1fo17j1wpe0hoczs9n8jd	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osYEc:HaRrSzlkjweme7pqJMLwT0NVzsjjNlOI9DPzGc_A0-Y	2022-11-22 23:42:26.54912+00
+cn4pwxhb1s0v3llt0uxtyzgz0pixdkk1	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osYJp:KEpfWI6ttqYsMdNntSCQ-P6TtemFhslb5npB2Fg8vLo	2022-11-22 23:47:49.349895+00
+oultu88s6w7t9xhjzav5fneqr60m6c6j	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osYP2:H-nWMXYhz-1bJ2jS5UUUVFtuVuvrL1XN70RUzj_VQjw	2022-11-22 23:53:12.561634+00
+qtsur0y8i52ochuvzjeduzttwz5vz6dc	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osYUH:zXUaV9Xhre_TPA3fR8rlnD6XYMskMMbRIx3Yc8bNLIc	2022-11-22 23:58:37.05265+00
+fm69ezug23kxmynthxnxwhmcfjn0frz0	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osYZS:hyi48Gj63_u0aoorbBosdQ44PPFMUZZOZnqwfnU5oU8	2022-11-23 00:03:58.464362+00
+d7jxscta2iww4sby1k3w7b3fusuxzdpq	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osYee:YOjahBlb6Jtk-bUnQMDpustFIhIGn4TehL4bd_8GYT0	2022-11-23 00:09:20.095342+00
+msnjaik7a69leiztu4bg1qjw6bk1qqtp	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osYjo:X3nGbUOCnfhKv5nBNw-dd6No2ewmU4_nqcs9n5UyTvs	2022-11-23 00:14:40.623781+00
+oyx9wnm55g7hvovm8wavdng7zq7uz6yo	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osYoz:5Nxh7pRyAyCpUY7nEeo3D_HNtWftKV50-q3obQGBj1A	2022-11-23 00:20:01.811097+00
+381xm71ttu77y46kevjsh4bxz9zol4uz	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osYuD:lYyCl19A2bwJyzi0K6V0skCx4-86Sqq1SoZIZ6gJJtI	2022-11-23 00:25:25.248728+00
+bbmg8gh745njx84i6ws2j2k1ykq7dut7	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osYzO:n6HTyAMNWBkOc3cUN1yoIrdp0kCDydC7UY0rPAXZXIg	2022-11-23 00:30:46.221519+00
+1wi831uhw7v610w4xb66ea6jupaz1u9p	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osZ4c:cRVdHcle-mUE1-Q6iKIa4qWhHA86bgGvYwjYMsMHw3Q	2022-11-23 00:36:10.405151+00
+zpv3szevexehe748v50ccajmjoqbok9r	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osZ9n:ioUudqm9KWAyyoBT69IUK5NlPuJAZD-VH2hQ5XSgNDA	2022-11-23 00:41:31.973465+00
+n5l76iyf0tmbdf2cwe9cj9vwwhd8lifd	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osZF0:cOwYmn6cEDKRPsUrW5i78FK9CRlsm_4_FD8qoZoa4vY	2022-11-23 00:46:54.561608+00
+gx3boplkzxqsnqz80qhbel466mkeqhic	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osZKE:nY0_GncY8HgxcCJfCq7MUWj3WzHl4cgyUzCmsrkbs0s	2022-11-23 00:52:18.330948+00
+7jznzg3oq1g993itbz0t569m9q8x335p	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osZPS:P9vkfayRYdseyC66nTtOWrT8gXv0WI2cgor8Z4DfIjU	2022-11-23 00:57:42.702453+00
+egv8n3kenfx3q4beafw7fm6m46b50qut	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osZUg:X6IIwQquWrvSMWbtU2MeBMEwpIO2JwehOTQrLX6gvUE	2022-11-23 01:03:06.146649+00
+64hpnxi74owkfprc2cediqdr020lb6xe	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osZZt:tpZkSRC3KhY1OKiBZ-H726I5bugiwc8m0g4XJz2YKjc	2022-11-23 01:08:29.491975+00
+xujrw94vtinmjyi4nagksf7b7angtm0x	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osZf6:ZOK7nmAb4XeQ1jnbHCi6yOpaS1w8VU9LEIbj4lilx5M	2022-11-23 01:13:52.95222+00
+kedm0ppta9lhf3pf3bgs4tfepcl293rn	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osgyH:aUVLF6fR3ZeDnkGUedqnx62UEsKBfkJN8fITjksLbsI	2022-11-23 09:02:09.920327+00
+s3ruyl6l5t1tq4vv7crfgbeyuags9a58	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osh5l:xQgHcjalFZ6Zsw0NXsRWAaYmEEzNNTtjR5HtGXiFBVQ	2022-11-23 09:09:53.535782+00
+dfzq4hwtt7ytii5qdu8fiz1khzxug4h2	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oshB3:-VRyct0fX7eyMv6vZyb7OncTw2juLaMIDQnIVk9nrkc	2022-11-23 09:15:21.285479+00
+sino15qnds016nk4tvr1mnozp9sowbxp	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oshHK:6xfsMipv-mRFbRePfkAKnhOODqPBrEuxPYokM2BM1G4	2022-11-23 09:21:50.84292+00
+7vsa79rn8k2inyuy4vle2kx8f8u1dic7	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oshJr:jamdYXlu4hojSfdcWWtj6Y6UMbl5PhDGZO8AoTGGXps	2022-11-23 09:24:27.46874+00
+yltu50166fm7fuztee34laueem92cr1i	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oshK3:i4yfaXp_2k76v1BO9268zSfqyDLLEY0J1qu6SBwcYew	2022-11-23 09:24:39.168731+00
+wwohkr22hmy490mpgv0q87bkgvxpqd0r	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oshPD:yGb_dfimTTKc22eQnCCy_swKM_xvFNxCccYJfP-Up1o	2022-11-23 09:29:59.08073+00
+4l7pmfibidzkwhi41to566w3jg8rgd8h	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oshUR:jVC-tIx-eT9Q0z07byU5LLUGsBUz-1HipVKVxdC1C9E	2022-11-23 09:35:23.194886+00
+ciocuymhofy8upewfmptd587sky615lb	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oshZj:dw0H9-zq9AyANALW3jZpVglfUDn_erPLzxlfF77Em2A	2022-11-23 09:40:51.488308+00
+xbxdcq0c4j8g8rhuhaby01pyemx01ns1	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osheu:oQAQCnNZ0x3dMaseG2cDV25q3_hReE8pn39n9Xik-wU	2022-11-23 09:46:12.185154+00
+g8t0xd3jtoxqvqgr9vufabs7bwnwwnzt	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oshk6:H-XukLEjDGeNMAmBa8Num3DDYuA4CtHCfzlJ4-v341U	2022-11-23 09:51:34.578756+00
+ua1txv4rmpmdbr2twzslei84pvj9xcmk	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oshpG:-Ft6I0U1LQ-771iMX-xBbE_6SHtpQ6Ifhb-rFU_CGHk	2022-11-23 09:56:54.910545+00
+a5vx22riks0rkkhx5rovr6eeh74fmf2h	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oshuV:vTHsSs4ctJ-axAwjRoBTJ5Uli1ghUqjF7putPD1q43Y	2022-11-23 10:02:19.711201+00
+j126h8lc4gkagpfw95jognn215o5gmoa	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oshzg:xOzBdDXR0GHsp7WLiWF1DUnCv98nmTqxN4z2EncTQ3Q	2022-11-23 10:07:40.596445+00
+efhdcvirhu8q5k5r8xpxxacdgs6qgwo6	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osi4u:Gw8Ow-rrW4QJYwcXvcA8K876nHx91vZqAXdOXQ-dxHs	2022-11-23 10:13:04.038029+00
+qxe4unsry6mlubzdva2vfyiiq8wl77ix	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osiA5:OZ9vuAi4vXeCxZqXW8G_A04w-JhR1VMWgUZ5txvCLus	2022-11-23 10:18:25.658564+00
+2gwruf3nl1rhb0ajtwumq67a17ymwxwz	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osiFH:G7nRkxSsHTFzvIgLAwgaAVNP6iKxNMg2apRzm_xsOeg	2022-11-23 10:23:47.134417+00
+ch7o1d24yysxgkadrs2t353y1ctqe3o5	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osiKV:KuKby1uJlFW2dyPXMd3BbbYcArkehA7NqqmgpIer9iU	2022-11-23 10:29:11.974622+00
+77p81vbe1mvdgaop01e8ehw9g7dte2v5	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osiPh:dJ-Ilkh1Rxf4BW_pACqevn_EEvsGmI9VGYkhghytn5g	2022-11-23 10:34:33.678652+00
+l9h8mxg2tc8ff6wqmbdhbwjaw2kcxvll	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osiUt:rfIIZtcA9WH_3-pm4A8gslKli22ex3v2-pT_KaL6N-A	2022-11-23 10:39:55.856369+00
+s2qj83prqx30y4ny8nd695s4yaeb2dw0	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osia6:6ir4ih39LCZEQ5GAZL0fSrgcdaPlbTkRFb1sCcNhipw	2022-11-23 10:45:18.018927+00
+s2ebie6wpf6h9afe10vnfabz10a923zg	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osifJ:7JcR0LpbrE_4zMyi631ogvJxg9D1G-LZC_DiXfi29i4	2022-11-23 10:50:41.252865+00
+d37t0d5hccrah5rdase5igt5je715ihr	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osikX:E2I6YBRs8NozcfWpbAI6rWUaAuErFn4p0ZBaxbMwy5o	2022-11-23 10:56:05.553023+00
+azet4ge9fnjg5y90gd57etcxki843fk3	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osipj:CNekEB86LUmVe4GnNZcTGcUlKiQWRNWfFZaQ3xhJAEg	2022-11-23 11:01:27.272773+00
+8rnf55hyq2d2vsvl13dyigd74h098p2z	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osiuw:9hchmiqrTrjySd8Kh0_BYwpljrVzXQLL2ok0Ns49UPU	2022-11-23 11:06:50.188733+00
+akq09p9jdaaj5llwqk4s3vvwccxma0g3	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osj08:ebXIoWchsl543pRgJb-dqFsPReErOaWZijgSNEPiCHo	2022-11-23 11:12:12.823988+00
+xl5y8pv8ox71wx7ixwr34g3tulrof3uh	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osj5L:o-0sIt3SogvW-PqjSP6q-O7v1JHidzJ9QB8YhrmVt5k	2022-11-23 11:17:35.521086+00
+kunvuvyuj4srkiy5w8ktf6m0b6n56fh0	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osjAX:uHt56fGHMWeGE8z0m7ydt92vcfUQIqjC5s4zhdupFUI	2022-11-23 11:22:57.391233+00
+6dyqoh4xe3dylucop37ecsvi3qd7drfl	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osjFi:j_SNDzm_en2mhuNnAe9hkqrfMuTohkhY1z0R5AKJeBA	2022-11-23 11:28:18.174746+00
+j72a3x87axgdeiih8ln5kbkciuo7u1yc	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osjKu:4u6_Ma34Oj_G_ZOIizfgYeftnWyNkwOq0R8tPT-5huM	2022-11-23 11:33:40.913+00
+8vyr24bjgn84za9vvo3oahotjo671elh	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osjQ7:FGqvISH4Tod4FkPfh40I8CiAbxu5-r89vK6GmNZzeM4	2022-11-23 11:39:03.816395+00
+ff3w5zk4qkxvx5vszmxsr8gr3b7f3ebe	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osjVL:vgmbGoZeVFQIKSswJgg_lFb5ShYuezFMOgRcT_r5cls	2022-11-23 11:44:27.616202+00
+laayq01ojcdq70zon6a1oshhl9k4c1ma	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osjaW:6_UgJqJChv8okmvvVk7L0oltb5o7ZWImGezTLPRn1Rw	2022-11-23 11:49:48.659463+00
+4bg81yl7xjvx3n1ydqnhoze7deshfq57	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osjfk:HjTRWT9bA1ikbcAQ18GjQiTX0n-lIQgRptRiU-9R6oQ	2022-11-23 11:55:12.917293+00
+k9yy75gyen6zrw8eeene7tu1vjvfie35	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osjkt:1nNtqnSUpMtzZHqcJhCgm7YiWxWilQF9G05qrpXT7iI	2022-11-23 12:00:31.760021+00
+iz8pb35gh05yes64skjw0ngkkcjytmvs	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osjq4:L2f85nM0C2V3EsfiwxCFX25q1XqhUbyDlIR_Fz5i7R4	2022-11-23 12:05:52.687699+00
+6t1jsfwyt1nl0he7x585ella9xgi8f6u	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osjvG:luXlUqsEpGziS2_QJbZE74I1nbe6FFZEWGxsZW9zaOk	2022-11-23 12:11:14.210962+00
+q9j2nr674tsyqp3b01qmbo0bcr5fsn9f	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osk0R:rVhNLL3H17D6mWkUeSmgVRjvopM_qAmraGSfF_mCvbM	2022-11-23 12:16:35.159317+00
+kqhsf9hyns1xvfb3rzy4ywzbtr9s9qcn	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osk5c:OJ2G4ADzxZANueoKb_U3KeQ0O4NHTh44-rjlOBzmLW0	2022-11-23 12:21:56.548736+00
+nwdwzqa2q7ktxt3h0zfkbb8pdzns6786	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oskAp:fFsh_JoYhOMs3A8cfvbd_nYzWlRnYJopmDWZkKhjWgM	2022-11-23 12:27:19.792338+00
+31p9dacnmjbjyzhtwwhir37upts0ramp	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oskFz:Xj7BzL3aa_IKQRzRncVMEZTKUqTenjho31bE-q299lI	2022-11-23 12:32:39.258322+00
+1t0cdhs9xka736x45k70j3mtv6009kzy	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1oskLA:9z-6lTGFET4SUAMIV20rXnolPm6BfhvprHlTdvnym08	2022-11-23 12:38:00.015809+00
+4htshept36b9hu6boyj3zidfw0flubvr	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osmDm:77xGOKT-SWAEIIspHoAx1ZW-6btyPPV5Lx3it2uRcOU	2022-11-23 14:38:30.387314+00
+nol3fzlui73szi5j93qfz4rktao9c2pu	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osmJb:TxxSA8XBca7XEW7-Xq-CQHiQ1TOIL3TUiCx3Cm-9Dz8	2022-11-23 14:44:31.402433+00
+vcnmahcc4lz5sc43alkpnvevtqa3qb3y	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osmOs:C-XGKEdeqSU2lCDFxg2AYqhUnY5iOyS4UFxwxzH3xVQ	2022-11-23 14:49:58.793123+00
+ifydi2h4o18jwaagjk4sbcrklo4vh4oh	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osmU1:mapmPET-4cP54zbP62Vf8iHivh5uNmujTVj9YWP8SpE	2022-11-23 14:55:17.02484+00
+5uf2sht4n2g2nfcwla6cps359g6927ck	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osmZB:A03wNvZh3wFqgSw-a1HbCK-0ykZMCymE39bx3Tqe3oo	2022-11-23 15:00:37.98356+00
+0u13tr80c1yao1qxy5hgejbqs3ubz0tk	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osmeN:wxTuiMlS5ptmQj1hMnypFd_p0bmYVgQ1rS239FtBWw0	2022-11-23 15:05:59.073816+00
+mdehw3as9s9pobq2yjgtd1t1273qoxxz	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osmjc:ptZZLVpLStcyAMUYdPKNs93lqqkNnygGDRAfbVxiohk	2022-11-23 15:11:24.116323+00
+pcbcrovw1zbwx2mpjw4cg8hgnfkcnb3w	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osmoo:sm1F0JQHdquVjmxn0VFr4dEOyyO041zs5jw8zVi6pns	2022-11-23 15:16:46.483233+00
+fycbsqa6i0hxsdlfu8soeoywalv9lkcv	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osmtz:MCo94yET060BpkODgbR9sPl_NQWA5kCux5-gK-GVuvY	2022-11-23 15:22:07.98929+00
+qqpdjif25o692xavsp9c84gjg5m2ozgi	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osmzB:IethntA57aaHbGRrpJDS_4J0IVwrtpwCxr29cK-9kYo	2022-11-23 15:27:29.435433+00
+etiy84h0ftovtn4010jtxwl9yt9e6l2u	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osn4N:2qohVlArkuyPR2QX2aThmtdqKz6A-cJY9VEF9Uvya1Q	2022-11-23 15:32:51.153937+00
+wdhvj9dat4agsr0k97gmh5a1vbtpqlv3	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osn9Y:EP5eOGePgVu6CkU9ULYpmcRD2FccQxzyVgmSTdUk2R0	2022-11-23 15:38:12.683504+00
+dysob2nhb4hkkp4p8jp7tgtnqxjsvmt2	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osnEk:SuPwVsb-vLs87ZAVISdG7OVoYzNB-uzUeMy9hQ5Hnco	2022-11-23 15:43:34.215+00
+vixexd0wvz2c7yj1fkt6kfkn4ciedkvl	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osnJt:OFlck0WCFtPsTIzQuDmzB-7fAKhml87Br7KJyza8vZU	2022-11-23 15:48:53.990474+00
+j4nyysgelck2r5bo21ezwap2btnki2l4	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osnP5:FBrASphpFFh9ubVnHKePap_OYcRIb9HMAN6ILcFjLbg	2022-11-23 15:54:15.978738+00
+rsdnan8ciblt376vxaem3gy98hsnmdiq	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osnUJ:adSzAYb_lk7ysakox3agarBiZ3cKKNlUmFvEPify8Y0	2022-11-23 15:59:39.135743+00
+wnvd1hue5l0014wcv039wxb4bupuf9sj	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1osnZV:OOj8URaEX_JYL7CqwbSOa__kIP51WsD4lqwSGRdkALo	2022-11-23 16:05:01.171855+00
+f9ow5dlpgt2n6z2jtnd4lllcj3xnszz2	.eJxVjDsOwjAQBe_iGln-xJtsSnrOYPmzJgZkoziRQIi7Q6QU0L6ZNy9m3bpMdm002xzZyBQ7_G7ehSuVDcSLK-fKQy3LnD3fFL7Txk810u24u3-BybXp-zYOgtc6BIJEPklU3SCT63qhQHujzYCDBKmw6wFFQmcCeFJKU4gIAFu0UWu5FkuPe56fbJRKIAjx_gD2gD_G:1osoc0:e93imVH4QpxyeT4DI3c_qWrABgWkRGWJLpXn1PGn3dg	2022-11-23 17:11:40.911366+00
+0b8rr04cv0rtq7vbiml8i1rx3t00qfww	eyJhY2NvdW50X3ZlcmlmaWVkX2VtYWlsIjpudWxsLCJhY2NvdW50X3VzZXIiOiJpIiwiX3Nlc3Npb25fZXhwaXJ5IjowfQ:1ovYgM:fYVYK1p68N_sS2JOQBrQD-UA4Sy6mhz6QVTD7RuLj0s	2022-12-01 06:47:30.705478+00
+409l80qrwjs2pe5x69mwbzcoml0y0ein	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1ovYhR:n62YvBmC-hy7SYjGi55rtD7i_sbVjeCA61WbGdArkkw	2022-12-01 06:48:37.408662+00
+ergrhpk0rqqbpi4mj8dx8fj2nxdshfqz	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1ovYkB:gSSEsmooyh40bX76ToO93Mt0zk8fyCaJDDcSIYejn1Q	2022-12-01 06:51:27.949388+00
+3cfw1mp8sqjo9d84h812pxjt2dkooep3	eyJhY2NvdW50X3ZlcmlmaWVkX2VtYWlsIjpudWxsLCJhY2NvdW50X3VzZXIiOiJqIiwiX3Nlc3Npb25fZXhwaXJ5IjowfQ:1owDwn:sHxismxLuAE3Deguw1xYuH1ovxVfzw8xCJOT3LBFc3Y	2022-12-03 02:51:13.100252+00
+9982raqg2fqroav4tit9qo87aprjgf2k	.eJxVjMEOgjAQRP-lZ9O0hbIsR-9-Q7O0i1RNSygkGuO_CwkHTeY08-a9haN1Gd1aeHYxiE6gOP12Pfk7p30IN0rXLH1Oyxx7uSPyWIu85MCP88H-CUYq4_ZmT8zG4tAa0AMF1ICVVbUO2teWAA0Qmi26VlXAxnirGcD2rBoboN2lhUuJOTl-TnF-iU4bhY1Sny_yCj-X:1owz7t:OtA2NmXWUP3GPn219DFAGrKmpHoxHxWPygP5CD1tGQw	2022-12-05 05:13:49.167468+00
+220ek7q6vn3bgvonpdrhqgkmif06zua6	.eJxVjMEOgjAQRP-lZ9O0hbIsR-9-Q7O0i1RNSygkGuO_CwkHTeY08-a9haN1Gd1aeHYxiE6gOP12Pfk7p30IN0rXLH1Oyxx7uSPyWIu85MCP88H-CUYq4_ZmT8zG4tAa0AMF1ICVVbUO2teWAA0Qmi26VlXAxnirGcD2rBoboN2lhUuJOTl-TnF-iU4bhY1Sny_yCj-X:1owzc1:YCSEia-8C5TSB84j41ugLR-Kuzo00GYo3sc7Ikswr74	2022-12-05 05:44:57.991124+00
+4a8b763j42vzprhbln2sxe11xg2e1pmf	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1ox52o:hpb98U7BsAguWEX2aNqI2gAPzdkf4-b_XSP7mZq7JtA	2022-12-05 11:32:58.151338+00
+zlk9100fig6qr0vg1vb5z9di406aypcn	.eJxVjMEOgjAQRP-lZ9O0hbKUo3e_oVm6i1RNSygkGuO_CwkHTeY08-a9hcd1Gf1aePaRRCecOP12PYY7p32gG6ZrliGnZY693BF5rEVeMvHjfLB_ghHLuL05ILOxbmgN6AHJaXCVVbUmHWqL4AygM1t0rSpyjQlWM4DtWTWWoN2lhUuJOXl-TnF-iU59vnkgPmU:1oxosK:TdkVjtg3gr4LdDYNUW3L8kuBG_0h-_KMQiMdCJZWl_c	2022-12-07 12:29:12.540607+00
+angs43m64bsui0qpscwiw4x6z3rqte6j	.eJxVjDsOwjAQBe_iGln-xJtsSnrOYPmzJgZkoziRQIi7Q6QU0L6ZNy9m3bpMdm002xzZyBQ7_G7ehSuVDcSLK-fKQy3LnD3fFL7Txk810u24u3-BybXp-zYOgtc6BIJEPklU3SCT63qhQHujzYCDBKmw6wFFQmcCeFJKU4gIAFu0UWu5FkuPe56fbJRKIAjx_gD2gD_G:1oz2W8:XPIyWFRGGkVbNyhqW30Ln70bq3AA1b-Pwr-ZAEwnMcU	2022-12-10 21:15:20.895157+00
+iz4wrnmy2plmbyeznp4hajwygt19otlc	eyJhY2NvdW50X3ZlcmlmaWVkX2VtYWlsIjpudWxsLCJhY2NvdW50X3VzZXIiOiJrIiwiX3Nlc3Npb25fZXhwaXJ5IjowfQ:1p2MOH:xWvfheWfPECJKEvhlln_b8kB_yyW0jf5U_nI6DLFwgU	2022-12-20 01:04:57.831732+00
+krcymfrfe3uaooav5lngb6rlox11fev2	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1p2MTp:724NUJ2h71iwg9hvVh42ouVaOgQ5r3OvqGSWDqXGXtU	2022-12-20 01:10:41.946018+00
+2wd6ykksiuhx2twu4y2pvs0kthima2s4	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1p2MYr:K20kZtECbSZB9WPHXkbVSy9hklqevVREg6rklAZBXdw	2022-12-20 01:15:53.579802+00
+z19fv6rsp38brtqwwqgnore6cvw2ksuc	eyJhY2NvdW50X3ZlcmlmaWVkX2VtYWlsIjpudWxsLCJhY2NvdW50X3VzZXIiOiJsIiwiX3Nlc3Npb25fZXhwaXJ5IjowfQ:1p8hsr:1iGv0Ih9kBNOuTxwPLWZ9TiSNFXzfb0lUHW__vRhD0k	2023-01-06 13:14:45.603614+00
+j1fvb7awev1gpium9jrpxsg0g8hu1n8i	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1pA8Kr:Qb-BeXzAo32DJBrxeYCXAJzEMV5aLvAUj_DPGr2Udlg	2023-01-10 11:41:33.591081+00
+zqc7wb7o554o1lte5gnqlov88ttprslq	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1pB3kt:0rlaktbO9QP0_FOJxTXqKO2zWP09vurfhs_O5uILstg	2023-01-13 01:00:15.329985+00
+kz4lhl8kqul5u30t0kt3zojtcaocvf10	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1pCHsE:S_LqujnuOdUScaEl-5s3YM-xwmwKDglmGGRkFmtZw90	2023-01-16 10:16:54.21755+00
+9nsan76xai04hqgfn83s9p08nh0u4u36	eyJfc2Vzc2lvbl9leHBpcnkiOjB9:1pDRj7:s3_vlVtsiJqJa5hfWFqHfBLmLDufw4n4RvjKDcbsjDg	2023-01-19 15:00:17.458608+00
 \.
 
 
@@ -1442,7 +1671,7 @@ COPY public.django_site (id, domain, name) FROM stdin;
 --
 
 COPY public.socialaccount_socialaccount (id, provider, uid, last_login, date_joined, extra_data, user_id) FROM stdin;
-3	google	104890244786077332574	2022-02-20 11:23:52.696635+00	2022-01-28 21:25:06.922211+00	{"id": "104890244786077332574", "email": "voltovtom92@gmail.com", "verified_email": true, "name": "Timofei Voltov", "given_name": "Timofei", "family_name": "Voltov", "picture": "https://lh3.googleusercontent.com/a-/AOh14GjkwmASd8cjv1R2n3CxxJMPrc6lNSF3JnpOSricyQ=s96-c", "locale": "ru"}	6
+3	google	104890244786077332574	2022-07-20 10:29:28.761994+00	2022-01-28 21:25:06.922211+00	{"id": "104890244786077332574", "email": "voltovtom92@gmail.com", "verified_email": true, "name": "Timofei Voltov", "given_name": "Timofei", "family_name": "Voltov", "picture": "https://lh3.googleusercontent.com/a-/AFdZucpSHzOo5BlwW-Ohc-roRx5B-3g0aSfS0nQoOT17ug=s96-c", "locale": "ru"}	6
 \.
 
 
@@ -1469,7 +1698,7 @@ COPY public.socialaccount_socialapp_sites (id, socialapp_id, site_id) FROM stdin
 --
 
 COPY public.socialaccount_socialtoken (id, token, token_secret, expires_at, account_id, app_id) FROM stdin;
-3	ya29.A0ARrdaM8mh6xaZ8cXwfwAi4WJPUZkiXJNDV4vgrYeUtaI5rj5zO51QlbilzYItLgivFJfCdvE_lUERJuDoUdmFXixw7DUDHYOytfVwiQLjeTA6mdzvovP_Why9UEqkyWkMSFxIhRGWsDd5scsVzj0omnpL6_aUSQ		2022-02-20 12:23:51.617372+00	3	1
+3	ya29.A0AVA9y1ufb9Sibt1E8Wfo-vQCSsGHY357mLSXxfjHvl-waFeYJYGuak6VgjSBdavKYdQ6sxgi64Gif8c09W1P64Rovmurc3PA_8VpSAAet3ahmijnxciWAdzDOtOVR-SiEbmdjW_At4Ql-U3t1LqwWh1mit9vb68YUNnWUtBVEFTQVRBU0ZRRTY1ZHI4endpVms4ZlZ3eHlxVTNITUZPS1FJZw0166		2022-07-20 11:29:27.585088+00	3	1
 \.
 
 
@@ -1477,7 +1706,7 @@ COPY public.socialaccount_socialtoken (id, token, token_secret, expires_at, acco
 -- Name: account_emailaddress_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
 --
 
-SELECT pg_catalog.setval('public.account_emailaddress_id_seq', 6, true);
+SELECT pg_catalog.setval('public.account_emailaddress_id_seq', 20, true);
 
 
 --
@@ -1519,7 +1748,7 @@ SELECT pg_catalog.setval('public.auth_user_groups_id_seq', 1, false);
 -- Name: auth_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
 --
 
-SELECT pg_catalog.setval('public.auth_user_id_seq', 7, true);
+SELECT pg_catalog.setval('public.auth_user_id_seq', 21, true);
 
 
 --
@@ -1554,14 +1783,14 @@ SELECT pg_catalog.setval('public.core_mediaitem_id_seq', 25, true);
 -- Name: core_mediaitem_likes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
 --
 
-SELECT pg_catalog.setval('public.core_mediaitem_likes_id_seq', 55, true);
+SELECT pg_catalog.setval('public.core_mediaitem_likes_id_seq', 75, true);
 
 
 --
 -- Name: core_mediaitemreview_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
 --
 
-SELECT pg_catalog.setval('public.core_mediaitemreview_id_seq', 7, true);
+SELECT pg_catalog.setval('public.core_mediaitemreview_id_seq', 15, true);
 
 
 --
@@ -1575,7 +1804,7 @@ SELECT pg_catalog.setval('public.core_subcategory_id_seq', 3, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 86, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 124, true);
 
 
 --
@@ -1589,7 +1818,7 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 17, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: voltov
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 43, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 45, true);
 
 
 --
@@ -1780,6 +2009,22 @@ ALTER TABLE ONLY public.core_maincategory
 
 
 --
+-- Name: core_maincategory core_maincategory_title_en_key; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_maincategory
+    ADD CONSTRAINT core_maincategory_title_en_key UNIQUE (title_en);
+
+
+--
+-- Name: core_maincategory core_maincategory_title_ru_key; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_maincategory
+    ADD CONSTRAINT core_maincategory_title_ru_key UNIQUE (title_ru);
+
+
+--
 -- Name: core_mediaitem_likes core_mediaitem_likes_mediaitem_id_user_id_abb76088_uniq; Type: CONSTRAINT; Schema: public; Owner: voltov
 --
 
@@ -1812,6 +2057,22 @@ ALTER TABLE ONLY public.core_mediaitem
 
 
 --
+-- Name: core_mediaitem core_mediaitem_title_en_key; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitem
+    ADD CONSTRAINT core_mediaitem_title_en_key UNIQUE (title_en);
+
+
+--
+-- Name: core_mediaitem core_mediaitem_title_ru_key; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_mediaitem
+    ADD CONSTRAINT core_mediaitem_title_ru_key UNIQUE (title_ru);
+
+
+--
 -- Name: core_mediaitemreview core_mediaitemreview_pkey; Type: CONSTRAINT; Schema: public; Owner: voltov
 --
 
@@ -1833,6 +2094,22 @@ ALTER TABLE ONLY public.core_subcategory
 
 ALTER TABLE ONLY public.core_subcategory
     ADD CONSTRAINT core_subcategory_title_b4574e7f_uniq UNIQUE (title);
+
+
+--
+-- Name: core_subcategory core_subcategory_title_en_key; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_subcategory
+    ADD CONSTRAINT core_subcategory_title_en_key UNIQUE (title_en);
+
+
+--
+-- Name: core_subcategory core_subcategory_title_ru_key; Type: CONSTRAINT; Schema: public; Owner: voltov
+--
+
+ALTER TABLE ONLY public.core_subcategory
+    ADD CONSTRAINT core_subcategory_title_ru_key UNIQUE (title_ru);
 
 
 --
@@ -2060,6 +2337,20 @@ CREATE INDEX core_maincategory_title_28ea58c2_like ON public.core_maincategory U
 
 
 --
+-- Name: core_maincategory_title_en_7e26c28e_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_maincategory_title_en_7e26c28e_like ON public.core_maincategory USING btree (title_en varchar_pattern_ops);
+
+
+--
+-- Name: core_maincategory_title_ru_9a19c0d0_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_maincategory_title_ru_9a19c0d0_like ON public.core_maincategory USING btree (title_ru varchar_pattern_ops);
+
+
+--
 -- Name: core_mediaitem_likes_mediaitem_id_55d433e8; Type: INDEX; Schema: public; Owner: voltov
 --
 
@@ -2102,6 +2393,20 @@ CREATE INDEX core_mediaitem_title_bb91c568_like ON public.core_mediaitem USING b
 
 
 --
+-- Name: core_mediaitem_title_en_7eb888af_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_mediaitem_title_en_7eb888af_like ON public.core_mediaitem USING btree (title_en varchar_pattern_ops);
+
+
+--
+-- Name: core_mediaitem_title_ru_421376d6_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_mediaitem_title_ru_421376d6_like ON public.core_mediaitem USING btree (title_ru varchar_pattern_ops);
+
+
+--
 -- Name: core_mediaitemreview_media_item_id_d236d440; Type: INDEX; Schema: public; Owner: voltov
 --
 
@@ -2141,6 +2446,20 @@ CREATE INDEX core_subcategory_slug_10630aef_like ON public.core_subcategory USIN
 --
 
 CREATE INDEX core_subcategory_title_b4574e7f_like ON public.core_subcategory USING btree (title varchar_pattern_ops);
+
+
+--
+-- Name: core_subcategory_title_en_739df0c1_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_subcategory_title_en_739df0c1_like ON public.core_subcategory USING btree (title_en varchar_pattern_ops);
+
+
+--
+-- Name: core_subcategory_title_ru_89f22a04_like; Type: INDEX; Schema: public; Owner: voltov
+--
+
+CREATE INDEX core_subcategory_title_ru_89f22a04_like ON public.core_subcategory USING btree (title_ru varchar_pattern_ops);
 
 
 --
