@@ -2,8 +2,6 @@
 ../venv
 /zh_gallery/static
 
-/zh_gallery/zh_gallery/settings.py
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -57,3 +55,6 @@ docs/_build/
 .idea/
 /zh_gallery/.idea/
 /zh_gallery/zh_gallery/local_dev.py
+!/.env
+!/.env.db
+/zh_gallery/zh_gallery/hiden_settings.py
