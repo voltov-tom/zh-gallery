@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django.contrib.sites',
+    'django.forms',
 
     'allauth',
     'allauth.account',
@@ -47,6 +48,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'zh_gallery.urls'
+
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 TEMPLATES = [
     {

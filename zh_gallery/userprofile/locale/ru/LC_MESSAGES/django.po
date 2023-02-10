@@ -49,3 +49,6 @@ msgstr "Всего лайков пользователя"
 
 msgid "Total user's comments"
 msgstr "Всего комментариев пользователя"
+
+msgid "Username must be Alphanumeric"
+msgstr "Имя пользователя может содержать только символы латинского алфавита и цифры"
