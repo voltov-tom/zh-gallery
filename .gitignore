@@ -53,3 +53,4 @@ docs/_build/
 .idea/
 /zh_gallery/zh_gallery/hidden_settings.py
 *.sql
+.env
