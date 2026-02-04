@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_delete, pre_save
+from django.dispatch import receiver
 from django.utils.timezone import now
 from slugify import slugify
 
@@ -110,3 +112,50 @@ class About(models.Model):
 
     def __str__(self):
         return 'About'
+
+
+@receiver(pre_save, sender=MediaItem)
+def delete_old_image_on_update(sender, instance, **kwargs):
+    """Удаляет старое изображение при обновлении MediaItem"""
+    if instance.pk:  # Если это обновление существующей записи
+        try:
+            old_instance = MediaItem.objects.get(pk=instance.pk)
+
+            # Если изображение изменилось и старое существует
+            if (old_instance.image and
+                    instance.image and
+                    old_instance.image.name != instance.image.name):
+                # Удаляем старое изображение из Nextcloud
+                delete_file_from_nextcloud(old_instance.image.name)
+
+        except MediaItem.DoesNotExist:
+            pass
+
+
+@receiver(post_delete, sender=MediaItem)
+def delete_image_on_delete(sender, instance, **kwargs):
+    """Удаляет изображение при удалении MediaItem"""
+    if instance.image and instance.image.name:
+        delete_file_from_nextcloud(instance.image.name)
+
+
+def delete_file_from_nextcloud(filename):
+    """Удаляет файл из Nextcloud"""
+    from django.conf import settings
+    from webdav3.client import Client
+
+    try:
+        config = settings.NEXTCLOUD_CONFIG
+        client = Client({
+            'webdav_hostname': config['webdav_hostname'],
+            'webdav_login': config['webdav_login'],
+            'webdav_password': config['webdav_password'],
+            'webdav_root': config['webdav_root'],
+        })
+
+        # Удаляем файл
+        client.clean(filename)
+
+    except Exception:
+        # Игнорируем ошибки (файл уже удален или недоступен)
+        pass

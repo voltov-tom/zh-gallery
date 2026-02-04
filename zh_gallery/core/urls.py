@@ -4,7 +4,7 @@ from django.urls import path
 from .sitemaps import StaticViewSitemap, SubCategorySitemap, MainCategorySitemap
 from .telegram_bot_api import telegram_bot_get_random_item, telegram_bot_get_media_item
 from .views import frontpage_view, about_view, terms_and_conditions_view, privacy_policy_view, category_view, \
-    subcategory_view, media_item_view
+    subcategory_view, media_item_view, nextcloud_proxy
 from .api import like_button, delete_review, edit_review
 
 sitemaps = {
@@ -30,4 +30,7 @@ urlpatterns = [
     path('<slug:slug>/', category_view, name='category_view'),
     path('<slug:category_slug>/<slug:slug>/', subcategory_view, name='subcategory_view'),
     path('<slug:category_slug>/<slug:subcategory_slug>/<slug:slug>/', media_item_view, name='media_item_view'),
+
+    # Прокси для медиафайлов из Nextcloud
+    path('media/<path:path>', nextcloud_proxy, name='nextcloud_proxy'),
 ]
