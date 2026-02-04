@@ -3,7 +3,7 @@ from random import choice
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from slugify import slugify
+from django.utils.text import slugify
 
 from .models import MediaItem
 
