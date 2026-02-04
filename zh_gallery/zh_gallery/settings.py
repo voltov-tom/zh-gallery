@@ -9,6 +9,7 @@ OAuth2_google_secret = OAUTH2_GOOGLE_SECRET
 SECRET_KEY = SECRET_KEY
 
 DEBUG = DEBUG
+WEBDAV_DEBUG = DEBUG
 
 ALLOWED_HOSTS = DJANGO_ALLOWED_HOSTS
 
@@ -29,6 +30,7 @@ INSTALLED_APPS = [
 
     'modeltranslation',
     'django.contrib.admin',
+    'storages',
 
     'core',
     'userprofile',
@@ -146,7 +148,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static/'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -176,3 +177,12 @@ ACCOUNT_FORMS = {
     'reset_password': 'userprofile.forms.ResetPasswordFormAllAuth',
     'reset_password_from_key': 'userprofile.forms.ResetPasswordKeyFormAllAuth',
 }
+
+NEXTCLOUD_CONFIG = {
+    'webdav_hostname': WEBDAV_HOSTNAME,
+    'webdav_login': WEBDAV_LOGIN,
+    'webdav_password': WEBDAV_PASSWORD,
+    'webdav_root': WEBDAV_ROOT
+}
+
+DEFAULT_FILE_STORAGE = 'zh_gallery.storage.NextcloudStorage'
