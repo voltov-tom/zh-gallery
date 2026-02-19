@@ -82,8 +82,55 @@ class NextcloudStorage(Storage):
             return False
 
     def size(self, name):
+        """Возвращает размер файла"""
         try:
             info = self.client.info(name)
             return info.get('size', 0)
         except:
             return 0
+
+    def _open(self, name, mode='rb'):
+        """Открывает файл для чтения"""
+        if not self.client:
+            return File(b'', name=name)
+
+        # Создаем временный файл
+        temp_path = tempfile.mktemp()
+
+        try:
+            # Скачиваем файл из Nextcloud
+            self.client.download_sync(
+                remote_path=name,
+                local_path=temp_path
+            )
+
+            # Возвращаем Django File объект
+            return File(open(temp_path, mode), name=name)
+
+        except Exception as e:
+            # Очищаем временный файл при ошибке
+            if os.path.exists(temp_path):
+                os.unlink(temp_path)
+            # Возвращаем пустой файл
+            from django.core.files.base import ContentFile
+            return ContentFile(b'', name=name)
+
+    def path(self, name):
+        """Возвращает локальный путь (для совместимости)"""
+        # Генерируем временный путь
+        return os.path.join(tempfile.gettempdir(), name)
+
+    def get_local_path(self, name):
+        """Скачивает файл и возвращает локальный путь"""
+        temp_path = tempfile.mktemp(suffix=os.path.splitext(name)[1])
+
+        try:
+            self.client.download_sync(
+                remote_path=name,
+                local_path=temp_path
+            )
+            return temp_path
+        except:
+            if os.path.exists(temp_path):
+                os.unlink(temp_path)
+            return None
