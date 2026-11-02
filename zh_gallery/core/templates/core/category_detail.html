@@ -1,5 +1,5 @@
 {% extends 'core/base.html' %}
-{% load static i18n %}
+{% load i18n %}
 
 {% block title %}{{ category.title }} — Zh-gallery{% endblock title %}
 
@@ -8,31 +8,7 @@
 
     <div class="columns is-multiline detail">
         {% for subcategory in subcategories %}
-            <div class="column is-3">
-                <div class="card">
-                    <a class="media_href" href="{{ subcategory.get_absolute_url }}">
-                        <div class="subtitle has-text-centered">{{ subcategory.title }}</div>
-
-                        <div class="card-image">
-                            <figure class="image">
-                                {% if subcategory.image %}
-                                    <img src="{{ subcategory.image.url }}" alt="{{ subcategory.title }}" loading="lazy">
-                                {% else %}
-                                    <img src="{% static 'core/images/no_photo.jpeg' %}" alt="{% trans 'no photo' %}" loading="lazy">
-                                {% endif %}
-                            </figure>
-
-                            {% include 'core/parts/stats.html' with stat_views=subcategory.views_count stat_likes=subcategory.likes_count stat_reviews=subcategory.reviews_count %}
-
-                            <div class="card-content">
-                                <div class="content">
-                                    {% if subcategory.description %}{{ subcategory.description }}{% else %}{% trans "no description" %}{% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
+            {% include 'core/parts/gallery_card.html' with item=subcategory stat_views=subcategory.views_count stat_likes=subcategory.likes_count stat_reviews=subcategory.reviews_count %}
         {% empty %}
             <div class="column is-12">
                 <div class="notification is-light">{% trans "This category is empty" %}.</div>

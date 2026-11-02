@@ -1,0 +1,214 @@
+/* Единая тема сайта: палитра, фон, карточки, кнопки, поля.
+   Подключается сразу после Bulma, поэтому переопределяет её дефолты.
+   Всё остальное (components.css, auth.css) использует эти переменные. */
+
+:root {
+    --pink: #ae7394;
+    --pink-dark: #8f5b78;
+    --pink-darker: #7c4d68;
+    --pink-soft: #fdf6f9;
+    --pink-tint: #f8e4ee;
+    --pink-line: #f2e0e9;
+    --pink-ring: rgba(174, 115, 148, 0.16);
+    --text: #3c2f36;
+    --text-muted: #6b5761;
+    --text-soft: #8d7b84;
+    --radius-card: 18px;
+    --radius-control: 12px;
+    --radius-pill: 999px;
+    --shadow-card: 0 10px 30px rgba(174, 115, 148, 0.10);
+    --shadow-card-hover: 0 18px 38px rgba(174, 115, 148, 0.18);
+    --shadow-control: 0 0 0 4px var(--pink-ring);
+}
+
+html {
+    background-color: #ffffff;
+}
+
+body {
+    background:
+        radial-gradient(1100px 420px at 50% -180px, var(--pink-tint) 0%, rgba(248, 228, 238, 0) 72%),
+        #ffffff;
+    color: var(--text);
+}
+
+a {
+    color: var(--pink);
+}
+
+a:hover {
+    color: var(--pink-dark);
+}
+
+.title,
+.subtitle {
+    color: var(--text);
+}
+
+.content h1,
+.content h2,
+.content h3,
+.content h4 {
+    color: var(--text);
+}
+
+/* --- кнопки ---------------------------------------------------------- */
+.button {
+    border-radius: var(--radius-control);
+    font-weight: 600;
+    transition: background-color 0.16s ease, border-color 0.16s ease,
+        color 0.16s ease, box-shadow 0.16s ease, transform 0.12s ease;
+}
+
+.button.is-info,
+.button.is-link,
+.button.is-primary,
+.button.is-success {
+    border-color: var(--pink);
+    background: linear-gradient(180deg, #b77f9e, var(--pink));
+    color: #ffffff;
+    box-shadow: 0 10px 20px rgba(174, 115, 148, 0.22);
+}
+
+.button.is-info:hover,
+.button.is-link:hover,
+.button.is-primary:hover,
+.button.is-success:hover {
+    border-color: var(--pink-dark);
+    background: linear-gradient(180deg, var(--pink), var(--pink-dark));
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.button.is-info:active,
+.button.is-link:active,
+.button.is-primary:active,
+.button.is-success:active {
+    transform: translateY(0);
+}
+
+.button.is-info.is-light,
+.button.is-link.is-light,
+.button.is-primary.is-light,
+.button.is-success.is-light,
+.button.is-light {
+    border: 1px solid var(--pink-line);
+    background: var(--pink-soft);
+    color: var(--pink-dark);
+    box-shadow: none;
+}
+
+.button.is-info.is-light:hover,
+.button.is-link.is-light:hover,
+.button.is-light:hover {
+    border-color: var(--pink);
+    background: #fbebf2;
+    color: var(--pink-darker);
+}
+
+.button.is-white {
+    background: transparent;
+    color: var(--text);
+}
+
+.button.is-white:hover {
+    background: transparent;
+    color: var(--pink);
+}
+
+.button.is-danger.is-inverted {
+    color: var(--pink);
+}
+
+.button.is-danger.is-inverted:hover {
+    background: var(--pink);
+    color: #ffffff;
+}
+
+/* --- поля ввода ------------------------------------------------------ */
+.input,
+.textarea,
+.select select {
+    border: 1px solid var(--pink-line);
+    border-radius: var(--radius-control);
+    background-color: #ffffff;
+    color: var(--text);
+    box-shadow: none;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+    color: #bda9b4;
+}
+
+.input:hover,
+.textarea:hover,
+.select select:hover {
+    border-color: #e3c6d5;
+}
+
+.input:focus,
+.textarea:focus,
+.select select:focus,
+.input:focus-visible,
+.textarea:focus-visible {
+    border-color: var(--pink);
+    box-shadow: var(--shadow-control);
+    outline: none;
+}
+
+.label {
+    color: #5b4550;
+    font-weight: 600;
+}
+
+/* --- карточки и уведомления ------------------------------------------ */
+.card {
+    border: 1px solid var(--pink-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+.notification {
+    border-radius: var(--radius-card);
+    border: 1px solid var(--pink-line);
+    background-color: #ffffff;
+    box-shadow: 0 6px 18px rgba(174, 115, 148, 0.06);
+}
+
+.notification.is-light {
+    background-color: var(--pink-soft);
+    color: var(--text-muted);
+}
+
+.message {
+    border-radius: var(--radius-card);
+}
+
+.message-body {
+    border: 1px solid var(--pink-line);
+    border-radius: var(--radius-card);
+}
+
+/* --- служебные элементы ---------------------------------------------- */
+.accent {
+    color: var(--pink);
+}
+
+.accent-icon {
+    color: var(--pink);
+}
+
+.views_likes {
+    color: var(--text-soft);
+    font-size: 0.8125rem;
+}
+
+#topButton {
+    background-color: var(--pink);
+    border-radius: var(--radius-control);
+    box-shadow: 0 8px 18px rgba(174, 115, 148, 0.28);
+}
