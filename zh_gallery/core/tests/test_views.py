@@ -168,3 +168,23 @@ def test_subcategory_page_does_not_duplicate_media_items(client, subcategory, us
 
     # название встречается и в alt картинки, поэтому считаем именно заголовок карточки
     assert response.content.count(f">{item.title}<".encode()) == 1
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "name", ["frontpage_view", "about_view", "terms_and_conditions_view", "privacy_policy_view"]
+)
+def test_no_raw_template_comments(client, name):
+    """`{# … #}` в Django однострочный: многострочный комментарий утекает в текст."""
+    response = client.get(reverse(name))
+
+    assert b"{#" not in response.content
+    assert b"#}" not in response.content
+
+
+@pytest.mark.django_db
+def test_footer_uses_local_social_icons(client):
+    response = client.get(reverse("about_view"))
+
+    assert response.content.count(b'class="footer-social__link"') == 3
+    assert b"upload.wikimedia.org" not in response.content

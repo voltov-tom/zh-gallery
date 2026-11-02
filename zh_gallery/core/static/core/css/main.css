@@ -3,11 +3,6 @@
     justify-content: center;
 }
 
-.footer-contact {
-    display: flex;
-    justify-content: space-around;
-}
-
 .navigation {
     padding: 0 200px;
     display: flex;
