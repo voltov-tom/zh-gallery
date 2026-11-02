@@ -41,7 +41,6 @@ function initLikeWidget() {
     const images = {
         like: widget.dataset.imgLike,
         liked: widget.dataset.imgLiked,
-        animation: widget.dataset.imgAnimation,
     };
 
     let liked = widget.dataset.liked === 'true';
@@ -52,9 +51,12 @@ function initLikeWidget() {
         button.setAttribute('aria-pressed', liked ? 'true' : 'false');
     };
 
+    // «пружинка» вместо растрового GIF: та же анимация, но векторная
     const animate = () => {
-        icon.src = images.animation;
-        window.setTimeout(render, 650);
+        icon.classList.remove('is-popping');
+        void icon.offsetWidth; // перезапуск анимации
+        icon.classList.add('is-popping');
+        window.setTimeout(() => icon.classList.remove('is-popping'), 650);
     };
 
     render();

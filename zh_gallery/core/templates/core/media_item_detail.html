@@ -19,8 +19,8 @@
 
         <div class="block is-flex media-detail__counters">
             <div class="media-detail__counter">
-                <figure class="image is-24x24">
-                    <img src="{% static 'core/images/eye-outline.svg' %}" alt="views">
+                <figure class="image is-24x24 media-detail__icon">
+                    <img src="{% static 'core/images/eye-outline.svg' %}" alt="{% trans 'Views' %}">
                 </figure>
                 <div class="has-text-centered">{{ media_item.views }}</div>
             </div>
@@ -31,13 +31,12 @@
                  data-url="{% url 'like_button' %}"
                  data-liked="{{ already_liked|yesno:'true,false' }}"
                  data-authenticated="{{ request.user.is_authenticated|yesno:'true,false' }}"
-                 data-img-like="{% static 'core/images/like-pink.PNG' %}"
-                 data-img-liked="{% static 'core/images/dislike-pink.PNG' %}"
-                 data-img-animation="{% static 'core/images/like.GIF' %}">
+                 data-img-like="{% static 'core/images/heart-outline.svg' %}"
+                 data-img-liked="{% static 'core/images/heart-fill.svg' %}">
                 <button type="button" class="like-widget__button" data-like-button
                         aria-pressed="{{ already_liked|yesno:'true,false' }}" aria-label="{% trans 'Like' %}">
                     <img class="like-widget__icon" data-like-icon alt=""
-                         src="{% if already_liked %}{% static 'core/images/dislike-pink.PNG' %}{% else %}{% static 'core/images/like-pink.PNG' %}{% endif %}">
+                         src="{% if already_liked %}{% static 'core/images/heart-fill.svg' %}{% else %}{% static 'core/images/heart-outline.svg' %}{% endif %}">
                 </button>
                 <div class="has-text-centered" data-like-count>{{ likes_count }}</div>
             </div>

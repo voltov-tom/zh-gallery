@@ -206,3 +206,19 @@ def test_catalog_pages_have_no_leaked_template_comments(client, category, subcat
         content = client.get(url).content
         assert b"{#" not in content, url
         assert b"#}" not in content, url
+
+
+@pytest.mark.django_db
+def test_like_icons_are_vector_and_match_style(client, media_item, user):
+    """Сердце и глаз — одно семейство SVG-иконок; растровые PNG/GIF не используются."""
+    media_item.likes.add(user)
+    client.force_login(user)
+
+    content = client.get(media_item.get_absolute_url()).content
+
+    assert b"heart-fill.svg" in content  # состояние «лайк поставлен»
+    assert b"heart-outline.svg" in content  # состояние «не лайкнуто»
+    assert b"eye-outline.svg" in content
+    assert b"like-pink" not in content
+    assert b"dislike-pink" not in content
+    assert b"like.GIF" not in content

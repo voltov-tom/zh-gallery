@@ -349,6 +349,34 @@ figure.image.mini-card__image img {
     height: 24px;
 }
 
+/* Глаз в счётчиках — того же размера, что и сердце */
+.media-detail__icon img {
+    width: 24px;
+    height: 24px;
+}
+
+.like-widget__icon.is-popping {
+    animation: like-pop 0.65s ease;
+}
+
+@keyframes like-pop {
+    0% {
+        transform: scale(1);
+    }
+
+    35% {
+        transform: scale(1.35);
+    }
+
+    65% {
+        transform: scale(0.92);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
 /* --- профиль и карточка отзыва --------------------------------------- */
 .profile-caption {
     margin: 10px;
