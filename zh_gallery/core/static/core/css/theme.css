@@ -26,10 +26,26 @@ html {
 }
 
 body {
+    /* колонка на всю высоту: футер прижат к низу даже на коротких страницах */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     background:
         radial-gradient(1100px 420px at 50% -180px, var(--pink-tint) 0%, rgba(248, 228, 238, 0) 72%),
         #ffffff;
     color: var(--text);
+}
+
+main {
+    flex: 1 0 auto;
+    /* небольшой зазор между контентом и футером */
+    padding-bottom: 56px;
+}
+
+.footer {
+    flex-shrink: 0;
+    /* у Bulma под футером 6rem пустоты — оставляем аккуратный отступ */
+    padding: 2.5rem 1.5rem;
 }
 
 a {
