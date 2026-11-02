@@ -1,5 +1,7 @@
 {% load static %}
-{# Компактная карточка для колонки «недавно лайкнутое» / «понравившееся». #}
+{% comment %}Компактная карточка для колонки «недавно лайкнутое» / «понравившееся».
+Классы Bulma title/subtitle не используем: их отрицательные margin-top
+схлопывают отступ между названием и категорией.{% endcomment %}
 <a href="{{ item.get_absolute_url }}" class="mini-card">
     <div class="card">
         <div class="card-content mini-card__content">
@@ -15,8 +17,8 @@
                 </div>
 
                 <div class="media-content">
-                    <p class="title is-6 mini-card__title">{{ item.title }}</p>
-                    <p class="subtitle is-7 mini-card__subtitle">{{ item.subcategory }}</p>
+                    <p class="mini-card__title">{{ item.title }}</p>
+                    <p class="mini-card__subtitle">{{ item.subcategory }}</p>
 
                     {% include 'core/parts/stats.html' with stat_views=item.views stat_likes=item.likes_count stat_reviews=item.reviews_count %}
                 </div>
