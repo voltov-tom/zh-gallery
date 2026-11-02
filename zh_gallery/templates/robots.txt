@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /api/
+
+Sitemap: https://zh-gallery.ru/sitemap.xml

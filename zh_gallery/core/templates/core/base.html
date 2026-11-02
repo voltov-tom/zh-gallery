@@ -1,39 +1,38 @@
-{% load static %}
-{% load account socialaccount %}
-{% load i18n %}
-<!DOCTYPE html>
-<html>
-
+{% load static i18n %}<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="yandex-verification" content="888bb2995c9e8e36" />
-    <meta name="description" content="{{ description.body }}">
-    <title>Zh-gallery</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
-    <link rel="stylesheet" href="{% static 'core/css/main.css' %}">
-    <link href="{% static 'core/images/favicon.png' %}" rel="icon" type="image/png"/>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="yandex-verification" content="888bb2995c9e8e36">
+    {% if about %}<meta name="description" content="{{ about.body|truncatechars:200 }}">{% endif %}
+    <title>{% block title %}Zh-gallery{% endblock %}</title>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="{% static 'core/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/components.css' %}">
+    <link rel="icon" href="{% static 'core/images/favicon.png' %}" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,200&family=Pushster&display=swap"
           rel="stylesheet">
+
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
-
+    <script type="module" src="{% static 'core/js/base.js' %}"></script>
 </head>
 
 <body>
 
-<div class="preloader">
+<div class="preloader" data-preloader>
     <div class="preloader__image">
-        <img src="{% static 'core/images/preloader.gif' %}">
+        <img src="{% static 'core/images/preloader.gif' %}" alt="">
     </div>
 </div>
 
 <div class="logo">
     <figure class="image is-128x128">
-        <a href="/">
-            <img src="{% static 'core/images/logo.png' %}">
+        <a href="{% url 'frontpage_view' %}">
+            <img src="{% static 'core/images/logo.png' %}" alt="zh-gallery">
         </a>
     </figure>
 </div>
@@ -41,14 +40,15 @@
 <div class="lang_switcher">
     <form action="{% url 'set_language' %}" method="post">
         {% csrf_token %}
-        <input name="next" type="hidden" value="{{ request.path }}"/>
-        {% get_current_language as LANGUAGE_CODE %}
-        {% get_available_languages as LANGUAGES %}
-        {% get_language_info_list for LANGUAGES as languages %}
+        <input name="next" type="hidden" value="{{ request.path }}">
+        {% get_current_language as CURRENT_LANGUAGE %}
+        {% get_available_languages as AVAILABLE_LANGUAGES %}
+        {% get_language_info_list for AVAILABLE_LANGUAGES as languages %}
         {% for language in languages %}
-        <button name="language" value="{{ language.code }}" type="submit" class="button is-white is-small" style="padding: 0px 5px">
-            <span style="color: #ae7394;">{{ language.code }}</span>
-        </button>
+            <button name="language" value="{{ language.code }}" type="submit"
+                    class="button is-white is-small lang_switcher__button">
+                <span class="lang_switcher__code">{{ language.code }}</span>
+            </button>
         {% endfor %}
     </form>
 </div>
@@ -56,7 +56,8 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
 
     <div class="navbar-brand">
-        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="main-navbar">
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+           data-target="main-navbar">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -64,62 +65,62 @@
     </div>
 
     <div id="main-navbar" class="navbar-menu">
-        {% for category in categories.all %}
-
-        <div class="navbar-item">
-            <a href="{{ category.get_absolute_url }}">
-                <button class="button is-white">
-                    {{ category.title }}
-                </button>
-            </a>
-        </div>
-
+        {% for category in categories %}
+            <div class="navbar-item">
+                <a href="{{ category.get_absolute_url }}">
+                    <button class="button is-white">{{ category.title }}</button>
+                </a>
+            </div>
         {% endfor %}
 
         <div class="navbar-item">
             <a href="{% url 'about_view' %}">
-                <button class="button is-white">{% trans "ABOUT" %}<span style="color: #ae7394;">&nbsp;ZH-GALLERY</span></button>
+                <button class="button is-white">{% trans "ABOUT" %}<span
+                        class="accent">&nbsp;ZH-GALLERY</span></button>
             </a>
         </div>
 
         {% if user.is_authenticated %}
             <div class="navbar-item my_account">
                 {% trans "Welcome," %}
-                <a href="{% url 'my_account_view' %}" class="button is-info is-inverted is small" style="padding: 0 5px;">
-                    {{ user }}!
-                </a>
-                <a href="{% url 'account_logout' %}" class="button is-danger is-inverted" style="padding: 0 5px; margin-left: 7px;">
-                    <ion-icon name="log-out-outline"></ion-icon>
-                </a>
+                <a href="{% url 'my_account_view' %}"
+                   class="button is-info is-inverted is-small navbar-item__account">{{ user }}!</a>
+                <form method="post" action="{% url 'account_logout' %}" class="navbar-item__logout">
+                    {% csrf_token %}
+                    <button type="submit" class="button is-danger is-inverted" title="{% trans 'Log out' %}">
+                        <ion-icon name="log-out-outline"></ion-icon>
+                    </button>
+                </form>
             </div>
         {% else %}
             <div class="navbar-item my_account">
-                <a href="{% url 'account_login' %}" class="button is-info is-light" style="margin: 2px;">
-                    {% trans "Sign In" %}
-                </a>
-                <a href="{% url 'account_signup' %}" class="button is-info is-light" style="margin: 2px;">
-                    {% trans "Sign Up" %}
-                </a>
+                <a href="{% url 'account_login' %}"
+                   class="button is-info is-light navbar-item__auth">{% trans "Sign In" %}</a>
+                <a href="{% url 'account_signup' %}"
+                   class="button is-info is-light navbar-item__auth">{% trans "Sign Up" %}</a>
             </div>
         {% endif %}
     </div>
 
 </nav>
 
-{% block content %}
-{% endblock content %}
+<main>
+    {% block content %}{% endblock content %}
+</main>
 
-<footer class="footer" style="padding-bottom: 48px;">
+<footer class="footer">
     <div class="columns">
         <div class="has-text-centered">
             <ul>
-                <li><a href="{% url 'about_view' %}">{% trans "ABOUT" %}<span style="color: #ae7394;">&nbsp;ZH-GALLERY</span></a></li>
+                <li><a href="{% url 'about_view' %}">{% trans "ABOUT" %}<span
+                        class="accent">&nbsp;ZH-GALLERY</span></a></li>
                 <li><a href="{% url 'terms_and_conditions_view' %}">{% trans "Terms and Conditions" %}</a></li>
                 <li><a href="{% url 'privacy_policy_view' %}">{% trans "Privacy Policy" %}</a></li>
                 <li><address>e-mail: <a>zhenya@zh-gallery.ru</a></address></li>
                 <li>
-                    <a href="https://appgallery.huawei.com/app/C105980213" target="_blank">
-                        <img style="height: 24px; margin-top: 5px;" src="https://consumer-tkbdownload.huawei.com/ctkbfm/applet/simulator/ru-ru00897966/img/logo.png"
+                    <a href="https://appgallery.huawei.com/app/C105980213" target="_blank" rel="noopener noreferrer">
+                        <img class="footer__app-gallery"
+                             src="https://consumer-tkbdownload.huawei.com/ctkbfm/applet/simulator/ru-ru00897966/img/logo.png"
                              alt="app gallery">
                     </a>
                 </li>
@@ -128,86 +129,35 @@
 
             <div class="navbar-item footer-contact">
                 <figure class="image is-24x24">
-                    <a href="https://www.instagram.com/zh_note/" target="_blank">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/Instagram-Gradient-Logo-PNG.png"
-                             alt="inst">
-                    </a>
-                </figure>
-
-                 <figure class="image is-24x24">
-                    <a href="https://x.com/ZhenyaNote" target="_blank">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/X_%28formerly_Twitter%29_logo_late_2025.svg"
-                             alt="x.com">
+                    <a href="https://www.instagram.com/zh_note/" target="_blank" rel="noopener noreferrer">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Instagram_logo_2016.svg/1024px-Instagram_logo_2016.svg.png"
+                             alt="instagram">
                     </a>
                 </figure>
 
                 <figure class="image is-24x24">
-                    <a href="https://vk.com/zh_note" target="_blank">
+                    <a href="https://twitter.com/ZhenyaNote" target="_blank" rel="noopener noreferrer">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Twitter-logo.svg/1024px-Twitter-logo.svg.png"
+                             alt="twitter">
+                    </a>
+                </figure>
+
+                <figure class="image is-24x24">
+                    <a href="https://vk.com/zh_note" target="_blank" rel="noopener noreferrer">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/VK_Compact_Logo_%282021-present%29.svg/1024px-VK_Compact_Logo_%282021-present%29.svg.png"
                              alt="vk">
                     </a>
                 </figure>
             </div>
-
         </div>
     </div>
 </footer>
 
-<button onclick="topFunction()" id="topButton" title="Go to top" style="margin: auto;">
+<button type="button" id="topButton" title="Go to top">
     <ion-icon name="arrow-up-outline"></ion-icon>
 </button>
 
+{% block scripts %}{% endblock scripts %}
+
 </body>
-
-{% block scripts %}
-{% endblock scripts %}
-
-<script>
-window.onload = function () {
-    document.body.classList.add('loaded_hiding');
-    window.setTimeout(function () {
-        document.body.classList.add('loaded');
-        document.body.classList.remove('loaded_hiding');
-    }, 500);
-}
-
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-    if ($navbarBurgers.length > 0) {
-        $navbarBurgers.forEach( el => {
-            el.addEventListener('click', () => {
-                const target = el.dataset.target;
-                const $target = document.getElementById(target);
-                el.classList.toggle('is-active');
-                $target.classList.toggle('is-active');
-            });
-        });
-    }
-});
-
-</script>
-
-<script>
-mybutton = document.getElementById("topButton");
-
-window.onscroll = function() {scrollFunction()};
-
-function scrollFunction() {
-    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-        mybutton.style.display = "block";
-    } else {
-        mybutton.style.display = "none";
-    }
-}
-
-function topFunction() {
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-}
-
-</script>
-
 </html>

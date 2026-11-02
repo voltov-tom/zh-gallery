@@ -1,180 +1,105 @@
 {% extends 'core/base.html' %}
-{% load static %}
-{% load socialaccount %}
-{% load i18n %}
+{% load static i18n %}
+
+{% block title %}{{ media_item.title }} — Zh-gallery{% endblock title %}
 
 {% block content %}
+    {% include 'core/parts/back_button_title.html' with title=media_item.title %}
 
-{% with media_item as item %}
-{% include 'core/parts/back_button_title.html' %}
-{% endwith %}
-
-<div id="vue">
-    <div class="content" style="display: flex;">
-        <figure style="height: auto; max-width: 720px; margin-left: auto; margin-right: auto;">
-            {% if media_item.image %}
-            <img src="{{ media_item.image.url }}">
-            {% else %}
-            <img src="{% static 'core/images/no_photo.jpeg' %}">
-            {% endif %}
-        </figure>
-    </div>
-
-    <div class="block is-flex" style="justify-content: space-around; margin-bottom: 0px;">
-
-        <div style="justify-content: center;">
-            <figure class="image is-24x24">
-                <img src="{% static 'core/images/eye-outline.svg' %}" alt="eye">
+    <div class="media-detail">
+        <div class="content media-detail__image">
+            <figure>
+                {% if media_item.image %}
+                    <img src="{{ media_item.image.url }}" alt="{{ media_item.title }}">
+                {% else %}
+                    <img src="{% static 'core/images/no_photo.jpeg' %}" alt="">
+                {% endif %}
             </figure>
-            <div class="has-text-centered">{{ media_item.views }}</div>
         </div>
 
-        <div style="justify-content: center;">
+        <div class="block is-flex media-detail__counters">
+            <div class="media-detail__counter">
+                <figure class="image is-24x24">
+                    <img src="{% static 'core/images/eye-outline.svg' %}" alt="views">
+                </figure>
+                <div class="has-text-centered">{{ media_item.views }}</div>
+            </div>
 
-            <figure class="image is-24x24">
-                <a @click="like()">
-                    <img :src='heart_img' alt="like">
-                </a>
-            </figure>
-
-            <div class="has-text-centered">[[ likes_count ]]</div>
+            <div class="media-detail__counter like-widget"
+                 data-like-widget
+                 data-media-id="{{ media_item.pk }}"
+                 data-url="{% url 'like_button' %}"
+                 data-liked="{{ already_liked|yesno:'true,false' }}"
+                 data-authenticated="{{ request.user.is_authenticated|yesno:'true,false' }}"
+                 data-img-like="{% static 'core/images/like-pink.PNG' %}"
+                 data-img-liked="{% static 'core/images/dislike-pink.PNG' %}"
+                 data-img-animation="{% static 'core/images/like.GIF' %}">
+                <button type="button" class="like-widget__button" data-like-button
+                        aria-pressed="{{ already_liked|yesno:'true,false' }}" aria-label="{% trans 'Like' %}">
+                    <img class="like-widget__icon" data-like-icon alt=""
+                         src="{% if already_liked %}{% static 'core/images/dislike-pink.PNG' %}{% else %}{% static 'core/images/like-pink.PNG' %}{% endif %}">
+                </button>
+                <div class="has-text-centered" data-like-count>{{ likes_count }}</div>
+            </div>
         </div>
 
-    </div>
-
-    <div class="content media_item_bottom">
-        <div class="notification is-warning is-light" v-if="unauthMessage">
-            <button v-on:click="unauthMessage = !unauthMessage" class="delete"></button>
-            <p>
-                {% url 'account_login' as account_login %}
-                {% blocktranslate with request.path as request_path %}Please <a href='{{ account_login }}?next={{ request_path }}'><strong>log in</strong></a> to like{% endblocktranslate %}
-            </p>
-        </div>
-        <div class="content" style="padding: 0 15px;">{{ media_item.description }}</div>
-
-        <h2 class="subtitle" style="padding: 0 15px;">{% trans "Comments" %}</h2>
-        <div class="reviews-wrapper">
-            {% for review in media_item.reviews.all %}
-            <div class="notification space-below review">
+        <div class="content media_item_bottom">
+            <div class="notification is-warning is-light" data-like-unauth hidden>
+                <button type="button" class="delete" data-like-unauth-close aria-label="{% trans 'Close' %}"></button>
                 <p>
-                    <strong><a href="/accounts/{{ review.user }}">{{ review.user }}</a></strong>
-                    {{ review.date_added|date:"d.m.Y" }}
-                    {% if review.edited %}
-                    <span><i>{% trans "edited" %}</i></span>
-                    {% endif %}
+                    {% url 'account_login' as account_login %}
+                    {% blocktranslate with request.path as request_path %}Please <a href="{{ account_login }}?next={{ request_path }}"><strong>log in</strong></a> to like{% endblocktranslate %}
                 </p>
-                {{ review.content }}
             </div>
-            {% empty %}
-            <div class="notification space-below">
-                {% trans "No comments yet" %}.
-            </div>
-            {% endfor %}
-        </div>
 
-        {% if request.user.is_authenticated %}
-        <div class="notification space-below" style="margin: 20px 0;">
-            <form method="post" action=".">
-                {% csrf_token %}
-                <div class="field">
-                    <label>{% trans "Leave the comment" %}:</label>
-                    <div class="control">
-                        <textarea class="textarea" name="content"></textarea>
+            <div class="content media-detail__description">{{ media_item.description }}</div>
+
+            <h2 class="subtitle media-detail__comments-title">{% trans "Comments" %}</h2>
+            <div class="reviews-wrapper">
+                {% for review in media_item.reviews.all %}
+                    <div class="notification space-below review">
+                        <p>
+                            <strong><a href="{% url 'account_view' review.user.username %}">{{ review.user }}</a></strong>
+                            <time datetime="{{ review.date_added|date:'c' }}">{{ review.date_added|date:"d.m.Y" }}</time>
+                            {% if review.edited %}<span><i>{% trans "edited" %}</i></span>{% endif %}
+                        </p>
+                        {{ review.content }}
                     </div>
-                </div>
-                <div class="field">
-                    <div class="control">
-                        <button class="button is-success">{% trans "Submit" %}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        {% else %}
-
-        <article class="message is-dark" style="margin: 24px 0;">
-            <div class="message-body">
-                {% blocktranslate with request.path as request_path %}Please <a href='{{ account_login }}?next={{ request_path }}'><strong>log in</strong></a> to leave a comment{% endblocktranslate %}
+                {% empty %}
+                    <div class="notification space-below">{% trans "No comments yet" %}.</div>
+                {% endfor %}
             </div>
-        </article>
-        {% endif %}
+
+            {% if request.user.is_authenticated %}
+                <div class="notification space-below review-form">
+                    <form method="post" action="{{ media_item.get_absolute_url }}">
+                        {% csrf_token %}
+                        <div class="field">
+                            <label class="label" for="{{ form.content.id_for_label }}">{{ form.content.label }}:</label>
+                            <div class="control">{{ form.content }}</div>
+                            {% for error in form.content.errors %}
+                                <p class="help is-danger">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button class="button is-success" type="submit">{% trans "Submit" %}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            {% else %}
+                <article class="message is-dark review-login-hint">
+                    <div class="message-body">
+                        {% url 'account_login' as account_login %}
+                        {% blocktranslate with request.path as request_path %}Please <a href="{{ account_login }}?next={{ request_path }}"><strong>log in</strong></a> to leave a comment{% endblocktranslate %}
+                    </div>
+                </article>
+            {% endif %}
+        </div>
     </div>
-</div>
 {% endblock content %}
 
 {% block scripts %}
-
-<script>
-var likes = new Vue({
-    el: '#vue',
-    delimiters: ['[[', ']]'],
-
-    data() {
-        return {
-            unauthMessage: false,
-            likes_count: {{ likes_count }},
-            already_liked: {{ already_liked }},
-            media_id: '{{ media_item.id }}',
-            heart_img: null,
-            img_dislike : "{% static 'core/images/dislike-pink.PNG' %}",
-            img_like_gif : "{% static 'core/images/like.GIF' %}",
-            img_like : "{% static 'core/images/like-pink.PNG' %}"
-        }
-    },
-
-    created: function() {
-        if (this.already_liked == true) {
-            this.heart_img = this.img_dislike;
-        } else {
-            this.heart_img = this.img_like;
-        }
-    },
-
-    methods: {
-        like() {
-            var data =  {
-                "media_id": this.media_id,
-                "operation": 'like_submit'
-            };
-            if ({% if request.user.is_authenticated %}true{% else %}false{% endif %}) {
-                fetch("{% url 'like_button' %}", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}'
-                        },
-                        credentials: 'same-origin',
-                        body: JSON.stringify(data)
-                    })
-
-                    .then(response => response.json())
-                    .then(data => {
-                        if ((data.success == true)&(data.liked == true)) {
-                            this.heart_img = this.img_like_gif,
-                            setTimeout(() => {
-                                this.heart_img = this.img_dislike;
-                                }, 650),
-                            this.likes_count += 1;
-
-                        } else if ((data.success == true)&(data.liked == false)) {
-                            this.heart_img = this.img_like,
-                            this.likes_count -= 1;
-
-                        } else {
-                            console.log(response.data)
-                        }
-                    })
-
-                    .catch(function (error) {
-                        console.log('error:', error);
-                    })
-                } else {
-                    console.log('user.is_authenticated')
-                    this.unauthMessage = true;
-                }
-            }
-        }
-    })
-</script>
-
+    <script type="module" src="{% static 'core/js/like.js' %}"></script>
 {% endblock scripts %}

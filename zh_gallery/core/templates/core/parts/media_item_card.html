@@ -1,0 +1,27 @@
+{% load static i18n %}
+{# Крупная карточка медиа-элемента. Ожидает `item` с annotate-полями. #}
+<div class="column is-3 media_item_card">
+    <div class="card">
+        <a class="media_href" href="{{ item.get_absolute_url }}">
+            <div class="subtitle has-text-centered">{{ item.title }}</div>
+
+            <div class="card-image">
+                <figure class="image">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy">
+                    {% else %}
+                        <img src="{% static 'core/images/no_photo.jpeg' %}" alt="{% trans 'no photo' %}" loading="lazy">
+                    {% endif %}
+                </figure>
+
+                {% include 'core/parts/stats.html' with stat_views=item.views stat_likes=item.likes_count stat_reviews=item.reviews_count %}
+
+                <div class="card-content">
+                    <div class="content">
+                        {% if item.description %}{{ item.description }}{% else %}{% trans "no description" %}{% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

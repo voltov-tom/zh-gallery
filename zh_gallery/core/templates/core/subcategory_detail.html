@@ -1,62 +1,18 @@
 {% extends 'core/base.html' %}
-{% load static %}
+{% load i18n %}
+
+{% block title %}{{ subcategory.title }} — Zh-gallery{% endblock title %}
+
 {% block content %}
+    {% include 'core/parts/back_button_title.html' with title=subcategory.title %}
 
-{% with subcategory as item %}
-{% include 'core/parts/back_button_title.html' %}
-{% endwith %}
-
-<div class="columns is-multiline detail">
-
-    {% for item in media_items %}
-    <div class="column is-3 media_item_card">
-        <div class="card">
-            <a class="media_href"
-               href="{{ item.get_absolute_url }}">
-                <div class="subtitle has-text-centered">{{ item.title }}</div>
-
-                <div class="card-image">
-                    <figure class="image">
-                        {% if item.image %}
-                        <img src="{{ item.image.url }}">
-                        {% else %}
-                        <img src="{% static 'core/images/no_photo.jpeg' %}">
-                        {% endif %}
-                    </figure>
-
-                    <span class="icon-text views_likes">
-                        <span class="icon">
-                            <ion-icon fill="currentColor" style="color: #ae7394;" name="reader-outline"></ion-icon>
-                        </span>
-                        <span>{{ item.reviews.count }}</span>
-
-                        <span class="icon">
-                            <ion-icon fill="currentColor" style="color: #ae7394;" name="eye-outline"></ion-icon>
-                        </span>
-                        <span>{{ item.views }}</span>
-
-                        <span class="icon">
-                            <ion-icon fill="currentColor" style="color: #ae7394;" name="heart-outline"></ion-icon>
-                        </span>
-                        <span>{{ item.total_likes }}</span>
-                    </span>
-
-                    <div class="card-content">
-                        <div class="content">
-                            {% if item.description %}
-                            {{ item.description }}
-                            {% else %}
-                            no description
-                            {% endif %}
-                        </div>
-                    </div>
-
-                </div>
-            </a>
-        </div>
+    <div class="columns is-multiline detail">
+        {% for item in media_items %}
+            {% include 'core/parts/media_item_card.html' with item=item %}
+        {% empty %}
+            <div class="column is-12">
+                <div class="notification is-light">{% trans "Nothing here yet" %}.</div>
+            </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-
-</div>
-
 {% endblock content %}

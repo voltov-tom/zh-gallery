@@ -1,80 +1,69 @@
+"""Формы django-allauth в стиле Bulma.
+
+Все кастомные формы приводили один и тот же список полей к классу ``input``;
+вместо семи копий — один миксин.
+"""
+
+from __future__ import annotations
+
+from allauth.account import app_settings
+from allauth.account.forms import (
+    AddEmailForm,
+    ChangePasswordForm,
+    LoginForm,
+    ResetPasswordForm,
+    ResetPasswordKeyForm,
+    SetPasswordForm,
+    SignupForm,
+)
 from django import forms
 from django.utils.translation import gettext_lazy as _
-
-from allauth.account.forms import LoginForm, SignupForm, AddEmailForm, ChangePasswordForm, SetPasswordForm, \
-    ResetPasswordForm, ResetPasswordKeyForm
-from allauth.account import app_settings
 
 from .fields import CustomCharField
 
 
-class LoginFormAllAuth(LoginForm):
+class BulmaFormMixin:
+    """Добавляет CSS-класс Bulma ко всем полям формы."""
+
+    widget_class = "input"
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['login'].widget.attrs['class'] = 'input '
-        self.fields['password'].widget.attrs['class'] = 'input '
+        for field in self.fields.values():
+            classes = field.widget.attrs.get("class", "")
+            if self.widget_class not in classes.split():
+                field.widget.attrs["class"] = f"{classes} {self.widget_class}".strip()
 
 
-class SignupFormAllAuth(SignupForm):
+class LoginFormAllAuth(BulmaFormMixin, LoginForm):
+    pass
+
+
+class SignupFormAllAuth(BulmaFormMixin, SignupForm):
+    """Регистрация с проверкой логина на латиницу/цифры."""
+
     username = CustomCharField(
         label=_("Username"),
         min_length=app_settings.USERNAME_MIN_LENGTH,
-        widget=forms.TextInput(
-            attrs={
-                "placeholder": _("Username"),
-                "autocomplete": "username",
-            },
-        ),
+        widget=forms.TextInput(attrs={"placeholder": _("Username"), "autocomplete": "username"}),
     )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs.update({
-                'class': 'input'
-            })
+
+class AddEmailFormAllAuth(BulmaFormMixin, AddEmailForm):
+    pass
 
 
-class AddEmailFormAllAuth(AddEmailForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs.update({
-                'class': 'input '
-            })
+class ChangePasswordFormAllAuth(BulmaFormMixin, ChangePasswordForm):
+    pass
 
 
-class ChangePasswordFormAllAuth(ChangePasswordForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs.update({
-                'class': 'input '
-            })
+class SetPasswordFormAllAuth(BulmaFormMixin, SetPasswordForm):
+    pass
 
 
-class SetPasswordFormAllAuth(SetPasswordForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs.update({
-                'class': 'input '
-            })
+class ResetPasswordFormAllAuth(BulmaFormMixin, ResetPasswordForm):
+    pass
 
 
-class ResetPasswordFormAllAuth(ResetPasswordForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs.update({
-                'class': 'input '
-            })
-
-
-class ResetPasswordKeyFormAllAuth(ResetPasswordKeyForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs.update({
-                'class': 'input '
-            })
+class ResetPasswordKeyFormAllAuth(BulmaFormMixin, ResetPasswordKeyForm):
+    pass

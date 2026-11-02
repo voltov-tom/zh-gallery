@@ -1,22 +1,24 @@
 {% extends 'core/base.html' %}
-{% block content %}
 {% load i18n %}
 
-{% trans 'ABOUT' as about %}
-{% with about as item %}
-{% include 'core/parts/back_button_title.html' %}
-{% endwith %}
-<div class="content about">
-    <div class="subtitle">{% trans 'Some info about zh-gallery' %}:</div>
-    <div class="columns">
-        <div class="column is-9">{{ description.body }}</div>
-        {% if description.image %}
-            <div class="column is-3" style="">
-                <figure class="image">
-                    <img style="height: auto; width: 200px;" class="is-rounded" src="{{ description.image.url }}" alt="image">
-                </figure>
+{% block content %}
+    {% trans 'ABOUT' as about_title %}
+    {% include 'core/parts/back_button_title.html' with title=about_title %}
+
+    <div class="content about">
+        <div class="subtitle">{% trans 'Some info about zh-gallery' %}:</div>
+        <div class="columns">
+            <div class="column is-9">
+                {% if about %}{{ about.body }}{% endif %}
             </div>
-        {% endif %}
+            {% if about.image %}
+                <div class="column is-3">
+                    <figure class="image">
+                        <img class="is-rounded about__image" src="{{ about.image.url }}"
+                             alt="{% trans 'About the project' %}">
+                    </figure>
+                </div>
+            {% endif %}
+        </div>
     </div>
-</div>
 {% endblock content %}

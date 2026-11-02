@@ -1,0 +1,26 @@
+{% load static %}
+{# Компактная карточка для колонки «недавно лайкнутое» / «понравившееся». #}
+<a href="{{ item.get_absolute_url }}" class="mini-card">
+    <div class="card">
+        <div class="card-content mini-card__content">
+            <div class="media mini-card__media">
+                <div class="media-left">
+                    <figure class="image is-64x64 mini-card__image">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy">
+                        {% else %}
+                            <img src="{% static 'core/images/no_photo.jpeg' %}" alt="" loading="lazy">
+                        {% endif %}
+                    </figure>
+                </div>
+
+                <div class="media-content">
+                    <p class="title is-6 mini-card__title">{{ item.title }}</p>
+                    <p class="subtitle is-7 mini-card__subtitle">{{ item.subcategory }}</p>
+
+                    {% include 'core/parts/stats.html' with stat_views=item.views stat_likes=item.likes_count stat_reviews=item.reviews_count %}
+                </div>
+            </div>
+        </div>
+    </div>
+</a>

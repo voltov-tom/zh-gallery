@@ -1,36 +1,92 @@
+"""URL-конфигурация приложения core.
+
+Порядок важен: служебные и API-пути объявлены раньше «жадных» slug-маршрутов.
+Имена маршрутов сохранены прежними — на них ссылаются шаблоны, sitemap и
+внешние клиенты.
+"""
+
+from __future__ import annotations
+
 from django.contrib.sitemaps.views import sitemap
 from django.urls import path
+from django.views.generic import TemplateView
 
-from .sitemaps import StaticViewSitemap, SubCategorySitemap, MainCategorySitemap
-from .telegram_bot_api import telegram_bot_get_random_item, telegram_bot_get_media_item
-from .views import frontpage_view, about_view, terms_and_conditions_view, privacy_policy_view, category_view, \
-    subcategory_view, media_item_view, nextcloud_proxy
-from .api import like_button, delete_review, edit_review
+from .api import (
+    delete_review,
+    edit_review,
+    like_button,
+    telegram_bot_get_media_item,
+    telegram_bot_get_random_item,
+)
+from .sitemaps import (
+    MainCategorySitemap,
+    MediaItemSitemap,
+    StaticViewSitemap,
+    SubCategorySitemap,
+)
+from .views import (
+    AboutView,
+    FrontPageView,
+    MainCategoryDetailView,
+    MediaItemDetailView,
+    PrivacyPolicyView,
+    SubCategoryDetailView,
+    TermsAndConditionsView,
+    healthcheck,
+)
 
 sitemaps = {
-    'static': StaticViewSitemap,
-    'category': MainCategorySitemap,
-    'subcategory': SubCategorySitemap
+    "static": StaticViewSitemap,
+    "category": MainCategorySitemap,
+    "subcategory": SubCategorySitemap,
+    "media_item": MediaItemSitemap,
 }
 
 urlpatterns = [
-    path('', frontpage_view, name='frontpage_view'),
-    path('about/', about_view, name='about_view'),
-    path('terms-and-conditions/', terms_and_conditions_view, name='terms_and_conditions_view'),
-    path('privacy-policy/', privacy_policy_view, name='privacy_policy_view'),
-
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
-
-    path('api/like/', like_button, name='like_button'),
-    path('api/delete-review/', delete_review, name='delete_review'),
-    path('api/edit-review/', edit_review, name='edit_review'),
-    path('api/telegram_bot/get_random_item/', telegram_bot_get_random_item, name='get_random_item'),
-    path('api/telegram_bot/get_media_item/<slug:slug>/', telegram_bot_get_media_item, name='get_media_item'),
-
-    path('<slug:slug>/', category_view, name='category_view'),
-    path('<slug:category_slug>/<slug:slug>/', subcategory_view, name='subcategory_view'),
-    path('<slug:category_slug>/<slug:subcategory_slug>/<slug:slug>/', media_item_view, name='media_item_view'),
-
-    # Прокси для медиафайлов из Nextcloud
-    path('media/<path:path>', nextcloud_proxy, name='nextcloud_proxy'),
+    path("", FrontPageView.as_view(), name="frontpage_view"),
+    path("about/", AboutView.as_view(), name="about_view"),
+    path(
+        "terms-and-conditions/",
+        TermsAndConditionsView.as_view(),
+        name="terms_and_conditions_view",
+    ),
+    path("privacy-policy/", PrivacyPolicyView.as_view(), name="privacy_policy_view"),
+    path("healthz/", healthcheck, name="healthcheck"),
+    path(
+        "robots.txt",
+        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
+        name="robots_txt",
+    ),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
+    # JSON API
+    path("api/like/", like_button, name="like_button"),
+    path("api/delete-review/", delete_review, name="delete_review"),
+    path("api/edit-review/", edit_review, name="edit_review"),
+    path(
+        "api/telegram_bot/get_random_item/",
+        telegram_bot_get_random_item,
+        name="get_random_item",
+    ),
+    path(
+        "api/telegram_bot/get_media_item/<slug:slug>/",
+        telegram_bot_get_media_item,
+        name="get_media_item",
+    ),
+    # Каталог: /категория/, /категория/подкатегория/, /категория/подкатегория/элемент/
+    path("<slug:slug>/", MainCategoryDetailView.as_view(), name="category_view"),
+    path(
+        "<slug:category_slug>/<slug:slug>/",
+        SubCategoryDetailView.as_view(),
+        name="subcategory_view",
+    ),
+    path(
+        "<slug:category_slug>/<slug:subcategory_slug>/<slug:slug>/",
+        MediaItemDetailView.as_view(),
+        name="media_item_view",
+    ),
 ]

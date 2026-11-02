@@ -1,56 +1,43 @@
-venv
-/zh_gallery/static
-
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
-
-# C extensions
 *.so
+.Python
 
-# Distribution / packaging
-bin/
-build/
-develop-eggs/
-dist/
-eggs/
-lib/
-lib64/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
+# Виртуальные окружения
+venv/
+.venv/
+env/
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-.tox/
-.coverage
-.cache
-nosetests.xml
-coverage.xml
-
-# Translations
-*.mo
-
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
-# Rope
-.ropeproject
-
-# Django stuff:
+# Django
 *.log
+local_settings.py
+zh_gallery/static/
+zh_gallery/media/
+
+# Переводы: .po в репозитории, .mo собираются при деплое
+*.mo
 *.pot
 
-# Sphinx documentation
-docs/_build/
-.idea/
-/zh_gallery/zh_gallery/hidden_settings.py
-*.sql
+# Секреты и локальная конфигурация
 .env
+.env.*
+!.env.example
+.idea/
+.vscode/
+.DS_Store
+
+# Инструменты
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.mypy_cache/
+
+# Дампы БД
+*.sql
+*.sql.gz
+
+# Локальный docker config (создаётся в песочнице)
+.docker/

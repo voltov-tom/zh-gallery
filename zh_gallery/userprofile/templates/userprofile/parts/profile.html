@@ -1,0 +1,99 @@
+{% load static i18n %}
+{# Общий профиль: используется и в «моём» кабинете, и в чужом. #}
+<div class="content media_item_bottom"
+     {% if edit_review_url %}data-reviews-app data-edit-url="{{ edit_review_url }}" data-delete-url="{{ delete_review_url }}"{% endif %}>
+    <div class="title">
+        <p class="profile-title">
+            {% if profile_user == user %}{% trans "My account" %}{% else %}{{ profile_user }}{% endif %}
+        </p>
+    </div>
+
+    {% if profile_user == user %}
+        <div class="navbar-item account_button">
+            <a class="button is-small account_button__item"
+               href="{% url 'socialaccount_connections' %}">{% trans "Socialaccount" %}</a>
+            <a class="button is-small account_button__item" href="{% url 'account_email' %}">E-mail</a>
+            <a class="button is-small account_button__item"
+               href="{% url 'account_change_password' %}">{% trans "Change Password" %}</a>
+            <form method="post" action="{% url 'account_logout' %}" class="account_button__item">
+                {% csrf_token %}
+                <button type="submit" class="button is-danger is-inverted" title="{% trans 'Log out' %}">
+                    <ion-icon name="log-out-outline"></ion-icon>
+                </button>
+            </form>
+        </div>
+    {% endif %}
+
+    <div class="columns">
+        <div class="column is-8">
+            <p class="subtitle profile-caption">
+                {% if profile_user == user %}{% trans "Your added comments" %}{% else %}{% trans "Total user's comments" %}{% endif %}
+                : {{ reviews|length }}
+            </p>
+
+            {% for review in reviews %}
+                <article class="notification review-item" data-review-item data-review-id="{{ review.pk }}">
+                    <div class="review-item__summary">
+                        <a href="{{ review.media_item.get_absolute_url }}">
+                            <figure class="image is-128x128 review-item__image">
+                                {% if review.media_item.image %}
+                                    <img src="{{ review.media_item.image.url }}"
+                                         alt="{{ review.media_item.title }}" loading="lazy">
+                                {% else %}
+                                    <img src="{% static 'core/images/no_photo.jpeg' %}" alt="" loading="lazy">
+                                {% endif %}
+                            </figure>
+                        </a>
+
+                        <div class="review-item__body">
+                            <strong class="review-item__title">{{ review.media_item.title }}</strong>
+                            <p class="review-item__meta">
+                                <time datetime="{{ review.date_added|date:'c' }}">{{ review.date_added|date:"d.m.Y H:i" }}</time>
+                                <span data-review-edited {% if not review.edited %}hidden{% endif %}><i> {% trans "edited" %}</i></span>
+                            </p>
+                            <p class="review_body" data-review-text>{{ review.content }}</p>
+
+                            {% if profile_user == user %}
+                                <form class="review-item__edit" data-review-edit hidden>
+                                    <textarea class="textarea" rows="4" name="content"
+                                              data-review-textarea>{{ review.content }}</textarea>
+                                    <div class="review-item__edit-actions">
+                                        <button type="submit"
+                                                class="button is-success is-light">{% trans "Submit changes" %}</button>
+                                        <button type="button" class="button is-danger is-light"
+                                                data-action="cancel">{% trans "Cancel changes" %}</button>
+                                    </div>
+                                    <p class="help is-danger" data-review-error hidden></p>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if profile_user == user %}
+                        <button type="button" class="delete review-item__delete" data-action="delete"
+                                aria-label="{% trans 'Delete' %}"></button>
+                        <button type="button" class="review-item__edit-toggle" data-action="edit"
+                                aria-label="{% trans 'Edit' %}">
+                            <ion-icon name="create-outline"></ion-icon>
+                        </button>
+                    {% endif %}
+                </article>
+            {% empty %}
+                <p class="profile-caption">{% trans "No comments yet" %}...</p>
+            {% endfor %}
+        </div>
+
+        <div class="column is-4 column_frontpage">
+            <p class="subtitle profile-caption">
+                {% if profile_user == user %}{% trans "Your liked items" %}{% else %}{% trans "Total user's liked items" %}{% endif %}
+                : {{ liked_items|length }}
+            </p>
+
+            {% for item in liked_items %}
+                {% include 'core/parts/media_item_mini.html' with item=item %}
+            {% empty %}
+                <p class="profile-caption">{% trans "No likes yet" %}...</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
