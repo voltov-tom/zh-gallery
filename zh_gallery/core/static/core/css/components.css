@@ -1,14 +1,5 @@
-/* Дополнительные стили для переработанных шаблонов.
-   Здесь только то, что раньше было инлайн-стилями, и новые компоненты:
-   виджет лайка, карточка отзыва, мини-карточка. */
-
-.accent {
-    color: #ae7394;
-}
-
-.accent-icon {
-    color: #ae7394;
-}
+/* Компоненты страниц: карточки галереи, мини-карточки, отзывы, детальная
+   страница, профиль, футер. Цвета и радиусы берутся из theme.css. */
 
 /* --- шапка ---------------------------------------------------------- */
 .lang_switcher__button {
@@ -16,7 +7,7 @@
 }
 
 .lang_switcher__code {
-    color: #ae7394;
+    color: var(--pink);
 }
 
 .navbar-item__account {
@@ -36,31 +27,6 @@
     margin-top: 5px;
 }
 
-/* --- соцсети в футере ------------------------------------------------ */
-.footer-social {
-    display: flex;
-    justify-content: center;
-    gap: 1.25rem;
-    padding: 0.75rem 0 0.25rem;
-}
-
-.footer-social__link {
-    display: inline-flex;
-    color: #ae7394;
-    transition: opacity 0.2s ease;
-}
-
-.footer-social__link:hover,
-.footer-social__link:focus-visible {
-    opacity: 0.65;
-}
-
-.footer-social__icon {
-    width: 24px;
-    height: 24px;
-    fill: currentColor;
-}
-
 /* --- заголовок раздела ---------------------------------------------- */
 .title-bar {
     margin: 0;
@@ -69,7 +35,7 @@
 .title-bar__title {
     margin-bottom: 0;
     margin-top: auto;
-    margin-bottom: auto;
+    font-weight: 600;
 }
 
 /* --- главная --------------------------------------------------------- */
@@ -78,13 +44,11 @@
 }
 
 .section-caption {
-    margin: 0 10px;
+    margin: 0 10px 12px;
+    color: var(--text-muted);
+    font-weight: 600;
 }
 
-/* Карточка комментария на главной: картинка слева, текст занимает остаток
-   ширины, счётчики — в правом нижнем углу (.notification у Bulma relative).
-   Раньше контейнер был full-width с justify-content: center, из-за чего
-   картинка и текст уезжали в середину и слева оставалась пустота. */
 .review-teaser__inner {
     display: flex;
     align-items: flex-start;
@@ -103,10 +67,10 @@ figure.image.review-teaser__image {
     height: auto;
 }
 
-/* Портретная работа должна растягивать карточку, а не вылезать из неё */
 figure.image.review-teaser__image img {
     width: 100%;
     height: auto;
+    border-radius: 12px;
 }
 
 .review-teaser__body {
@@ -117,10 +81,12 @@ figure.image.review-teaser__image img {
 
 .review-teaser__title {
     font-size: 20px;
+    color: var(--text);
 }
 
 .review-teaser__meta {
     margin-bottom: 0;
+    color: var(--text-soft);
 }
 
 .review-teaser__stats {
@@ -129,9 +95,110 @@ figure.image.review-teaser__image img {
     right: 10px;
 }
 
+/* --- карточки галереи (категории, подкатегории, работы) -------------- */
+.detail {
+    gap: 24px 0;
+}
+
+.media_item_card {
+    display: flex;
+}
+
+.media-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid var(--pink-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.media-card:hover,
+.media-card:focus-visible {
+    transform: translateY(-3px);
+    border-color: #e8c8d8;
+    box-shadow: var(--shadow-card-hover);
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Фиксированная пропорция: карточки в сетке одной высоты, картинка
+   не обрезается (contain), фон чуть розовый. */
+.media-card__media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(180deg, var(--pink-soft), #ffffff);
+    border-bottom: 1px solid var(--pink-line);
+    overflow: hidden;
+}
+
+.media-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.media-card__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    gap: 0.375rem;
+    padding: 14px 16px 16px;
+}
+
+.media-card__title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.media-card__description {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--text-soft);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.media-card__stats {
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+.media-card__stats .views_likes {
+    justify-content: flex-start;
+    padding: 0;
+}
+
 /* --- мини-карточка --------------------------------------------------- */
 .mini-card {
+    display: block;
     width: 100%;
+    margin-bottom: 10px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.mini-card .card {
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.mini-card:hover .card {
+    transform: translateY(-2px);
+    border-color: #e8c8d8;
+    box-shadow: var(--shadow-card-hover);
 }
 
 .mini-card__content {
@@ -139,28 +206,55 @@ figure.image.review-teaser__image img {
 }
 
 .mini-card__media {
+    display: flex;
     align-items: center;
+    gap: 0.75rem;
+    padding: 10px 12px;
+}
+
+.mini-card__media .media-left {
+    margin: 0;
 }
 
 figure.image.mini-card__image {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    display: flex;
-    justify-content: center;
-    height: auto;
+    width: 64px;
+    min-width: 64px;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 10px;
 }
 
 figure.image.mini-card__image img {
-    width: 100%;
-    height: auto;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 .mini-card__title {
-    padding: 5px;
+    padding: 0;
+    /* Bulma тянет .subtitle вверх отрицательным margin-top — сбрасываем */
+    margin-top: 0;
+    margin-bottom: 0.125rem;
+    color: var(--text);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.3;
 }
 
 .mini-card__subtitle {
-    padding: 5px;
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+    line-height: 1.2;
+    color: var(--text-soft);
+    font-size: 0.75rem;
+    line-height: 1.3;
+}
+
+.mini-card__media .views_likes {
+    justify-content: flex-start;
+    padding: 0;
 }
 
 /* Длинный текст комментария обрезаем в карточках, а не в самом отзыве */
@@ -172,32 +266,61 @@ figure.image.mini-card__image img {
 }
 
 /* --- страница элемента ---------------------------------------------- */
+.media-detail {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+/* текстовая часть — по ширине картинки, без лишних отступов */
+.media-detail .media_item_bottom {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0;
+}
+
 .media-detail__image {
     display: flex;
+    justify-content: center;
 }
 
 .media-detail__image figure {
     height: auto;
     max-width: 720px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
+    padding: 12px;
+    background-color: #ffffff;
+    border: 1px solid var(--pink-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+.media-detail__image img {
+    border-radius: 10px;
 }
 
 .media-detail__counters {
-    justify-content: space-around;
-    margin-bottom: 0;
+    justify-content: center;
+    gap: 72px;
+    margin: 20px 0;
 }
 
 .media-detail__counter {
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--text-muted);
 }
 
 .media-detail__description {
     padding: 0 15px;
+    color: var(--text-muted);
 }
 
 .media-detail__comments-title {
     padding: 0 15px;
+    color: var(--text);
 }
 
 .review-form {
@@ -229,6 +352,8 @@ figure.image.mini-card__image img {
 /* --- профиль и карточка отзыва --------------------------------------- */
 .profile-caption {
     margin: 10px;
+    color: var(--text-muted);
+    font-weight: 600;
 }
 
 .account_button__item {
@@ -263,6 +388,7 @@ figure.image.review-item__image {
 figure.image.review-item__image img {
     width: 100%;
     height: auto;
+    border-radius: 12px;
 }
 
 .review-item__body {
@@ -273,10 +399,12 @@ figure.image.review-item__image img {
 
 .review-item__title {
     font-size: 20px;
+    color: var(--text);
 }
 
 .review-item__meta {
     margin-bottom: 0;
+    color: var(--text-soft);
 }
 
 .review-item__delete {
@@ -293,19 +421,125 @@ figure.image.review-item__image img {
     border: 0;
     padding: 0;
     cursor: pointer;
-    color: #ae7394;
+    color: var(--pink);
+}
+
+.review-item__edit-toggle:hover {
+    color: var(--pink-dark);
 }
 
 .review-item__edit-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     margin-top: 14px;
+}
+
+/* --- «О проекте» ----------------------------------------------------- */
+.about {
+    justify-content: space-around;
+    padding: 0 200px;
+}
+
+@media screen and (max-width: 1114px) {
+    .about {
+        padding: 15px;
+        margin: 10px;
+        text-align: justify;
+    }
+}
+
+.about-page {
+    display: flex;
+    gap: 28px;
+    align-items: flex-start;
+    max-width: 1040px;
+    margin: 8px auto 0;
+    padding: 32px 36px;
+    background: linear-gradient(160deg, var(--pink-soft) 0%, #ffffff 55%);
+    border: 1px solid var(--pink-line);
+    border-left: 4px solid var(--pink);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+.about-page__text {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.about-page__title {
+    margin-bottom: 1rem;
+    color: var(--pink-dark);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.about-page__body {
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.about-page__body p {
+    margin-bottom: 0.75rem;
+}
+
+.about-page__image {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 8px;
+    background: #ffffff;
+    border: 1px solid var(--pink-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+}
+
+.about-page__image img {
+    display: block;
+    width: 200px;
+    height: auto;
+    border-radius: 12px;
+}
+
+@media screen and (max-width: 768px) {
+    .about-page {
+        flex-direction: column-reverse;
+        gap: 16px;
+        padding: 20px;
+        border-left-width: 1px;
+    }
+
+    .about-page__image img {
+        width: 100%;
+        max-width: 220px;
+    }
+}
+
+/* --- соцсети в футере ------------------------------------------------ */
+.footer-social {
+    display: flex;
+    justify-content: center;
+    gap: 1.25rem;
+    padding: 0.75rem 0 0.25rem;
+}
+
+.footer-social__link {
+    display: inline-flex;
+    color: var(--pink);
+    transition: opacity 0.2s ease;
+}
+
+.footer-social__link:hover,
+.footer-social__link:focus-visible {
+    opacity: 0.65;
+}
+
+.footer-social__icon {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
 }
 
 [hidden] {
     display: none !important;
-}
-
-/* --- «О проекте» ----------------------------------------------------- */
-.about__image {
-    height: auto;
-    width: 200px;
 }

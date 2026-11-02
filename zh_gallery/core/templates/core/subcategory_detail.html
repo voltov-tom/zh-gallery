@@ -8,7 +8,7 @@
 
     <div class="columns is-multiline detail">
         {% for item in media_items %}
-            {% include 'core/parts/media_item_card.html' with item=item %}
+            {% include 'core/parts/gallery_card.html' with item=item stat_views=item.views stat_likes=item.likes_count stat_reviews=item.reviews_count %}
         {% empty %}
             <div class="column is-12">
                 <div class="notification is-light">{% trans "Nothing here yet" %}.</div>

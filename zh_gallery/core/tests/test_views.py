@@ -197,3 +197,12 @@ def test_footer_uses_local_social_icons(client):
 
     assert response.content.count(b'class="footer-social__link"') == 3
     assert b"upload.wikimedia.org" not in response.content
+
+
+@pytest.mark.django_db
+def test_catalog_pages_have_no_leaked_template_comments(client, category, subcategory, media_item):
+    """Комментарии {# … #} в партиалах карточек не должны попадать в сетку."""
+    for url in (category.get_absolute_url(), subcategory.get_absolute_url()):
+        content = client.get(url).content
+        assert b"{#" not in content, url
+        assert b"#}" not in content, url

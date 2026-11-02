@@ -1,0 +1,27 @@
+{% load static i18n %}
+{% comment %}Универсальная карточка галереи: категория, подкатегория или работа.
+Ожидает item (get_absolute_url, title, image) и счётчики
+stat_views / stat_likes / stat_reviews.{% endcomment %}
+<div class="column is-12-mobile is-6-tablet is-3-desktop media_item_card">
+    <a class="media-card" href="{{ item.get_absolute_url }}">
+        <div class="media-card__media">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy">
+            {% else %}
+                <img src="{% static 'core/images/no_photo.jpeg' %}" alt="{% trans 'no photo' %}" loading="lazy">
+            {% endif %}
+        </div>
+
+        <div class="media-card__body">
+            <h3 class="media-card__title">{{ item.title }}</h3>
+
+            {% if item.description %}
+                <p class="media-card__description">{{ item.description }}</p>
+            {% endif %}
+
+            <div class="media-card__stats">
+                {% include 'core/parts/stats.html' with stat_views=stat_views stat_likes=stat_likes stat_reviews=stat_reviews %}
+            </div>
+        </div>
+    </a>
+</div>
