@@ -68,13 +68,19 @@
     padding-right: 56px;
 }
 
-.review-teaser__image {
+figure.image.review-teaser__image {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
     min-width: 128px;
     max-width: 128px;
+    height: auto;
+}
+
+/* Портретная работа должна растягивать карточку, а не вылезать из неё */
+figure.image.review-teaser__image img {
+    width: 100%;
     height: auto;
 }
 
@@ -111,11 +117,16 @@
     align-items: center;
 }
 
-.mini-card__image {
+figure.image.mini-card__image {
     margin-top: 5px;
     margin-bottom: 5px;
     display: flex;
     justify-content: center;
+    height: auto;
+}
+
+figure.image.mini-card__image img {
+    width: 100%;
     height: auto;
 }
 
@@ -214,13 +225,18 @@
     padding-right: 40px;
 }
 
-.review-item__image {
+figure.image.review-item__image {
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
     min-width: 128px;
     max-width: 128px;
+    height: auto;
+}
+
+figure.image.review-item__image img {
+    width: 100%;
     height: auto;
 }
 
