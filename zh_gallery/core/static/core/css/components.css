@@ -231,11 +231,11 @@ figure.image.mini-card__image img {
     border-radius: 10px;
 }
 
-.mini-card__title {
+.mini-card__media .mini-card__title {
     padding: 0;
-    /* Bulma тянет .subtitle вверх отрицательным margin-top — сбрасываем */
+    /* два класса, чтобы перебить Bulma .title:not(:last-child) */
     margin-top: 0;
-    margin-bottom: 0.125rem;
+    margin-bottom: 0.5rem;
     color: var(--text);
     font-size: 0.9375rem;
     font-weight: 600;
