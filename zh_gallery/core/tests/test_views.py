@@ -172,7 +172,16 @@ def test_subcategory_page_does_not_duplicate_media_items(client, subcategory, us
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-    "name", ["frontpage_view", "about_view", "terms_and_conditions_view", "privacy_policy_view"]
+    "name",
+    [
+        "frontpage_view",
+        "about_view",
+        "terms_and_conditions_view",
+        "privacy_policy_view",
+        "account_login",
+        "account_signup",
+        "account_reset_password",
+    ],
 )
 def test_no_raw_template_comments(client, name):
     """`{# … #}` в Django однострочный: многострочный комментарий утекает в текст."""

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="{% static 'core/css/main.css' %}">
     <link rel="stylesheet" href="{% static 'core/css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/auth.css' %}">
     <link rel="icon" href="{% static 'core/images/favicon.png' %}" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,200&family=Pushster&display=swap"
@@ -21,7 +22,7 @@
     <script type="module" src="{% static 'core/js/base.js' %}"></script>
 </head>
 
-<body>
+<body{% if is_auth_page %} class="auth-page"{% endif %}>
 
 <div class="preloader" data-preloader>
     <div class="preloader__image">

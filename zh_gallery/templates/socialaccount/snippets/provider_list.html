@@ -1,30 +1,32 @@
-{% load socialaccount %}
+{% load i18n static socialaccount %}
 
 {% get_providers as socialaccount_providers %}
 
 {% for provider in socialaccount_providers %}
-
     {% if provider.id == "openid" %}
-
         {% for brand in provider.get_brands %}
-        <p>
-          <a title="{{ brand.name }}"
-             class="socialaccount_provider {{ provider.id }} {{ brand.id }}"
-             href="{% provider_login_url provider.id openid=brand.openid_url process=process %}">
-          </a>
-        </p>
-        {% endfor %}
-
-    {% endif %}
-    {% if provider.name == 'Google' %}
-        <div>
-            <figure class="image is-24x24" style="margin: 20px">
-                <a title="{{ provider.name }}" class="socialaccount_provider {{ provider.id }} media_href"
-                href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
-                    <img alt="Google sign-in" src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Google_Favicon_2025.svg">
+            <li>
+                <a class="auth-provider" title="{{ brand.name }}"
+                   href="{% provider_login_url provider.id openid=brand.openid_url process=process %}">
+                    {{ brand.name }}
                 </a>
-            </figure>
-        </div>
+            </li>
+        {% endfor %}
+    {% elif provider.name == 'Google' %}
+        <li>
+            <a class="auth-provider socialaccount_provider {{ provider.id }}" title="{{ provider.name }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                <img class="auth-provider__icon" src="{% static 'core/images/social/google.svg' %}"
+                     alt="" width="20" height="20">
+                <span>{% trans "Continue with Google" %}</span>
+            </a>
+        </li>
+    {% else %}
+        <li>
+            <a class="auth-provider socialaccount_provider {{ provider.id }}" title="{{ provider.name }}"
+               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+                {{ provider.name }}
+            </a>
+        </li>
     {% endif %}
-
 {% endfor %}

@@ -2,22 +2,52 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "Signup" %}{% endblock %}
+{% block title %}{% trans "Sign Up" %} — Zh-gallery{% endblock title %}
 
 {% block content %}
-<div class="column is-6 is-offset-3">
-  <h1 class="subtitle has-text-centered">{% trans "Sign Up" %}</h1>
+    <div class="column is-6 is-offset-3">
+        <h1 class="subtitle has-text-centered">{% trans "Sign Up" %}</h1>
 
-<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+        <form class="signup auth-form" id="signup_form" method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
 
-<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button class="button is-info" type="submit" style="margin-top: 10px;">{% trans "Sign Up" %}</button>
-</form>
+            {% if form.non_field_errors %}
+                <div class="auth-alert" role="alert">
+                    {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+                </div>
+            {% endif %}
 
-</div>
-{% endblock %}
+            {% for field in form %}
+                {% if field.field.widget.input_type == "checkbox" %}
+                    <div class="auth-checkbox">
+                        {{ field }}
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    </div>
+                {% else %}
+                    <div class="auth-field">
+                        <label class="auth-field__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="auth-field__help">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p class="auth-field__error">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+            {% endif %}
+
+            <div class="auth-actions">
+                <button class="button primaryAction" type="submit">{% trans "Sign Up" %}</button>
+            </div>
+        </form>
+
+        <p class="auth-footer-hint">
+            {% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}
+        </p>
+    </div>
+{% endblock content %}
