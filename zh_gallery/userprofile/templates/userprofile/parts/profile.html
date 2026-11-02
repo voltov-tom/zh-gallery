@@ -2,12 +2,6 @@
 {# Общий профиль: используется и в «моём» кабинете, и в чужом. #}
 <div class="content media_item_bottom"
      {% if edit_review_url %}data-reviews-app data-edit-url="{{ edit_review_url }}" data-delete-url="{{ delete_review_url }}"{% endif %}>
-    <div class="title">
-        <p class="profile-title">
-            {% if profile_user == user %}{% trans "My account" %}{% else %}{{ profile_user }}{% endif %}
-        </p>
-    </div>
-
     {% if profile_user == user %}
         <div class="navbar-item account_button">
             <a class="button is-small account_button__item"

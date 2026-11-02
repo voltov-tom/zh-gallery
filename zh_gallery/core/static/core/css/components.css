@@ -56,23 +56,32 @@
     margin: 0 10px;
 }
 
+/* Карточка комментария на главной: картинка слева, текст занимает остаток
+   ширины, счётчики — в правом нижнем углу (.notification у Bulma relative).
+   Раньше контейнер был full-width с justify-content: center, из-за чего
+   картинка и текст уезжали в середину и слева оставалась пустота. */
 .review-teaser__inner {
     display: flex;
-    min-width: 100%;
-    padding-right: 0;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0 20px;
+    padding-right: 56px;
 }
 
 .review-teaser__image {
     display: flex;
     justify-content: center;
-    margin: auto;
+    align-items: center;
+    margin: 0;
     min-width: 128px;
+    max-width: 128px;
     height: auto;
 }
 
 .review-teaser__body {
-    margin: 0 20px;
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
 }
 
 .review-teaser__title {
@@ -116,6 +125,14 @@
 
 .mini-card__subtitle {
     padding: 5px;
+}
+
+/* Длинный текст комментария обрезаем в карточках, а не в самом отзыве */
+.review_body {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /* --- страница элемента ---------------------------------------------- */
@@ -174,10 +191,6 @@
 }
 
 /* --- профиль и карточка отзыва --------------------------------------- */
-.profile-title {
-    text-align: center;
-}
-
 .profile-caption {
     margin: 10px;
 }
@@ -188,28 +201,33 @@
 
 .review-item {
     display: flex;
-    min-width: 100%;
     padding-right: 0;
     position: relative;
 }
 
 .review-item__summary {
     display: flex;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0 20px;
     width: 100%;
+    padding-right: 40px;
 }
 
 .review-item__image {
     display: flex;
     justify-content: center;
-    margin: auto;
+    align-items: center;
+    margin: 0;
     min-width: 128px;
+    max-width: 128px;
     height: auto;
 }
 
 .review-item__body {
-    margin: 0 20px;
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
 }
 
 .review-item__title {

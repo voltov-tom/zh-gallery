@@ -17,16 +17,7 @@ import contextlib
 from django.core.files.storage import default_storage
 from django.core.management.base import BaseCommand
 
-from core.models import About, MediaItem, SubCategory
-
-
-def image_names():
-    """Все имена файлов, на которые ссылаются модели."""
-    yield from (MediaItem.objects.exclude(image="").order_by("pk").values_list("image", flat=True))
-    yield from (
-        SubCategory.objects.exclude(image="").order_by("pk").values_list("image", flat=True)
-    )
-    yield from About.objects.exclude(image="").values_list("image", flat=True)
+from core.selectors import all_image_names
 
 
 def is_image(payload: bytes) -> bool:
@@ -44,7 +35,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         storage = default_storage
-        names = list(image_names())
+        names = list(all_image_names())
         if options["limit"]:
             names = names[: options["limit"]]
 

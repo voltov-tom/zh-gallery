@@ -271,6 +271,11 @@ STORAGES = {
 if MEDIA_STORAGE == "nextcloud":
     STORAGES["default"] = {"BACKEND": "core.storage.NextcloudStorage", "OPTIONS": {}}
 
+# Локальный кэш картинок: нужен, чтобы сайт продолжал показывать работы
+# при недоступном Nextcloud. Для локального диска выключен — файлы и так рядом.
+MEDIA_CACHE_ENABLED = env.bool("MEDIA_CACHE_ENABLED", default=(MEDIA_STORAGE != "local"))
+MEDIA_CACHE_ROOT = Path(env.str("MEDIA_CACHE_ROOT", default=str(BASE_DIR / "media-cache")))
+
 # Nextcloud / WebDAV. Старые имена WEBDAV_* оставлены для совместимости.
 # HOSTNAME может быть как доменом, так и полным адресом WebDAV-корня
 # (https://host/remote.php/dav/files/user/) — второй вариант поддерживается.

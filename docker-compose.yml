@@ -46,10 +46,11 @@ services:
     command:
       - sh
       - -c
-      - "chown -R 1000:1000 /app/zh_gallery/static /app/zh_gallery/media"
+      - "chown -R 1000:1000 /app/zh_gallery/static /app/zh_gallery/media /app/zh_gallery/media-cache"
     volumes:
       - static_volume:/app/zh_gallery/static
       - media_volume:/app/zh_gallery/media
+      - media_cache:/app/zh_gallery/media-cache
 
   web:
     build:
@@ -63,9 +64,11 @@ services:
       SQL_PORT: "5432"
       REDIS_URL: redis://redis:6379/1
       MEDIA_ROOT: /app/zh_gallery/media
+      MEDIA_CACHE_ROOT: /app/zh_gallery/media-cache
     volumes:
       - static_volume:/app/zh_gallery/static
       - media_volume:/app/zh_gallery/media
+      - media_cache:/app/zh_gallery/media-cache
     depends_on:
       init:
         condition: service_completed_successfully
@@ -100,7 +103,11 @@ services:
       web:
         condition: service_healthy
 
+  # Локальный SMTP-приёмник (веб-интерфейс на :8025). Нужен только если хочется
+  # посмотреть письма регистрации: docker compose --profile mail up -d mailpit.
+  # По умолчанию письма печатаются в лог контейнера (console backend).
   mailpit:
+    profiles: ["mail"]
     image: axllent/mailpit:v1.21
     restart: unless-stopped
     ports:
@@ -127,3 +134,4 @@ volumes:
   redis_data:
   static_volume:
   media_volume:
+  media_cache:
