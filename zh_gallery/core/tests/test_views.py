@@ -222,3 +222,27 @@ def test_like_icons_are_vector_and_match_style(client, media_item, user):
     assert b"like-pink" not in content
     assert b"dislike-pink" not in content
     assert b"like.GIF" not in content
+
+
+@pytest.mark.django_db
+def test_terms_page_is_localised(client):
+    ru = client.get(reverse("terms_and_conditions_view"), headers={"accept-language": "ru"})
+    en = client.get(reverse("terms_and_conditions_view"), headers={"accept-language": "en"})
+
+    assert ru.status_code == en.status_code == 200
+    assert "Гражданского кодекса".encode() in ru.content
+    assert "Редакция от".encode() in ru.content
+    assert b"Civil Code" in en.content
+    assert b"Last updated" in en.content
+    assert "Гражданского кодекса".encode() not in en.content
+
+
+@pytest.mark.django_db
+def test_privacy_page_is_localised(client):
+    ru = client.get(reverse("privacy_policy_view"), headers={"accept-language": "ru"})
+    en = client.get(reverse("privacy_policy_view"), headers={"accept-language": "en"})
+
+    assert ru.status_code == en.status_code == 200
+    assert "152-ФЗ".encode() in ru.content
+    assert b"152-FZ" in en.content
+    assert "Персональных данных".encode() not in en.content

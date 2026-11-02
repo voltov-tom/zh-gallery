@@ -1,12 +1,10 @@
 {% load i18n %}
-<div class="columns title-bar">
-    <div class="column is-1 is-hidden-mobile">
-        <a href="{{ back_url|default:'/' }}" class="button is-danger is-inverted">
-            <ion-icon name="return-up-back-outline"></ion-icon>
-        </a>
-    </div>
+<div class="title-bar">
+    <a class="title-bar__back" href="{{ back_url|default:'/' }}" aria-label="{% trans 'Back' %}">
+        <ion-icon name="return-up-back-outline"></ion-icon>
+    </a>
 
-    <div class="column is-4 is-hidden-mobile"></div>
-    <div class="is-size-4 has-text-centered column is-2 title-bar__title">{{ title }}</div>
-    <div class="column is-5 is-hidden-mobile"></div>
+    <h1 class="title-bar__title">{{ title }}</h1>
+
+    <span class="title-bar__spacer" aria-hidden="true"></span>
 </div>

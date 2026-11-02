@@ -48,3 +48,6 @@ screenshots/
 .chrome-profile/
 .chrome-crash/
 .ff-profile/
+
+# Профили браузера из локальных проверок
+.chrome-*/
