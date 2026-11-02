@@ -1,0 +1,18 @@
+{# Счётчики просмотров/комментариев/лайков. Значения передаются извне, #}
+{# чтобы шаблон не дёргал .count() и работал с annotate-полями. #}
+<span class="icon-text views_likes">
+    <span class="icon">
+        <ion-icon fill="currentColor" class="accent-icon" name="reader-outline"></ion-icon>
+    </span>
+    <span>{{ stat_reviews }}</span>
+
+    <span class="icon">
+        <ion-icon fill="currentColor" class="accent-icon" name="eye-outline"></ion-icon>
+    </span>
+    <span>{{ stat_views }}</span>
+
+    <span class="icon">
+        <ion-icon fill="currentColor" class="accent-icon" name="heart-outline"></ion-icon>
+    </span>
+    <span>{{ stat_likes }}</span>
+</span>

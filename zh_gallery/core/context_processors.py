@@ -1,11 +1,14 @@
-from .models import MainCategory, About
+"""Контекст, доступный во всех шаблонах."""
+
+from __future__ import annotations
+
+from django.http import HttpRequest
+
+from . import selectors
 
 
-def context(request):
-    categories = MainCategory.objects.all()
-    description = About.objects.all()[0]
-    ctx = {
-        'categories': categories,
-        'description': description
+def site_context(request: HttpRequest) -> dict:
+    return {
+        "categories": selectors.get_categories(),
+        "about": selectors.get_about(),
     }
-    return ctx

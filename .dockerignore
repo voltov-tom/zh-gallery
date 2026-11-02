@@ -1,39 +1,21 @@
-# Git
 .git
 .gitignore
-
-# Docker
-.dockerignore
-Dockerfile
-docker-compose.yml
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.env
-.python-version
-poetry.lock
-pyproject.toml
-
-# Базы данных
-*.sqlite3
-*.db
-
-# Локальные файлы
-media/
-static/
-staticfiles/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Логи
+.github
+.idea
+.venv
+venv
+__pycache__
+*.py[cod]
+*.mo
 *.log
+.env
+.env.*
+!.env.example
+zh_gallery/static/
+zh_gallery/media/
+.pytest_cache
+.ruff_cache
+.coverage
+htmlcov
+.DS_Store
+.docker

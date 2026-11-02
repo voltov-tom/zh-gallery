@@ -1,0 +1,49 @@
+[project]
+name = "zh-gallery"
+version = "2.0.0"
+description = "Учебный Django-проект: галерея работ творческого человека"
+requires-python = ">=3.12"
+# Проект не публикуется как пакет: исходники запускаются напрямую,
+# pyproject используется только как конфигурация инструментов.
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["zh_gallery"]
+extend-exclude = [
+    "zh_gallery/**/migrations/*.py",
+    "zh_gallery/static",
+    "zh_gallery/media",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle
+    "F",   # pyflakes
+    "W",   # warnings
+    "I",   # isort
+    "B",   # bugbear
+    "UP",  # pyupgrade
+    "DJ",  # flake8-django
+    "SIM", # simplify
+    "C4",  # comprehensions
+]
+ignore = [
+    "E501",  # длина строк контролируется форматтером
+    "B008",  # вызовы в аргументах по умолчанию (Django-паттерн)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"zh_gallery/zh_gallery/settings/*.py" = ["F405", "F403"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "zh_gallery.settings.test"
+pythonpath = ["zh_gallery"]
+testpaths = ["zh_gallery"]
+# importlib позволяет держать файлы с одинаковыми именами (test_views.py)
+# в разных приложениях без конфликта имён модулей.
+addopts = "-q --strict-markers --import-mode=importlib"
+
+[tool.coverage.run]
+source = ["core", "userprofile", "zh_gallery"]
+omit = ["*/migrations/*", "*/tests/*"]

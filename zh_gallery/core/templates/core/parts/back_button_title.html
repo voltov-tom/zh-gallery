@@ -1,29 +1,12 @@
-<div class="columns" style="margin-bottom: 0; margin-top: 0;">
-
-    <div class="column is-1 is-hidden-mobile" style="margin: auto;">
-        <form style="padding: 0 0 0 20px; margin: auto;">
-            {% if item.likes %}
-                <a href="{{ item.subcategory.get_absolute_url }}"
-                   class="button is-danger is-inverted" type="button">
-                    <ion-icon name="return-up-back-outline"></ion-icon>
-                </a>
-            {% elif item.category %}
-                <a href="{{ item.category.get_absolute_url }}"
-                    class="button is-danger is-inverted" type="button">
-                    <ion-icon name="return-up-back-outline"></ion-icon>
-                </a>
-            {% else %}
-                <a href="/" class="button is-danger is-inverted" type="button">
-                    <ion-icon name="return-up-back-outline"></ion-icon>
-                </a>
-            {% endif %}
-        </form>
+{% load i18n %}
+<div class="columns title-bar">
+    <div class="column is-1 is-hidden-mobile">
+        <a href="{{ back_url|default:'/' }}" class="button is-danger is-inverted">
+            <ion-icon name="return-up-back-outline"></ion-icon>
+        </a>
     </div>
 
     <div class="column is-4 is-hidden-mobile"></div>
-    <div class="is-size-4 has-text-centered column is-2" style="margin-bottom: 0;">
-        {{ item.title }}
-    </div>
+    <div class="is-size-4 has-text-centered column is-2 title-bar__title">{{ title }}</div>
     <div class="column is-5 is-hidden-mobile"></div>
-
 </div>

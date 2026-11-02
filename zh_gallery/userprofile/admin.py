@@ -1,3 +1,5 @@
-from django.contrib import admin
+"""Админка приложения пуста.
 
-# Register your models here.
+Пользователями управляет стандартная админка ``django.contrib.auth``,
+а все сущности галереи зарегистрированы в ``core/admin.py``.
+"""

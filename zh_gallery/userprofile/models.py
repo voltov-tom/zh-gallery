@@ -1,3 +1,7 @@
-from django.db import models
+"""Своих моделей у приложения нет.
 
-# Create your models here.
+Профиль пользователя — стандартный ``django.contrib.auth.models.User``:
+логин, e-mail и пароль ведёт django-allauth, а лайки и комментарии
+ссылаются на пользователя через ``MediaItem.likes`` и ``MediaItemReview.user``.
+Если понадобится аватар или настройки профиля — добавляйте модель здесь.
+"""
