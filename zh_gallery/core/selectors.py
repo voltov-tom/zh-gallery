@@ -77,6 +77,13 @@ def liked_items_of(user) -> QuerySet[MediaItem]:
     return user.liked_items.with_stats().order_by("title")
 
 
+def all_image_names():
+    """Все имена файлов, на которые ссылаются модели (для проверки и прогрева кэша)."""
+    yield from MediaItem.objects.exclude(image="").order_by("pk").values_list("image", flat=True)
+    yield from SubCategory.objects.exclude(image="").order_by("pk").values_list("image", flat=True)
+    yield from About.objects.exclude(image="").values_list("image", flat=True)
+
+
 def get_random_media_item() -> MediaItem | None:
     """Случайный элемент для Telegram-бота.
 

@@ -24,7 +24,7 @@ COPY . .
 # Каталоги под тома создаём заранее и отдаём пользователю app:
 # иначе named volume достаётся root и collectstatic не сможет писать.
 RUN useradd --create-home --uid 1000 app \
-    && mkdir -p /app/zh_gallery/static /app/zh_gallery/media \
+    && mkdir -p /app/zh_gallery/static /app/zh_gallery/media /app/zh_gallery/media-cache \
     && chown -R app:app /app
 
 USER app

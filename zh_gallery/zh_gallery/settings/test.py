@@ -33,6 +33,9 @@ atexit.register(shutil.rmtree, _TEST_MEDIA_ROOT, ignore_errors=True)
 
 MEDIA_ROOT = _TEST_MEDIA_ROOT
 MEDIA_STORAGE = "local"
+# Кэш медиа в тестах выключен; включаем точечно через override_settings
+MEDIA_CACHE_ENABLED = False
+MEDIA_CACHE_ROOT = _TEST_MEDIA_ROOT + "-cache"
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",

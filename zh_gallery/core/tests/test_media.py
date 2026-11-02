@@ -33,15 +33,18 @@ def test_media_view_returns_file(client, stored_file):
 
     assert response.status_code == 200
     assert response["Content-Type"] == "image/jpeg"
-    assert response["Cache-Control"] == "public, max-age=604800"
-    assert b"".join(response.streaming_content) == JPEG
+    assert response["Cache-Control"] == "public, max-age=604800, immutable"
+    assert response["X-Media-Cache"] == "miss"
+    assert response.content == JPEG
 
 
 @pytest.mark.django_db
-def test_media_view_404_for_missing_file(client):
+def test_media_view_returns_placeholder_for_missing_file(client):
+    """Файла нет ни в кэше, ни в хранилище — отдаём заглушку, а не битую картинку."""
     response = client.get(reverse("media_file", args=["nope.jpg"]))
 
-    assert response.status_code == 404
+    assert response.status_code == 302
+    assert response["X-Media-Placeholder"] == "1"
 
 
 @pytest.mark.django_db
@@ -55,9 +58,18 @@ def test_media_view_rejects_path_traversal(client):
 def test_media_view_rejects_traversal_in_view(rf, db):
     from django.http import Http404
 
-    for path in ("../secret.txt", "a/../../secret.txt", "/etc/passwd", ".hidden"):
+    for path in ("../secret.txt", "a/../../secret.txt", ".hidden"):
         with pytest.raises(Http404):
             media_file(rf.get("/media/x"), path)
+
+
+@pytest.mark.django_db
+def test_leading_slash_stays_inside_media_root(rf, db):
+    """Слеш в начале обрезается, выйти за MEDIA_ROOT нельзя — файла просто нет."""
+    response = media_file(rf.get("/media/x"), "/etc/passwd")
+
+    assert response.status_code == 302
+    assert response["X-Media-Placeholder"] == "1"
 
 
 @pytest.mark.django_db

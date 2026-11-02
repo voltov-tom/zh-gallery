@@ -14,6 +14,7 @@ env/
 local_settings.py
 zh_gallery/static/
 zh_gallery/media/
+zh_gallery/media-cache/
 
 # Переводы: .po в репозитории, .mo собираются при деплое
 *.mo
@@ -41,3 +42,9 @@ htmlcov/
 
 # Локальный docker config (создаётся в песочнице)
 .docker/
+
+# Локальные артефакты проверки
+screenshots/
+.chrome-profile/
+.chrome-crash/
+.ff-profile/

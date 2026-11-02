@@ -4,17 +4,30 @@
 каталога с ними нет, поэтому nginx не может отдать их алиасом. Тогда nginx
 проксирует ``/media/`` в Django, а эта вьюха стримит файл из хранилища.
 
-Для локального диска тот же маршрут работает как fallback (в проде его
-перекрывает ``location /media/ { alias ...; }`` в nginx).
+Порядок источников:
+
+1. локальный кэш (``core/media_cache.py``) — работает, даже если WebDAV упал;
+2. хранилище (диск или Nextcloud) — удачный ответ сразу попадает в кэш;
+3. заглушка ``core/images/no_photo.jpeg``, если файла нет нигде.
 """
 
 from __future__ import annotations
 
+import logging
 import mimetypes
+from pathlib import Path
 
 from django.core.files.storage import default_storage
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponse
+from django.shortcuts import redirect
+from django.templatetags.static import static
 from django.views.decorators.http import require_GET
+
+from core import media_cache
+
+logger = logging.getLogger(__name__)
+
+PLACEHOLDER_STATIC_PATH = "core/images/no_photo.jpeg"
 
 
 def _clean_path(path: str) -> str:
@@ -28,18 +41,55 @@ def _clean_path(path: str) -> str:
     return path
 
 
+def _content_type(name: str) -> str:
+    return mimetypes.guess_type(name)[0] or "application/octet-stream"
+
+
+def _cached_response(path: Path, name: str) -> FileResponse:
+    response = FileResponse(path.open("rb"), content_type=_content_type(name))
+    response["Cache-Control"] = "public, max-age=604800, immutable"
+    response["X-Media-Cache"] = "hit"
+    return response
+
+
+def _bytes_response(payload: bytes, name: str) -> HttpResponse:
+    response = HttpResponse(payload, content_type=_content_type(name))
+    response["Cache-Control"] = "public, max-age=604800, immutable"
+    response["X-Media-Cache"] = "miss"
+    return response
+
+
+def _placeholder_response():
+    """Файла нет ни в кэше, ни в хранилище — показываем заглушку."""
+    response = redirect(static(PLACEHOLDER_STATIC_PATH))
+    # 302 не кэшируем: как только файл появится, отдадим настоящую картинку
+    response["Cache-Control"] = "no-store"
+    response["X-Media-Placeholder"] = "1"
+    return response
+
+
 @require_GET
 def media_file(request, path: str):
-    """Отдаёт файл из default_storage (диск или Nextcloud)."""
+    """Отдаёт файл из кэша или из default_storage (диск / Nextcloud)."""
     name = _clean_path(path)
 
-    try:
-        stored_file = default_storage.open(name, "rb")
-    except (FileNotFoundError, OSError) as exc:
-        raise Http404(f"Файл {name} не найден") from exc
+    cached = media_cache.read(name)
+    if cached is not None:
+        return _cached_response(cached, name)
 
-    content_type = mimetypes.guess_type(name)[0] or "application/octet-stream"
-    response = FileResponse(stored_file, content_type=content_type)
-    # Файлы галереи не меняются: агрессивный кэш и корректное имя
-    response["Cache-Control"] = "public, max-age=604800"
-    return response
+    try:
+        stored = default_storage.open(name, "rb")
+        try:
+            payload = stored.read()
+        finally:
+            stored.close()
+    except (FileNotFoundError, OSError) as exc:
+        logger.warning("Медиафайл %s недоступен: %s", name, exc)
+        return _placeholder_response()
+
+    if not payload:
+        logger.warning("Медиафайл %s пустой — отдаём заглушку", name)
+        return _placeholder_response()
+
+    media_cache.store(name, payload)
+    return _bytes_response(payload, name)
