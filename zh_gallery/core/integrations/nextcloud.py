@@ -31,8 +31,9 @@ class NextcloudWebDAVClient:
         root: str = "",
         timeout: int = 30,
         session: requests.Session | None = None,
+        base_url: str = "",
     ) -> None:
-        if not hostname or not login or not password:
+        if not (base_url or hostname) or not login or not password:
             raise NextcloudError(
                 "Не заданы NEXTCLOUD_HOSTNAME / NEXTCLOUD_LOGIN / NEXTCLOUD_PASSWORD"
             )
@@ -42,6 +43,21 @@ class NextcloudWebDAVClient:
         self.root = root.strip("/")
         self.timeout = timeout
         self._session = session or requests.Session()
+        self.base_url = self.build_base_url(base_url or self.hostname)
+
+    def build_base_url(self, hostname: str) -> str:
+        """Адрес WebDAV-корня, к которому просто дописывается путь файла.
+
+        Nextcloud отдаёт файлы по ``/remote.php/dav/files/<user>/``, но в
+        конфигурации проекта исторически записан полный адрес
+        (``WEBDAV_HOSTNAME`` = ``https://host/remote.php/dav/files/user/``).
+        Поэтому если путь уже содержит ``remote.php``, используем его как есть
+        и не подставляем логин — это и есть поведение старого клиента.
+        """
+        hostname = hostname.rstrip("/")
+        if "remote.php" in hostname:
+            return f"{hostname}/"
+        return f"{hostname}/remote.php/dav/files/{quote(self.login)}/"
 
     @classmethod
     def from_settings(cls) -> NextcloudWebDAVClient:
@@ -53,6 +69,7 @@ class NextcloudWebDAVClient:
             password=settings.NEXTCLOUD_PASSWORD,
             root=settings.NEXTCLOUD_ROOT,
             timeout=settings.NEXTCLOUD_TIMEOUT,
+            base_url=getattr(settings, "NEXTCLOUD_BASE_URL", ""),
         )
 
     # ------------------------------------------------------------------
@@ -60,13 +77,13 @@ class NextcloudWebDAVClient:
     # ------------------------------------------------------------------
     def endpoint(self, name: str = "") -> str:
         """Полный URL файла внутри WebDAV-дерева пользователя."""
-        parts = ["remote.php", "dav", "files", self.login]
-        if self.root:
-            parts.append(self.root)
-        name = name.strip("/")
-        if name:
-            parts.extend(name.split("/"))
-        return f"{self.hostname}/" + "/".join(quote(part) for part in parts)
+        segments: list[str] = []
+        for chunk in (self.root, name.strip("/")):
+            if chunk:
+                segments.extend(part for part in chunk.split("/") if part)
+        if not segments:
+            return self.base_url
+        return self.base_url + "/".join(quote(part) for part in segments)
 
     def _request(self, method: str, name: str = "", **kwargs) -> requests.Response:
         kwargs.setdefault("timeout", self.timeout)
