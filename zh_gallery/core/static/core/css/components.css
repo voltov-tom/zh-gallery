@@ -456,9 +456,8 @@ figure.image.review-item__image img {
     max-width: 1040px;
     margin: 8px auto 0;
     padding: 32px 36px;
-    background: linear-gradient(160deg, var(--pink-soft) 0%, #ffffff 55%);
+    background: var(--pink-soft);
     border: 1px solid var(--pink-line);
-    border-left: 4px solid var(--pink);
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-card);
 }
@@ -506,7 +505,6 @@ figure.image.review-item__image img {
         flex-direction: column-reverse;
         gap: 16px;
         padding: 20px;
-        border-left-width: 1px;
     }
 
     .about-page__image img {
