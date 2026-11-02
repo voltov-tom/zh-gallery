@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import re
+
 from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
+
+from core.views.media import media_file
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -15,9 +18,12 @@ urlpatterns = [
     path("", include("core.urls")),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# Медиа отдаёт Django: для Nextcloud иначе файлы недоступны (их нет на диске),
+# а для локального хранилища этот маршрут перекрывает nginx. При DEBUG=True
+# Django и сам раздаёт /media/, поэтому маршрут не нужен.
+if not settings.DEBUG and settings.MEDIA_URL.startswith("/"):
+    media_prefix = re.escape(settings.MEDIA_URL.strip("/"))
+    urlpatterns.insert(0, re_path(rf"^{media_prefix}/(?P<path>.+)$", media_file, name="media_file"))
 
 admin.site.site_header = "zh-gallery"
 admin.site.site_title = "zh-gallery"

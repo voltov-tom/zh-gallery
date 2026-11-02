@@ -272,7 +272,10 @@ if MEDIA_STORAGE == "nextcloud":
     STORAGES["default"] = {"BACKEND": "core.storage.NextcloudStorage", "OPTIONS": {}}
 
 # Nextcloud / WebDAV. Старые имена WEBDAV_* оставлены для совместимости.
+# HOSTNAME может быть как доменом, так и полным адресом WebDAV-корня
+# (https://host/remote.php/dav/files/user/) — второй вариант поддерживается.
 NEXTCLOUD_HOSTNAME = env.str("NEXTCLOUD_HOSTNAME", default=env.str("WEBDAV_HOSTNAME", default=""))
+NEXTCLOUD_BASE_URL = env.str("NEXTCLOUD_BASE_URL", default="")
 NEXTCLOUD_LOGIN = env.str("NEXTCLOUD_LOGIN", default=env.str("WEBDAV_LOGIN", default=""))
 NEXTCLOUD_PASSWORD = env.str("NEXTCLOUD_PASSWORD", default=env.str("WEBDAV_PASSWORD", default=""))
 NEXTCLOUD_ROOT = env.str("NEXTCLOUD_ROOT", default=env.str("WEBDAV_ROOT", default="zh-gallery"))

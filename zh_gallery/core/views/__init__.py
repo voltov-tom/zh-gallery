@@ -2,6 +2,7 @@
 
 from .gallery import MainCategoryDetailView, MediaItemDetailView, SubCategoryDetailView
 from .health import healthcheck
+from .media import media_file
 from .pages import (
     AboutView,
     FrontPageView,
@@ -18,4 +19,5 @@ __all__ = [
     "SubCategoryDetailView",
     "TermsAndConditionsView",
     "healthcheck",
+    "media_file",
 ]

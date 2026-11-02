@@ -133,16 +133,47 @@ make test && make lint                     # 105 тестов + ruff
 
 ```env
 MEDIA_STORAGE=nextcloud
+# Вариант 1 — только домен, путь до файлов соберётся сам:
 NEXTCLOUD_HOSTNAME=https://cloud.example.com
 NEXTCLOUD_LOGIN=user
 NEXTCLOUD_PASSWORD=app-password
 NEXTCLOUD_ROOT=gallery
-NEXTCLOUD_PUBLIC_URL=https://cloud.example.com/s/xxxx/download   # необязательно
+# Вариант 2 — полный адрес WebDAV-корня (так было в старом .env проекта,
+# поддерживаются старые имена WEBDAV_HOSTNAME / WEBDAV_LOGIN / WEBDAV_PASSWORD / WEBDAV_ROOT):
+# NEXTCLOUD_HOSTNAME=https://cloud.example.com/remote.php/dav/files/user/
 ```
 
-Старые переменные `WEBDAV_*` по-прежнему читаются. Файлы сохраняются по WebDAV
-(PUT/DELETE/HEAD/MKCOL), ссылки для браузера строятся от `NEXTCLOUD_PUBLIC_URL`
-или `MEDIA_URL` — их должен отдавать nginx либо публичная ссылка Nextcloud.
+Отдельно про отдачу файлов браузеру: в Nextcloud их нет в локальном каталоге,
+поэтому `docker/nginx-nextcloud.conf` проксирует `/media/` в Django, а
+`core/views/media.py` стримит файл из хранилища (с кэшем на неделю).
+Для локального диска используется обычный `alias` в `docker/nginx.conf`.
+Переключение — переменной `NGINX_CONF`.
+
+Проверить связку с базой можно командой:
+
+```bash
+docker compose run --rm web python manage.py media_check --download
+# Хранилище: core.storage.NextcloudStorage
+# Файлов в БД: 31
+# Найдено: 31, отсутствует: 0
+# Все файлы на месте
+```
+
+## Переезд на существующую базу
+
+Данные из старой копии проекта переносятся обычным дампом, структура миграций
+совместима (0021–0023 дорабатывают её без потери строк):
+
+```bash
+# дамп со старого Postgres
+docker exec old_db sh -c 'pg_dump -U "$POSTGRES_USER" -d "$POSTGRES_DB" --no-owner' > old.sql
+# восстановление в новый контейнер
+docker exec -i <new_db> sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" \
+    -c "drop schema public cascade; create schema public;"'
+docker exec -i <new_db> sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB"' < old.sql
+# затем обычные миграции — 0023 обнулит like_time там, где лайков нет
+docker compose run --rm web python manage.py migrate
+```
 
 ## Тесты и качество
 
@@ -188,11 +219,12 @@ make migrate-check # миграции соответствуют моделям
 
 ### Изменения схемы БД
 
-Три новые миграции (`0021`+): `like_time` становится nullable + индекс, `views` —
+Три новые миграции (`0021`–`0023`): `like_time` становится nullable + индекс, `views` —
 `PositiveIntegerField`, у тайтлов снята глобальная уникальность (слаги уникальны внутри
 родителя и генерируются один раз), текстовые поля больше не `NULL`, добавлены индексы
-по отзывам. Данные не удаляются; миграция обнуляет `like_time` там, где лайков нет
-(раньше там было время создания записи).
+по отзывам. Данные не удаляются; миграция 0023 обнуляет `like_time` там, где лайков
+нет (раньше там было время последнего сохранения). Порядок миграций проверен на
+живой базе старой копии проекта (6 пользователей, 27 работ, 6 комментариев).
 
 ### Осознанно не делалось
 
