@@ -5,6 +5,8 @@
 иначе локальный docker-compose на http://localhost:8080 не открылся бы.
 """
 
+import logging
+
 from django.core.exceptions import ImproperlyConfigured
 
 from .base import *  # noqa: F401,F403
@@ -41,3 +43,10 @@ SECURE_REFERRER_POLICY = "same-origin"
 X_FRAME_OPTIONS = "DENY"
 
 LOG_LEVEL = env.str("LOG_LEVEL", default="INFO")
+
+if not SECURE_SSL_REDIRECT:
+    logging.getLogger(__name__).warning(
+        "SECURE_SSL_REDIRECT=False: сайт отдаётся по HTTP. После настройки TLS "
+        "включите SECURE_SSL_REDIRECT, SESSION_COOKIE_SECURE, CSRF_COOKIE_SECURE "
+        "и SECURE_HSTS_SECONDS (см. .env.example)."
+    )

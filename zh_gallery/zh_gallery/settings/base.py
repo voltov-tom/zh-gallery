@@ -251,7 +251,7 @@ else:
 
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 14
 SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_HTTPONLY = False  # нужен JS для fetch-запросов
+CSRF_COOKIE_HTTPONLY = True  # JS берёт токен из <meta name="csrf-token">
 
 
 # ---------------------------------------------------------------------------
