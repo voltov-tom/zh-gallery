@@ -18,6 +18,12 @@
         </div>
     {% endif %}
 
+    {% if profile_user == user and user.personal_data_consent %}
+        <p class="profile-consent">
+            {% blocktrans with date=user.personal_data_consent.granted_at|date:"d.m.Y" version=user.personal_data_consent.policy_version %}Consent to personal data processing: {{ date }}, policy version {{ version }}{% endblocktrans %}
+        </p>
+    {% endif %}
+
     <div class="columns">
         <div class="column is-8">
             <p class="subtitle profile-caption">

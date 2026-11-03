@@ -7,6 +7,7 @@ import pathlib
 import pytest
 from allauth.account.adapter import get_adapter
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from core.adapters import AccountAdapter
@@ -32,6 +33,7 @@ def test_signup_sends_html_confirmation_email(client, mailoutbox):
             "username": "newuser",
             "password1": "strong-password-777",
             "password2": "strong-password-777",
+            "consent": "on",
         },
     )
 
@@ -52,6 +54,7 @@ def test_signup_form_rejects_cyrillic_username():
             "username": "кириллица",
             "password1": "strong-password-777",
             "password2": "strong-password-777",
+            "consent": "on",
         }
     )
 
@@ -120,3 +123,74 @@ def test_google_button_has_russian_translation():
     content = po.read_text()
     assert 'msgid "Continue with Google"' in content
     assert 'msgstr "Продолжить с Google"' in content
+
+
+@pytest.mark.django_db
+def test_signup_requires_personal_data_consent(client):
+    """Без согласия на обработку ПДн (ст. 9 152-ФЗ) аккаунт не создаётся."""
+    response = client.post(
+        reverse("account_signup"),
+        {
+            "email": "no-consent@example.com",
+            "username": "noconsent",
+            "password1": "strong-password-777",
+            "password2": "strong-password-777",
+        },
+    )
+
+    assert response.status_code == 200
+    assert get_user_model().objects.filter(username="noconsent").exists() is False
+    assert b"consent" in response.content
+
+
+@pytest.mark.django_db
+def test_signup_stores_consent_record(client, settings):
+    settings.PRIVACY_POLICY_VERSION = "2026-11-02"
+
+    client.post(
+        reverse("account_signup"),
+        {
+            "email": "consented@example.com",
+            "username": "consented",
+            "password1": "strong-password-777",
+            "password2": "strong-password-777",
+            "consent": "on",
+        },
+    )
+
+    from userprofile.models import PersonalDataConsent
+
+    consent = PersonalDataConsent.objects.get(user__username="consented")
+    assert consent.policy_version == "2026-11-02"
+    assert consent.ip_address == "127.0.0.1"
+    assert consent.granted_at is not None
+
+
+@pytest.mark.django_db
+def test_signup_page_mentions_privacy_policy(client):
+    response = client.get(reverse("account_signup"))
+    content = response.content
+
+    assert b"auth-checkbox--consent" in content
+    assert b"privacy-policy" in content
+
+
+@pytest.mark.django_db
+def test_consent_is_shown_in_account(client, user):
+    from userprofile.models import PersonalDataConsent
+
+    PersonalDataConsent.objects.create(user=user, policy_version="2026-11-02")
+    client.force_login(user)
+
+    response = client.get(reverse("my_account_view"))
+
+    assert b"profile-consent" in response.content
+
+
+@pytest.mark.django_db
+def test_cookie_notice_is_on_pages(client):
+    content = client.get(reverse("frontpage_view")).content
+
+    assert b"data-cookie-notice" in content
+    assert b"core/js/cookie.js" in content
+    assert b"privacy-policy" in content

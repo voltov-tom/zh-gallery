@@ -79,7 +79,8 @@ a:hover {
 .button.is-info,
 .button.is-link,
 .button.is-primary,
-.button.is-success {
+.button.is-success,
+.button.primaryAction {
     border-color: var(--pink);
     background: linear-gradient(180deg, #b77f9e, var(--pink));
     color: #ffffff;
@@ -89,7 +90,8 @@ a:hover {
 .button.is-info:hover,
 .button.is-link:hover,
 .button.is-primary:hover,
-.button.is-success:hover {
+.button.is-success:hover,
+.button.primaryAction:hover {
     border-color: var(--pink-dark);
     background: linear-gradient(180deg, var(--pink), var(--pink-dark));
     color: #ffffff;
@@ -99,7 +101,8 @@ a:hover {
 .button.is-info:active,
 .button.is-link:active,
 .button.is-primary:active,
-.button.is-success:active {
+.button.is-success:active,
+.button.primaryAction:active {
     transform: translateY(0);
 }
 

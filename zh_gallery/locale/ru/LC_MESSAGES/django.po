@@ -655,3 +655,24 @@ msgstr "Имя пользователя или e-mail"
 
 msgid "Hover to zoom in"
 msgstr "Наведите курсор, чтобы увеличить"
+
+msgid "I agree to the processing of personal data"
+msgstr "Я согласен на обработку персональных данных"
+
+msgid "Without consent we cannot create an account"
+msgstr "Без согласия мы не можем создать учётную запись"
+
+msgid "This site uses technical cookies for sign-in and language selection."
+msgstr "Сайт использует технические cookie для входа и выбора языка."
+
+msgid "Learn more"
+msgstr "Подробнее"
+
+msgid "Got it"
+msgstr "Понятно"
+
+msgid ""
+"Consent to personal data processing: %(date)s, policy version %(version)s"
+msgstr ""
+"Согласие на обработку персональных данных: %(date)s, версия политики "
+"%(version)s"

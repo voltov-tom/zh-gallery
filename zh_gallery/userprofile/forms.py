@@ -17,10 +17,14 @@ from allauth.account.forms import (
     SignupForm,
 )
 from django import forms
+from django.conf import settings
 from django.forms import CheckboxInput, Select, Textarea
 from django.utils.translation import gettext_lazy as _
 
+from core.http import client_ip
+
 from .fields import CustomCharField
+from .models import PersonalDataConsent
 
 
 class BulmaFormMixin:
@@ -58,13 +62,34 @@ class LoginFormAllAuth(BulmaFormMixin, LoginForm):
 
 
 class SignupFormAllAuth(BulmaFormMixin, SignupForm):
-    """Регистрация с проверкой логина на латиницу/цифры."""
+    """Регистрация: логин латиницей и обязательное согласие на обработку ПДн."""
 
     username = CustomCharField(
         label=_("Username"),
         min_length=app_settings.USERNAME_MIN_LENGTH,
         widget=forms.TextInput(attrs={"placeholder": _("Username"), "autocomplete": "username"}),
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # allauth собирает self.fields заново из ACCOUNT_SIGNUP_FIELDS,
+        # поэтому поле, объявленное в классе, теряется — добавляем после super()
+        self.fields["consent"] = forms.BooleanField(
+            label=_("I agree to the processing of personal data"),
+            required=True,
+            error_messages={"required": _("Without consent we cannot create an account")},
+            widget=forms.CheckboxInput(attrs={"class": "checkbox"}),
+        )
+
+    def save(self, request):
+        user = super().save(request)
+        PersonalDataConsent.objects.create(
+            user=user,
+            policy_version=settings.PRIVACY_POLICY_VERSION,
+            ip_address=client_ip(request),
+            user_agent=request.META.get("HTTP_USER_AGENT", "")[:255],
+        )
+        return user
 
 
 class AddEmailFormAllAuth(BulmaFormMixin, AddEmailForm):

@@ -157,6 +157,9 @@ SITE_ID = 1
 # Домен и имя сайта: используются django.contrib.sites и allauth для абсолютных
 # ссылок в письмах. После migrate объект Site приводится к этим значениям.
 SITE_DOMAIN = env.str("SITE_DOMAIN", default="zh-gallery.ru")
+# Версия политики обработки ПДн: попадает в запись согласия.
+# При изменении текста политики поднимите и это значение.
+PRIVACY_POLICY_VERSION = env.str("PRIVACY_POLICY_VERSION", default="2026-11-02")
 SITE_NAME = env.str("SITE_NAME", default="zh-gallery")
 
 # django-allauth 65.x
