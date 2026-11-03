@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from django.conf import settings
 from django.http import HttpRequest
 
 from . import selectors
@@ -34,4 +35,5 @@ def site_context(request: HttpRequest) -> dict:
         "categories": selectors.get_categories(),
         "about": selectors.get_about(),
         "is_auth_page": is_auth_page(request),
+        "policy_version": settings.PRIVACY_POLICY_VERSION,
     }

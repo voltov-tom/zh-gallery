@@ -18,7 +18,19 @@
             {% endif %}
 
             {% for field in form %}
-                {% if field.field.widget.input_type == "checkbox" %}
+                {% if field.name == "consent" %}
+                    <div class="auth-checkbox auth-checkbox--consent">
+                        {{ field }}
+                        <label for="{{ field.id_for_label }}">
+                            {% trans "I agree to the processing of personal data" %}
+                            (<a href="{% url 'privacy_policy_view' %}" target="_blank"
+                                rel="noopener">{% trans "Privacy Policy" %}</a>)
+                        </label>
+                    </div>
+                    {% for error in field.errors %}
+                        <p class="auth-field__error">{{ error }}</p>
+                    {% endfor %}
+                {% elif field.field.widget.input_type == "checkbox" %}
                     <div class="auth-checkbox">
                         {{ field }}
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>

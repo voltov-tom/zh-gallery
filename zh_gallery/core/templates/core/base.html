@@ -21,6 +21,7 @@
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script type="module" src="{% static 'core/js/base.js' %}"></script>
+    <script type="module" src="{% static 'core/js/cookie.js' %}"></script>
 </head>
 
 <body{% if is_auth_page %} class="auth-page"{% endif %}>
@@ -109,6 +110,8 @@
 <main>
     {% block content %}{% endblock content %}
 </main>
+
+{% include 'core/parts/cookie_notice.html' %}
 
 <footer class="footer">
     <div class="columns">

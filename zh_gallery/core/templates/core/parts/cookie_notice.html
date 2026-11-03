@@ -1,0 +1,8 @@
+{% load i18n %}
+<div class="cookie-notice" data-cookie-notice hidden role="status">
+    <p class="cookie-notice__text">
+        {% trans "This site uses technical cookies for sign-in and language selection." %}
+        <a href="{% url 'privacy_policy_view' %}">{% trans "Learn more" %}</a>
+    </p>
+    <button type="button" class="button is-info is-small" data-cookie-accept>{% trans "Got it" %}</button>
+</div>
