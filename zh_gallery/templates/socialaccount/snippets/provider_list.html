@@ -12,20 +12,21 @@
                 </a>
             </li>
         {% endfor %}
-    {% elif provider.name == 'Google' %}
-        <li>
-            <a class="auth-provider socialaccount_provider {{ provider.id }}" title="{{ provider.name }}"
-               href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
-                <img class="auth-provider__icon" src="{% static 'core/images/social/google.svg' %}"
-                     alt="" width="20" height="20">
-                <span>{% trans "Continue with Google" %}</span>
-            </a>
-        </li>
     {% else %}
         <li>
             <a class="auth-provider socialaccount_provider {{ provider.id }}" title="{{ provider.name }}"
                href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
-                {{ provider.name }}
+                {% if provider.id == "vk" %}
+                    <img class="auth-provider__icon" src="{% static 'core/images/social/vk.svg' %}"
+                         alt="" width="20" height="20">
+                {% elif provider.id == "mailru" %}
+                    <img class="auth-provider__icon" src="{% static 'core/images/social/mailru.svg' %}"
+                         alt="" width="20" height="20">
+                {% elif provider.id == "google" %}
+                    <img class="auth-provider__icon" src="{% static 'core/images/social/google.svg' %}"
+                         alt="" width="20" height="20">
+                {% endif %}
+                <span>{% blocktrans with provider_name=provider.name %}Continue with {{ provider_name }}{% endblocktrans %}</span>
             </a>
         </li>
     {% endif %}

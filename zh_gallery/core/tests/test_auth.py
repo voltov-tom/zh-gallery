@@ -96,33 +96,48 @@ def test_remember_me_renders_as_checkbox(client):
 
 
 @pytest.fixture
-def google_social_app(db):
-    """Кнопка провайдера рисуется только когда SocialApp настроен (как в живой БД)."""
+def social_apps(db):
+    """Кнопки провайдеров рисуются, когда SocialApp настроен (как в живой БД)."""
     from allauth.socialaccount.models import SocialApp
     from django.contrib.sites.models import Site
 
-    app = SocialApp.objects.create(
-        provider="google", name="Google", client_id="test-id", secret="test-secret"
-    )
-    app.sites.add(Site.objects.get(pk=settings.SITE_ID))
-    return app
+    site = Site.objects.get(pk=settings.SITE_ID)
+    apps = []
+    for provider, name in (("vk", "VK"), ("mailru", "Mail.ru")):
+        app = SocialApp.objects.create(
+            provider=provider, name=name, client_id=f"{provider}-id", secret="test-secret"
+        )
+        app.sites.add(site)
+        apps.append(app)
+    return apps
 
 
 @pytest.mark.django_db
-def test_login_page_uses_local_google_icon(client, google_social_app):
+def test_login_page_uses_local_provider_icons(client, social_apps):
     response = client.get(reverse("account_login"))
+    content = response.content
 
-    assert b"core/images/social/google.svg" in response.content
-    assert b"upload.wikimedia.org" not in response.content
+    assert b"core/images/social/vk.svg" in content
+    assert b"core/images/social/mailru.svg" in content
+    assert b"upload.wikimedia.org" not in content
+    # Google больше не подключён как провайдер входа
+    assert b"socialaccount_provider google" not in content
+    assert b"core/images/social/google.svg" not in content
 
 
-def test_google_button_has_russian_translation():
+def test_provider_button_has_russian_translation():
     """В тестах .mo не собирается (он в .gitignore) — проверяем сам каталог."""
     po = pathlib.Path(settings.BASE_DIR) / "locale/ru/LC_MESSAGES/django.po"
 
     content = po.read_text()
-    assert 'msgid "Continue with Google"' in content
-    assert 'msgstr "Продолжить с Google"' in content
+    assert 'msgid "Continue with %(provider_name)s"' in content
+    assert 'msgstr "Продолжить с %(provider_name)s"' in content
+
+
+def test_google_provider_is_not_installed():
+    assert "allauth.socialaccount.providers.google" not in settings.INSTALLED_APPS
+    assert "vk" in settings.SOCIALACCOUNT_PROVIDERS
+    assert "mailru" in settings.SOCIALACCOUNT_PROVIDERS
 
 
 @pytest.mark.django_db
