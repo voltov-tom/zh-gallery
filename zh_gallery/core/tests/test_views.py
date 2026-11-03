@@ -262,3 +262,14 @@ def test_media_item_page_has_hover_zoom(client, media_item):
 def test_grid_cards_do_not_zoom(client, subcategory, media_item):
     """Зум только на странице работы, чтобы сетка не дёргалась."""
     assert b"data-media-zoom" not in client.get(subcategory.get_absolute_url()).content
+
+
+@pytest.mark.django_db
+def test_css_is_served_locally(client):
+    """Стили не тянутся с внешних CDN: Bulma лежит в статике, шрифты Google убраны."""
+    content = client.get(reverse("frontpage_view")).content
+
+    assert b"core/vendor/bulma.min.css" in content
+    assert b"cdn.jsdelivr.net" not in content
+    assert b"fonts.googleapis.com" not in content
+    assert b"fonts.gstatic.com" not in content
