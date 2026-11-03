@@ -62,3 +62,40 @@ def test_dockerfile_runs_as_non_root_user():
 
     assert "USER app" in dockerfile
     assert "useradd" in dockerfile
+
+
+@pytest.mark.django_db
+def test_telegram_api_is_disabled_without_token(client, media_item, settings):
+    """Без TELEGRAM_BOT_TOKEN эндпоинты выключены: иначе накручиваются просмотры."""
+    settings.TELEGRAM_BOT_TOKEN = ""
+    views_before = media_item.views
+
+    response = client.get(reverse("get_media_item", args=[media_item.slug]))
+
+    assert response.status_code == 403
+    media_item.refresh_from_db()
+    assert media_item.views == views_before
+
+
+@pytest.mark.django_db
+def test_telegram_api_requires_correct_token(client, media_item, settings):
+    settings.TELEGRAM_BOT_TOKEN = "secret-bot-token"
+
+    forbidden = client.get(reverse("get_media_item", args=[media_item.slug]))
+    allowed = client.get(
+        reverse("get_media_item", args=[media_item.slug]),
+        headers={"X-Bot-Token": "secret-bot-token"},
+    )
+
+    assert forbidden.status_code == 403
+    assert allowed.status_code == 200
+    assert allowed.json()["title"] == media_item.title
+
+
+@pytest.mark.django_db
+def test_telegram_random_item_is_disabled_without_token(client, media_item, settings):
+    settings.TELEGRAM_BOT_TOKEN = ""
+
+    response = client.get(reverse("get_random_item"))
+
+    assert response.status_code == 403

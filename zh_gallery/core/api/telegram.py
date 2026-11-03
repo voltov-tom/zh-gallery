@@ -18,10 +18,14 @@ from core.models import MediaItem
 
 
 def _bot_token_is_valid(request) -> bool:
-    """Если TELEGRAM_BOT_TOKEN задан — требуем его в заголовке X-Bot-Token."""
+    """Эндпоинт работает только с настроенным токеном.
+
+    Раньше при пустом TELEGRAM_BOT_TOKEN проверка пропускала всех: любой GET
+    накручивал просмотры. Теперь без токена API выключено (fail closed).
+    """
     token = settings.TELEGRAM_BOT_TOKEN
     if not token:
-        return True
+        return False
     return request.headers.get("X-Bot-Token") == token
 
 
