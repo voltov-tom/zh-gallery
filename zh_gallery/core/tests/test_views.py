@@ -246,3 +246,19 @@ def test_privacy_page_is_localised(client):
     assert "152-ФЗ".encode() in ru.content
     assert b"152-FZ" in en.content
     assert "Персональных данных".encode() not in en.content
+
+
+@pytest.mark.django_db
+def test_media_item_page_has_hover_zoom(client, media_item):
+    """Наведение мыши увеличивает картинку — без клика по элементам."""
+    content = client.get(media_item.get_absolute_url()).content
+
+    assert b"data-media-zoom" in content
+    assert b"media-zoom__image" in content
+    assert b"core/js/zoom.js" in content
+
+
+@pytest.mark.django_db
+def test_grid_cards_do_not_zoom(client, subcategory, media_item):
+    """Зум только на странице работы, чтобы сетка не дёргалась."""
+    assert b"data-media-zoom" not in client.get(subcategory.get_absolute_url()).content

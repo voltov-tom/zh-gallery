@@ -8,12 +8,16 @@
 
     <div class="media-detail">
         <div class="content media-detail__image">
-            <figure>
-                {% if media_item.image %}
-                    <img src="{{ media_item.image.url }}" alt="{{ media_item.title }}">
-                {% else %}
-                    <img src="{% static 'core/images/no_photo.jpeg' %}" alt="">
-                {% endif %}
+            <figure class="media-detail__frame">
+                <div class="media-zoom" data-media-zoom>
+                    {% if media_item.image %}
+                        <img class="media-zoom__image" src="{{ media_item.image.url }}"
+                             alt="{{ media_item.title }}">
+                    {% else %}
+                        <img class="media-zoom__image" src="{% static 'core/images/no_photo.jpeg' %}" alt="">
+                    {% endif %}
+                    <span class="media-zoom__hint">{% trans "Hover to zoom in" %}</span>
+                </div>
             </figure>
         </div>
 
@@ -101,4 +105,5 @@
 
 {% block scripts %}
     <script type="module" src="{% static 'core/js/like.js' %}"></script>
+    <script type="module" src="{% static 'core/js/zoom.js' %}"></script>
 {% endblock scripts %}

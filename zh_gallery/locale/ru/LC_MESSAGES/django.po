@@ -652,3 +652,6 @@ msgstr "Всего понравившихся работ"
 
 msgid "Username or e-mail"
 msgstr "Имя пользователя или e-mail"
+
+msgid "Hover to zoom in"
+msgstr "Наведите курсор, чтобы увеличить"
