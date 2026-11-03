@@ -46,6 +46,13 @@ STORAGES = {
     },
 }
 
+# В тестах провайдеры соцвхода задаются только через SocialApp в БД:
+# allauth падает с MultipleObjectsReturned, если ключи заданы и в настройках, и в базе.
+SOCIALACCOUNT_PROVIDERS = {
+    key: {name: value for name, value in options.items() if name != "APP"}
+    for key, options in SOCIALACCOUNT_PROVIDERS.items()
+}
+
 # Тесты не должны ходить в Nextcloud и слать реальные письма
 NEXTCLOUD_HOSTNAME = ""
 TELEGRAM_BOT_TOKEN = ""

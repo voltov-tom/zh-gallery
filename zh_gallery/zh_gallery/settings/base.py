@@ -66,7 +66,8 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.vk",
+    "allauth.socialaccount.providers.mailru",
     # локальные
     "core",
     "userprofile",
@@ -182,13 +183,28 @@ ACCOUNT_FORMS = {
     "reset_password_from_key": "userprofile.forms.ResetPasswordKeyFormAllAuth",
 }
 
+# Вход через российские сервисы. Учётные данные можно задать в .env
+# (APP-блок ниже) или создать SocialApp в админке — allauth поймёт оба варианта.
 SOCIALACCOUNT_PROVIDERS = {
-    "google": {
-        "SCOPE": ["profile", "email"],
-        "AUTH_PARAMS": {"access_type": "online"},
-        "OAUTH_PKCE_ENABLED": True,
-    }
+    "vk": {
+        "SCOPE": ["email"],
+        "AUTH_PARAMS": {"response_type": "code"},
+    },
+    "mailru": {
+        "SCOPE": ["email"],
+    },
 }
+
+if env.str("VK_CLIENT_ID", default=""):
+    SOCIALACCOUNT_PROVIDERS["vk"]["APP"] = {
+        "client_id": env.str("VK_CLIENT_ID"),
+        "secret": env.str("VK_SECRET", default=""),
+    }
+if env.str("MAILRU_CLIENT_ID", default=""):
+    SOCIALACCOUNT_PROVIDERS["mailru"]["APP"] = {
+        "client_id": env.str("MAILRU_CLIENT_ID"),
+        "secret": env.str("MAILRU_SECRET", default=""),
+    }
 
 
 # ---------------------------------------------------------------------------

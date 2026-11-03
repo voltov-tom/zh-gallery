@@ -676,3 +676,6 @@ msgid ""
 msgstr ""
 "Согласие на обработку персональных данных: %(date)s, версия политики "
 "%(version)s"
+
+msgid "Continue with %(provider_name)s"
+msgstr "Продолжить с %(provider_name)s"
