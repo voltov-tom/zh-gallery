@@ -5,7 +5,15 @@
 const MAX_ZOOM = 3;
 const MIN_ZOOM = 1.8;
 
+// На тач-устройствах наведения нет: тап фокусировал бы картинку и включал зум,
+// а пользователь и так увеличивает жестами. Поэтому там зум не подключаем вовсе.
+const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
 function initZoom(box) {
+    if (!supportsHover) {
+        return;
+    }
+
     const image = box.querySelector("img");
     if (!image) {
         return;
