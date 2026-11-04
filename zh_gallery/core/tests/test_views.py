@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import pathlib
+
 import pytest
+from django.conf import settings
 from django.urls import reverse
 
 from core.models import MediaItem, MediaItemReview, SubCategory
@@ -290,3 +293,12 @@ def test_footer_has_no_appgallery_link(client):
 
     assert b"appgallery" not in content.lower()
     assert b"consumer-tkbdownload.huawei.com" not in content
+
+
+def test_zoom_hint_is_hidden_on_touch():
+    """На телефоне наведения нет — подсказка «наведите курсор» не показывается."""
+    css = (pathlib.Path(settings.BASE_DIR) / "core/static/core/css/components.css").read_text()
+
+    assert "(hover: none)" in css
+    assert "(pointer: coarse)" in css
+    assert ".media-zoom__hint {" in css
