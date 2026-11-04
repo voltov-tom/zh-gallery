@@ -22,6 +22,66 @@
     margin: 2px;
 }
 
+/* Приветствие в шапке: читаемый текст и обычная ссылка вместо кнопки */
+.welcome {
+    color: var(--text-soft);
+    font-size: 0.9375rem;
+}
+
+.welcome__name {
+    margin-left: 4px;
+    color: var(--pink-dark);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.16s ease;
+}
+
+.welcome__name:hover {
+    border-bottom-color: currentColor;
+}
+
+/* Кнопки личного кабинета — мягкие розовые плашки в стиле сайта */
+.account_button .button {
+    height: auto;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--pink-line);
+    border-radius: 999px;
+    background: var(--pink-soft);
+    color: var(--text);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    box-shadow: none;
+}
+
+.account_button .button:hover {
+    border-color: #e8c8d8;
+    background: #fbebf2;
+    color: var(--pink-dark);
+}
+
+.account_button__logout,
+.navbar-item__logout .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid var(--pink-line);
+    border-radius: 999px;
+    background: var(--pink-soft);
+    color: var(--pink);
+    box-shadow: none;
+}
+
+.account_button__logout:hover,
+.navbar-item__logout .button:hover {
+    border-color: #e8c8d8;
+    background: #fbebf2;
+    color: var(--pink-dark);
+}
+
 /* --- заголовок раздела ---------------------------------------------- */
 .title-bar {
     display: flex;
@@ -378,6 +438,13 @@ figure.image.mini-card__image img {
 @media (prefers-reduced-motion: reduce) {
     .media-zoom__image {
         transition: none;
+    }
+}
+
+/* На телефоне наведения нет — увеличивают жестами, подсказка только мешает */
+@media (hover: none), (pointer: coarse), (max-width: 767px) {
+    .media-zoom__hint {
+        display: none;
     }
 }
 

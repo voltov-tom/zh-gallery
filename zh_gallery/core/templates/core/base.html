@@ -82,9 +82,9 @@
 
         {% if user.is_authenticated %}
             <div class="navbar-item my_account">
-                {% trans "Welcome," %}
-                <a href="{% url 'my_account_view' %}"
-                   class="button is-info is-inverted is-small navbar-item__account">{{ user }}!</a>
+                <span class="welcome">{% trans "Welcome," %}</span>
+                <a href="{% url 'my_account_view' %}" class="welcome__name"
+                   title="{% trans 'My account' %}">{{ user }}</a>!
                 <form method="post" action="{% url 'account_logout' %}" class="navbar-item__logout">
                     {% csrf_token %}
                     <button type="submit" class="button is-danger is-inverted" title="{% trans 'Log out' %}">
