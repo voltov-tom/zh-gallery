@@ -118,12 +118,12 @@
                         class="accent">&nbsp;ZH-GALLERY</span></a></li>
                 <li><a href="{% url 'terms_and_conditions_view' %}">{% trans "Terms and Conditions" %}</a></li>
                 <li><a href="{% url 'privacy_policy_view' %}">{% trans "Privacy Policy" %}</a></li>
-                <li><address>e-mail: <a>zhenya@zh-gallery.ru</a></address></li>
+                <li><address>e-mail: <a href="mailto:zhenya@zh-gallery.ru">zhenya@zh-gallery.ru</a></address></li>
                 <li>
                     <a href="https://appgallery.huawei.com/app/C105980213" target="_blank" rel="noopener noreferrer">
                         <img class="footer__app-gallery"
-                             src="https://consumer-tkbdownload.huawei.com/ctkbfm/applet/simulator/ru-ru00897966/img/logo.png"
-                             alt="app gallery">
+                             src="{% static 'core/images/appgallery.png' %}"
+                             alt="app gallery" width="120" height="36" loading="lazy">
                     </a>
                 </li>
                 <li>{% trans "Social links" %}:</li>

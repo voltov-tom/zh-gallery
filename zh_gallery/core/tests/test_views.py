@@ -273,3 +273,20 @@ def test_css_is_served_locally(client):
     assert b"cdn.jsdelivr.net" not in content
     assert b"fonts.googleapis.com" not in content
     assert b"fonts.gstatic.com" not in content
+
+
+@pytest.mark.django_db
+def test_footer_email_is_mailto_link(client):
+    """Клик по адресу должен открывать почтовую программу (mailto:)."""
+    content = client.get(reverse("frontpage_view")).content
+
+    assert b'href="mailto:zhenya@zh-gallery.ru"' in content
+
+
+@pytest.mark.django_db
+def test_footer_images_are_local(client):
+    """Логотип AppGallery не хотлинкается с сайта Huawei."""
+    content = client.get(reverse("frontpage_view")).content
+
+    assert b"core/images/appgallery" in content
+    assert b"consumer-tkbdownload.huawei.com" not in content
