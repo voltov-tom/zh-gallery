@@ -284,9 +284,9 @@ def test_footer_email_is_mailto_link(client):
 
 
 @pytest.mark.django_db
-def test_footer_images_are_local(client):
-    """Логотип AppGallery не хотлинкается с сайта Huawei."""
+def test_footer_has_no_appgallery_link(client):
+    """Бейдж AppGallery убран из футера."""
     content = client.get(reverse("frontpage_view")).content
 
-    assert b"core/images/appgallery" in content
+    assert b"appgallery" not in content.lower()
     assert b"consumer-tkbdownload.huawei.com" not in content
