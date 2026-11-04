@@ -17,6 +17,7 @@ from .api import (
     like_button,
     telegram_bot_get_media_item,
     telegram_bot_get_random_item,
+    telegram_bot_send_contact,
 )
 from .sitemaps import (
     MainCategorySitemap,
@@ -71,6 +72,11 @@ urlpatterns = [
         "api/telegram_bot/get_random_item/",
         telegram_bot_get_random_item,
         name="get_random_item",
+    ),
+    path(
+        "api/telegram_bot/send_message/",
+        telegram_bot_send_contact,
+        name="telegram_bot_send_message",
     ),
     path(
         "api/telegram_bot/get_media_item/<slug:slug>/",

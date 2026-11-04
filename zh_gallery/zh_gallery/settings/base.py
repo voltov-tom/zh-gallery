@@ -218,6 +218,8 @@ EMAIL_HOST_PASSWORD = env.str("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
 EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=False)
 DEFAULT_FROM_EMAIL = env.str("DEFAULT_FROM_EMAIL", default="zh-gallery@localhost")
+# Куда пересылаются сообщения, отправленные через Telegram-бота
+CONTACT_EMAIL = env.str("CONTACT_EMAIL", default="zhenya@zh-gallery.ru")
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 # сколько секунд ждать между повторными письмами подтверждения
 EMAIL_CONFIRMATION_COOLDOWN = env.int("EMAIL_CONFIRMATION_COOLDOWN", default=60)
