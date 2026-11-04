@@ -41,8 +41,9 @@
     border-bottom-color: currentColor;
 }
 
-/* Кнопки личного кабинета — мягкие розовые плашки в стиле сайта */
-.account_button .button {
+/* Кнопки личного кабинета — мягкие розовые плашки в стиле сайта.
+   Кнопку выхода исключаем: у неё своя круглая форма. */
+.account_button .button:not(.account_button__logout) {
     height: auto;
     padding: 0.4rem 0.9rem;
     border: 1px solid var(--pink-line);
@@ -54,13 +55,13 @@
     box-shadow: none;
 }
 
-.account_button .button:hover {
+.account_button .button:not(.account_button__logout):hover {
     border-color: #e8c8d8;
     background: #fbebf2;
     color: var(--pink-dark);
 }
 
-.account_button__logout,
+.account_button .account_button__logout,
 .navbar-item__logout .button {
     display: inline-flex;
     align-items: center;
@@ -75,7 +76,7 @@
     box-shadow: none;
 }
 
-.account_button__logout:hover,
+.account_button .account_button__logout:hover,
 .navbar-item__logout .button:hover {
     border-color: #e8c8d8;
     background: #fbebf2;
