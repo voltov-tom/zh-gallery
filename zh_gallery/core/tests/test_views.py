@@ -302,3 +302,11 @@ def test_zoom_hint_is_hidden_on_touch():
     assert "(hover: none)" in css
     assert "(pointer: coarse)" in css
     assert ".media-zoom__hint {" in css
+
+
+def test_zoom_js_is_disabled_without_hover():
+    """На тач-устройствах зум не подключается: тап не должен увеличивать картинку."""
+    js = (pathlib.Path(settings.BASE_DIR) / "core/static/core/js/zoom.js").read_text()
+
+    assert "supportsHover" in js
+    assert "(hover: hover) and (pointer: fine)" in js
