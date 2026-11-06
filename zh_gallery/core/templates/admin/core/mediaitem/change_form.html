@@ -39,6 +39,27 @@
             min-height: 16px;
         }
 
+        /* Кнопка генерации и оба поля описания — один блок без разделителей,
+           граница остаётся только перед «Изображением» */
+        .form-row:has([data-ai-url]) {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .form-row:has(#id_description_ru) {
+            border-bottom: none;
+            padding-top: 0;
+            padding-bottom: 2px;
+        }
+
+        .form-row:has(#id_description_en) {
+            padding-bottom: 10px;
+        }
+
+        .form-row:has([data-ai-url]) .ai-generate__status:empty {
+            min-height: 0;
+        }
+
         @keyframes ai-spin {
             to {
                 transform: rotate(360deg);
