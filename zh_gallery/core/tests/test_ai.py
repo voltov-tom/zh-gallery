@@ -147,3 +147,43 @@ def test_admin_add_form_has_no_button(client, admin_user, ai_settings):
     html = client.get("/admin/core/mediaitem/add/").content.decode()
 
     assert "Сгенерировать описание" not in html
+
+
+@pytest.mark.django_db
+def test_admin_generate_response_is_not_cached(client, admin_user, media_item, ai_settings, monkeypatch):
+    """Повторное нажатие не должно получать закэшированный ответ."""
+    payload = json.dumps({"ru": "Новый текст.", "en": "New text."})
+    monkeypatch.setattr(ai.requests, "post", lambda *a, **kw: make_api_response(payload))
+    client.force_login(admin_user)
+
+    response = client.get(
+        reverse("admin:core_mediaitem_generate_description", args=[media_item.pk]),
+        headers={"X-Requested-With": "XMLHttpRequest"},
+    )
+
+    cache_control = response.headers.get("Cache-Control", "")
+    assert "no-store" in cache_control or "no-cache" in cache_control
+
+
+@pytest.mark.django_db
+def test_second_generation_overwrites_description(client, admin_user, media_item, ai_settings, monkeypatch):
+    """Повторное нажатие перезаписывает уже существующее описание."""
+    media_item.description_ru = "старое описание"
+    media_item.description_en = "old description"
+    media_item.save(update_fields=["description_ru", "description_en"])
+    client.force_login(admin_user)
+
+    texts = iter(
+        [
+            json.dumps({"ru": "первое новое", "en": "first new"}),
+            json.dumps({"ru": "второе новое", "en": "second new"}),
+        ]
+    )
+    monkeypatch.setattr(ai.requests, "post", lambda *a, **kw: make_api_response(next(texts)))
+
+    url = reverse("admin:core_mediaitem_generate_description", args=[media_item.pk])
+    client.get(url, headers={"X-Requested-With": "XMLHttpRequest"})
+    client.get(url, headers={"X-Requested-With": "XMLHttpRequest"})
+
+    media_item.refresh_from_db()
+    assert media_item.description_ru == "второе новое"
