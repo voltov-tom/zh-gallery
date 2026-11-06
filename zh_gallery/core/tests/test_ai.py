@@ -99,3 +99,51 @@ def test_admin_button_generates_description(client, admin_user, media_item, ai_s
     assert response.status_code == 302
     media_item.refresh_from_db()
     assert media_item.description_ru == "Описание из админки."
+
+
+@pytest.mark.django_db
+def test_admin_button_returns_json_for_ajax(client, admin_user, media_item, ai_settings, monkeypatch):
+    payload = json.dumps({"ru": "Текст из AJAX.", "en": "Text from AJAX."})
+    monkeypatch.setattr(ai.requests, "post", lambda *a, **kw: make_api_response(payload))
+    client.force_login(admin_user)
+
+    response = client.get(
+        reverse("admin:core_mediaitem_generate_description", args=[media_item.pk]),
+        headers={"X-Requested-With": "XMLHttpRequest"},
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {"success": True, "ru": "Текст из AJAX.", "en": "Text from AJAX."}
+
+
+@pytest.mark.django_db
+def test_admin_button_reports_error_in_json(client, admin_user, media_item, ai_settings, monkeypatch):
+    monkeypatch.setattr(ai.requests, "post", lambda *a, **kw: FakeResponse({"error": "boom"}, 500))
+    client.force_login(admin_user)
+
+    response = client.get(
+        reverse("admin:core_mediaitem_generate_description", args=[media_item.pk]),
+        headers={"X-Requested-With": "XMLHttpRequest"},
+    )
+
+    assert response.status_code == 400
+    assert response.json()["success"] is False
+
+
+@pytest.mark.django_db
+def test_admin_button_is_placed_before_description(client, admin_user, media_item, ai_settings):
+    client.force_login(admin_user)
+
+    html = client.get(f"/admin/core/mediaitem/{media_item.pk}/change/").content.decode()
+
+    assert "Сгенерировать описание" in html
+    assert html.index("Сгенерировать описание") < html.index('id="id_description_ru"')
+
+
+@pytest.mark.django_db
+def test_admin_add_form_has_no_button(client, admin_user, ai_settings):
+    client.force_login(admin_user)
+
+    html = client.get("/admin/core/mediaitem/add/").content.decode()
+
+    assert "Сгенерировать описание" not in html

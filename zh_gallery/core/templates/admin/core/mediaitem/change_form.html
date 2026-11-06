@@ -1,12 +1,96 @@
 {% extends "admin/change_form.html" %}
 
-{% block object-tools-items %}
-    {% if original and ai_enabled %}
-        <li>
-            <a href="{% url 'admin:core_mediaitem_generate_description' original.pk %}" class="addlink">
-                Сгенерировать описание (ИИ)
-            </a>
-        </li>
-    {% endif %}
+{% block extrahead %}
     {{ block.super }}
+    <style>
+        .ai-generate {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            border: 1px solid var(--hairline-color, #ccc);
+            border-radius: 6px;
+            background: var(--button-bg, #fff);
+            color: inherit;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .ai-generate[disabled] {
+            opacity: 0.65;
+            cursor: progress;
+        }
+
+        .ai-generate.is-loading::before {
+            content: "";
+            width: 13px;
+            height: 13px;
+            border: 2px solid currentColor;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: ai-spin 0.7s linear infinite;
+        }
+
+        .ai-generate__status {
+            display: block;
+            margin-top: 6px;
+            color: var(--body-quiet-color, #666);
+            font-size: 12px;
+            min-height: 16px;
+        }
+
+        @keyframes ai-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var button = document.querySelector("[data-ai-url]");
+            if (!button) {
+                return;
+            }
+
+            var status = document.querySelector("[data-ai-status]");
+            var ru = document.querySelector("#id_description_ru");
+            var en = document.querySelector("#id_description_en");
+
+            function setStatus(text) {
+                if (status) {
+                    status.textContent = text;
+                }
+            }
+
+            button.addEventListener("click", async function () {
+                button.disabled = true;
+                button.classList.add("is-loading");
+                setStatus("Генерируем описание — это занимает 10–30 секунд…");
+
+                try {
+                    var response = await fetch(button.dataset.aiUrl, {
+                        headers: { "X-Requested-With": "XMLHttpRequest" }
+                    });
+                    var data = await response.json();
+                    if (!response.ok || !data.success) {
+                        throw new Error(data.error || "сервис вернул ошибку");
+                    }
+                    if (ru) {
+                        ru.value = data.ru;
+                        ru.dispatchEvent(new Event("input", { bubbles: true }));
+                    }
+                    if (en) {
+                        en.value = data.en;
+                        en.dispatchEvent(new Event("input", { bubbles: true }));
+                    }
+                    setStatus("Готово — проверьте текст и нажмите «Сохранить».");
+                } catch (error) {
+                    setStatus("Не получилось: " + error.message);
+                } finally {
+                    button.disabled = false;
+                    button.classList.remove("is-loading");
+                }
+            });
+        });
+    </script>
 {% endblock %}

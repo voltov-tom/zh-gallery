@@ -5,9 +5,10 @@ from __future__ import annotations
 from django.conf import settings
 from django.contrib import admin, messages
 from django.db.models import Count
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
-from django.urls import path
+from django.urls import path, reverse
+from django.utils.html import format_html
 from modeltranslation.admin import TranslationAdmin
 
 from .integrations.ai import AIDescriptionError
@@ -71,10 +72,56 @@ class MediaItemAdmin(TranslationAdmin):
     list_filter = ("subcategory__category", "subcategory")
     search_fields = ("title", "slug", "description")
     autocomplete_fields = ("subcategory",)
-    readonly_fields = ("slug", "views", "like_time")
+    readonly_fields = ("slug", "views", "like_time", "ai_generate")
     date_hierarchy = None
     change_form_template = "admin/core/mediaitem/change_form.html"
     actions = ("generate_description_action",)
+    # Кнопка генерации стоит прямо над полями описания, а не в шапке страницы
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "subcategory",
+                    "title_ru",
+                    "title_en",
+                    "ai_generate",
+                    "description_ru",
+                    "description_en",
+                    "image",
+                    "likes",
+                    "slug",
+                    "views",
+                    "like_time",
+                )
+            },
+        ),
+    )
+
+    def get_fieldsets(self, request, obj=None):
+        """На форме добавления кнопка не нужна — генерировать пока нечего."""
+        fieldsets = super().get_fieldsets(request, obj)
+        if obj is not None:
+            return fieldsets
+        cleaned = []
+        for name, options in fieldsets:
+            fields = [field for field in options["fields"] if field != "ai_generate"]
+            cleaned.append((name, {**options, "fields": fields}))
+        return cleaned
+
+    @admin.display(description="Описание через ИИ")
+    def ai_generate(self, obj):
+        """Кнопка «Сгенерировать описание» рядом с полями описания."""
+        if obj is None or not settings.AI_API_KEY:
+            return ""
+        url = reverse("admin:core_mediaitem_generate_description", args=[obj.pk])
+        return format_html(
+            '<button type="button" class="button ai-generate" data-ai-url="{}">'
+            '<span class="ai-generate__label">Сгенерировать описание</span>'
+            "</button>"
+            '<span class="ai-generate__status" data-ai-status></span>',
+            url,
+        )
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
         extra_context = {**(extra_context or {}), "ai_enabled": bool(settings.AI_API_KEY)}
@@ -93,11 +140,16 @@ class MediaItemAdmin(TranslationAdmin):
     def generate_description_view(self, request, pk):
         """Кнопка «Сгенерировать описание» на странице работы."""
         media_item = get_object_or_404(MediaItem, pk=pk)
+        is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
         try:
-            generate_media_description(media_item)
+            texts = generate_media_description(media_item)
         except AIDescriptionError as error:
+            if is_ajax:
+                return JsonResponse({"success": False, "error": str(error)}, status=400)
             self.message_user(request, f"Описание не создано: {error}", level=messages.ERROR)
         else:
+            if is_ajax:
+                return JsonResponse({"success": True, **texts})
             self.message_user(request, "Описание сгенерировано", level=messages.SUCCESS)
         return HttpResponseRedirect(request.META.get("HTTP_REFERER") or request.path)
 
