@@ -187,3 +187,14 @@ def test_second_generation_overwrites_description(client, admin_user, media_item
 
     media_item.refresh_from_db()
     assert media_item.description_ru == "второе новое"
+
+
+@pytest.mark.django_db
+def test_description_fields_are_textareas(client, admin_user, media_item, ai_settings):
+    """Описания — многострочные поля, иначе 255 символов не видно."""
+    client.force_login(admin_user)
+
+    html = client.get(f"/admin/core/mediaitem/{media_item.pk}/change/").content.decode()
+
+    assert '<textarea name="description_ru"' in html
+    assert '<textarea name="description_en"' in html

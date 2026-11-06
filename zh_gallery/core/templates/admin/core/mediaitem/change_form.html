@@ -39,6 +39,17 @@
             min-height: 16px;
         }
 
+        /* Описания — многострочные поля на всю ширину */
+        textarea.ai-description-input {
+            width: 100%;
+            max-width: 900px;
+            min-height: 52px;
+            box-sizing: border-box;
+            resize: vertical;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
         /* Кнопка генерации и оба поля описания — один блок без разделителей,
            граница остаётся только перед «Изображением» */
         .form-row:has([data-ai-url]) {
@@ -77,11 +88,27 @@
             var ru = document.querySelector("#id_description_ru");
             var en = document.querySelector("#id_description_en");
 
+            function autoGrow(field) {
+                if (!field) {
+                    return;
+                }
+                field.style.height = "auto";
+                field.style.height = Math.max(field.scrollHeight, 52) + "px";
+            }
+
             function setStatus(text) {
                 if (status) {
                     status.textContent = text;
                 }
             }
+
+            autoGrow(ru);
+            autoGrow(en);
+            [ru, en].forEach(function (field) {
+                if (field) {
+                    field.addEventListener("input", function () { autoGrow(field); });
+                }
+            });
 
             button.addEventListener("click", async function () {
                 button.disabled = true;
@@ -106,6 +133,8 @@
                         en.value = data.en;
                         en.dispatchEvent(new Event("input", { bubbles: true }));
                     }
+                    autoGrow(ru);
+                    autoGrow(en);
                     setStatus("Готово — проверьте текст и нажмите «Сохранить».");
                 } catch (error) {
                     setStatus("Не получилось: " + error.message);
