@@ -145,11 +145,15 @@ class MediaItemAdmin(TranslationAdmin):
             texts = generate_media_description(media_item)
         except AIDescriptionError as error:
             if is_ajax:
-                return JsonResponse({"success": False, "error": str(error)}, status=400)
+                response = JsonResponse({"success": False, "error": str(error)}, status=400)
+                response["Cache-Control"] = "no-store, max-age=0"
+                return response
             self.message_user(request, f"Описание не создано: {error}", level=messages.ERROR)
         else:
             if is_ajax:
-                return JsonResponse({"success": True, **texts})
+                response = JsonResponse({"success": True, **texts})
+                response["Cache-Control"] = "no-store, max-age=0"
+                return response
             self.message_user(request, "Описание сгенерировано", level=messages.SUCCESS)
         return HttpResponseRedirect(request.META.get("HTTP_REFERER") or request.path)
 

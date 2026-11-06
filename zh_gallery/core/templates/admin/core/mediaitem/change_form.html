@@ -89,7 +89,9 @@
                 setStatus("Генерируем описание — это занимает 10–30 секунд…");
 
                 try {
-                    var response = await fetch(button.dataset.aiUrl, {
+                    var url = button.dataset.aiUrl + "?ts=" + Date.now();
+                    var response = await fetch(url, {
+                        cache: "no-store",
                         headers: { "X-Requested-With": "XMLHttpRequest" }
                     });
                     var data = await response.json();
