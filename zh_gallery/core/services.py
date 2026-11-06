@@ -10,6 +10,7 @@ from django.db import transaction
 from django.db.models import F
 from django.utils import timezone
 
+from .integrations.ai import request_description
 from .models import MediaItem, MediaItemReview
 
 
@@ -58,3 +59,19 @@ def update_review(review: MediaItemReview, content: str) -> MediaItemReview:
 
 def delete_review(review: MediaItemReview) -> None:
     review.delete()
+
+
+def generate_media_description(media_item: MediaItem) -> dict[str, str]:
+    """Просит ИИ описание работы и сохраняет его в оба языка.
+
+    Старые значения не трогаем, пока модель не вернула оба текста: если сервис
+    недоступен, в базе остаётся то, что было.
+    """
+    texts = request_description(media_item)
+    MediaItem.objects.filter(pk=media_item.pk).update(
+        description_ru=texts["ru"],
+        description_en=texts["en"],
+    )
+    media_item.description_ru = texts["ru"]
+    media_item.description_en = texts["en"]
+    return texts

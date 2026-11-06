@@ -2,11 +2,17 @@
 
 from __future__ import annotations
 
-from django.contrib import admin
+from django.conf import settings
+from django.contrib import admin, messages
 from django.db.models import Count
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.urls import path
 from modeltranslation.admin import TranslationAdmin
 
+from .integrations.ai import AIDescriptionError
 from .models import About, MainCategory, MediaItem, MediaItemReview, SubCategory
+from .services import generate_media_description
 
 
 @admin.register(MainCategory)
@@ -67,6 +73,56 @@ class MediaItemAdmin(TranslationAdmin):
     autocomplete_fields = ("subcategory",)
     readonly_fields = ("slug", "views", "like_time")
     date_hierarchy = None
+    change_form_template = "admin/core/mediaitem/change_form.html"
+    actions = ("generate_description_action",)
+
+    def change_view(self, request, object_id, form_url="", extra_context=None):
+        extra_context = {**(extra_context or {}), "ai_enabled": bool(settings.AI_API_KEY)}
+        return super().change_view(request, object_id, form_url, extra_context)
+
+    def get_urls(self):
+        return [
+            path(
+                "<int:pk>/generate-description/",
+                self.admin_site.admin_view(self.generate_description_view),
+                name="core_mediaitem_generate_description",
+            ),
+            *super().get_urls(),
+        ]
+
+    def generate_description_view(self, request, pk):
+        """Кнопка «Сгенерировать описание» на странице работы."""
+        media_item = get_object_or_404(MediaItem, pk=pk)
+        try:
+            generate_media_description(media_item)
+        except AIDescriptionError as error:
+            self.message_user(request, f"Описание не создано: {error}", level=messages.ERROR)
+        else:
+            self.message_user(request, "Описание сгенерировано", level=messages.SUCCESS)
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER") or request.path)
+
+    @admin.action(description="Сгенерировать описание через ИИ")
+    def generate_description_action(self, request, queryset):
+        """Пакетная генерация для выбранных работ в списке."""
+        if not settings.AI_API_KEY:
+            self.message_user(request, "AI_API_KEY не задан — генерация отключена", level=messages.ERROR)
+            return
+
+        done = failed = 0
+        for media_item in queryset:
+            try:
+                generate_media_description(media_item)
+            except AIDescriptionError as error:
+                failed += 1
+                self.message_user(
+                    request, f"«{media_item.title}»: {error}", level=messages.WARNING
+                )
+            else:
+                done += 1
+        if done:
+            self.message_user(request, f"Описаний создано: {done}", level=messages.SUCCESS)
+        if failed:
+            self.message_user(request, f"Не удалось: {failed}", level=messages.WARNING)
 
     def get_queryset(self, request):
         return (
