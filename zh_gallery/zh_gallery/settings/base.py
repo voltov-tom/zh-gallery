@@ -223,6 +223,14 @@ EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=False)
 DEFAULT_FROM_EMAIL = env.str("DEFAULT_FROM_EMAIL", default="zh-gallery@localhost")
 # Куда пересылаются сообщения, отправленные через Telegram-бота
 CONTACT_EMAIL = env.str("CONTACT_EMAIL", default="zhenya@zh-gallery.ru")
+
+# --- генерация описаний работ через vision-модель -------------------------
+# Ключ не коммитим: он живёт только в .env на сервере/машине разработчика
+AI_API_KEY = env.str("AI_API_KEY", default="")
+AI_BASE_URL = env.str("AI_BASE_URL", default="https://api.deepseek.com")
+AI_MODEL = env.str("AI_MODEL", default="deepseek-flash")
+AI_TIMEOUT = env.int("AI_TIMEOUT", default=120)
+AI_MAX_TOKENS = env.int("AI_MAX_TOKENS", default=2500)
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 # сколько секунд ждать между повторными письмами подтверждения
 EMAIL_CONFIRMATION_COOLDOWN = env.int("EMAIL_CONFIRMATION_COOLDOWN", default=60)
