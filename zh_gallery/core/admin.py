@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from django import forms
 from django.conf import settings
 from django.contrib import admin, messages
 from django.db.models import Count
@@ -97,6 +98,16 @@ class MediaItemAdmin(TranslationAdmin):
             },
         ),
     )
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        # Описание — 255 символов: в одну строку не влезает, делаем textarea
+        for name in ("description_ru", "description_en"):
+            if name in form.base_fields:
+                form.base_fields[name].widget = forms.Textarea(
+                    attrs={"rows": 2, "cols": 90, "class": "ai-description-input"}
+                )
+        return form
 
     def get_fieldsets(self, request, obj=None):
         """На форме добавления кнопка не нужна — генерировать пока нечего."""
