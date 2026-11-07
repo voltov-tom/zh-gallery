@@ -310,3 +310,22 @@ def test_zoom_js_is_disabled_without_hover():
 
     assert "supportsHover" in js
     assert "(hover: hover) and (pointer: fine)" in js
+
+
+@pytest.mark.django_db
+def test_ai_badge_is_shown_for_generated_description(client, media_item):
+    media_item.description_generated_by_ai = True
+    media_item.save(update_fields=["description_generated_by_ai"])
+
+    content = client.get(media_item.get_absolute_url()).content
+
+    # .mo в тестах не собирается, поэтому проверяем разметку плашки
+    assert b"ai-badge" in content
+    assert b"sparkles-outline" in content
+
+
+@pytest.mark.django_db
+def test_ai_badge_is_hidden_for_manual_description(client, media_item):
+    content = client.get(media_item.get_absolute_url()).content
+
+    assert b"ai-badge" not in content

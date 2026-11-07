@@ -679,3 +679,6 @@ msgstr ""
 
 msgid "Continue with %(provider_name)s"
 msgstr "Продолжить с %(provider_name)s"
+
+msgid "Description generated with AI"
+msgstr "Описание сгенерировано с помощью ИИ"

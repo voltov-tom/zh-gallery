@@ -71,7 +71,9 @@ def generate_media_description(media_item: MediaItem) -> dict[str, str]:
     MediaItem.objects.filter(pk=media_item.pk).update(
         description_ru=texts["ru"],
         description_en=texts["en"],
+        description_generated_by_ai=True,
     )
     media_item.description_ru = texts["ru"]
     media_item.description_en = texts["en"]
+    media_item.description_generated_by_ai = True
     return texts

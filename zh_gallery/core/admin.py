@@ -67,10 +67,11 @@ class MediaItemAdmin(TranslationAdmin):
         "views",
         "likes_count",
         "reviews_count",
+        "description_generated_by_ai",
         "like_time",
     )
     list_display_links = ("title",)
-    list_filter = ("subcategory__category", "subcategory")
+    list_filter = ("subcategory__category", "subcategory", "description_generated_by_ai")
     search_fields = ("title", "slug", "description")
     autocomplete_fields = ("subcategory",)
     readonly_fields = ("slug", "views", "like_time", "ai_generate")
@@ -89,6 +90,7 @@ class MediaItemAdmin(TranslationAdmin):
                     "ai_generate",
                     "description_ru",
                     "description_en",
+                    "description_generated_by_ai",
                     "image",
                     "likes",
                     "slug",
