@@ -198,3 +198,14 @@ def test_description_fields_are_textareas(client, admin_user, media_item, ai_set
 
     assert '<textarea name="description_ru"' in html
     assert '<textarea name="description_en"' in html
+
+
+@pytest.mark.django_db
+def test_generation_marks_description_as_ai(media_item, ai_settings, monkeypatch):
+    payload = json.dumps({"ru": "Текст.", "en": "Text."})
+    monkeypatch.setattr(ai.requests, "post", lambda *a, **kw: make_api_response(payload))
+
+    generate_media_description(media_item)
+
+    media_item.refresh_from_db()
+    assert media_item.description_generated_by_ai is True

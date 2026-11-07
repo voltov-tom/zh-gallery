@@ -57,6 +57,13 @@
 
             <div class="content media-detail__description">{{ media_item.description }}</div>
 
+            {% if media_item.description_generated_by_ai %}
+                <p class="ai-badge">
+                    <ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon>
+                    {% trans "Description generated with AI" %}
+                </p>
+            {% endif %}
+
             <h2 class="subtitle media-detail__comments-title">{% trans "Comments" %}</h2>
             <div class="reviews-wrapper">
                 {% for review in media_item.reviews.all %}
