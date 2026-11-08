@@ -64,7 +64,11 @@
         </form>
 
         <p class="auth-footer-hint">
-            {% blocktrans %}If you have not created an account yet, then please <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
+            {% if signup_enabled %}
+                {% blocktrans %}If you have not created an account yet, then please <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}
+            {% else %}
+                {% trans "Registration is temporarily closed." %}
+            {% endif %}
         </p>
     </div>
 {% endblock content %}

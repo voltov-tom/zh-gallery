@@ -48,6 +48,10 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Deploy over SSH
+        # пока секрет не добавлен — шаг просто пропускается, образ всё равно пушится
+        if: ${{ env.DEPLOY_KEY != '' }}
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         uses: appleboy/ssh-action@v1
         with:
           host: zh-gallery.ru

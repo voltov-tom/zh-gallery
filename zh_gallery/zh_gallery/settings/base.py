@@ -165,6 +165,9 @@ SITE_NAME = env.str("SITE_NAME", default="zh-gallery")
 
 # django-allauth 65.x
 ACCOUNT_LOGIN_METHODS = {"username", "email"}
+# Регистрация открывается/закрывается одной переменной окружения.
+# Пока продумываем антиспам — на проде выключена.
+SIGNUP_ENABLED = env.bool("SIGNUP_ENABLED", default=True)
 ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3

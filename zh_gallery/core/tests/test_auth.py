@@ -209,3 +209,25 @@ def test_cookie_notice_is_on_pages(client):
     assert b"data-cookie-notice" in content
     assert b"core/js/cookie.js" in content
     assert b"privacy-policy" in content
+
+
+@pytest.mark.django_db
+def test_signup_can_be_closed_by_setting(client, settings):
+    """SIGNUP_ENABLED=False: нет кнопки в шапке и прямой заход не открывает форму."""
+    settings.SIGNUP_ENABLED = False
+
+    page = client.get(reverse("account_login"))
+    assert b"/accounts/signup/" not in page.content
+    assert b"Registration is temporarily closed" in page.content
+
+    response = client.get(reverse("account_signup"))
+    assert response.status_code == 200
+    assert b"temporarily closed" in response.content
+    assert b'name="password1"' not in response.content
+
+
+@pytest.mark.django_db
+def test_signup_is_open_by_default(client):
+    page = client.get(reverse("account_login"))
+
+    assert b"/accounts/signup/" in page.content
