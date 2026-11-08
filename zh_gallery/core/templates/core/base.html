@@ -96,8 +96,10 @@
             <div class="navbar-item my_account">
                 <a href="{% url 'account_login' %}"
                    class="button is-info is-light navbar-item__auth">{% trans "Sign In" %}</a>
-                <a href="{% url 'account_signup' %}"
-                   class="button is-info is-light navbar-item__auth">{% trans "Sign Up" %}</a>
+                {% if signup_enabled %}
+                    <a href="{% url 'account_signup' %}"
+                       class="button is-info is-light navbar-item__auth">{% trans "Sign Up" %}</a>
+                {% endif %}
             </div>
         {% endif %}
     </div>

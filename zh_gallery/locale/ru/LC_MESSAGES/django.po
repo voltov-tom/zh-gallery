@@ -682,3 +682,13 @@ msgstr "Продолжить с %(provider_name)s"
 
 msgid "Description generated with AI"
 msgstr "Описание сгенерировано с помощью ИИ"
+
+msgid ""
+"Registration is temporarily closed: we are setting up\n"
+"            anti-spam protection and mandatory e-mail verification. Please check back later."
+msgstr ""
+"Регистрация временно закрыта: настраиваем антиспам-защиту и обязательное "
+"подтверждение e-mail. Загляните позже."
+
+msgid "Already have an account?"
+msgstr "Уже есть аккаунт?"
