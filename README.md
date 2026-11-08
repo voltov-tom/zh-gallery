@@ -159,6 +159,35 @@ docker compose run --rm web python manage.py media_check --download
 # Все файлы на месте
 ```
 
+## Деплой
+
+Прод живёт на VPS (`zh-gallery.ru`, Debian 13), конфигурация — в `deploy/`:
+
+```
+deploy/
+├── docker-compose.prod.yml   # db, redis, web (образ из GHCR), nginx
+├── nginx-prod.conf           # HTTPS, HSTS, статика, медиа
+└── deploy.sh                 # pull образа → up → smoke /healthz/
+```
+
+Схема: `git push` → GitHub Actions (`ci.yml`) → сборка образа → публичный GHCR
+→ по SSH от пользователя `deploy` запускается `deploy.sh`.
+
+На сервере:
+
+```
+/srv/zh-gallery/
+├── .env              # секреты, chmod 600
+├── certs/            # fullchain.pem + privkey.pem
+├── docker-compose.prod.yml
+├── nginx-prod.conf
+└── deploy.sh
+```
+
+Секреты GitHub: `DEPLOY_SSH_KEY` — приватный ключ пользователя `deploy`.
+Сертификат — GlobalSign (nic.ru), продлевается вручную до 25.05.2027; позже
+переедем на Let's Encrypt с автообновлением.
+
 ## Юридические страницы
 
 «Условия и положения» и «Политика конфиденциальности» лежат отдельными файлами

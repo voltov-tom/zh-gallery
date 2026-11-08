@@ -2,8 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [master, modernization]
+    branches: [master, modernization, refactor]
   pull_request:
+  # чтобы deploy.yml мог вызывать этот workflow как переиспользуемый
+  workflow_call:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
