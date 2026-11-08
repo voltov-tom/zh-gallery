@@ -692,3 +692,6 @@ msgstr ""
 
 msgid "Already have an account?"
 msgstr "Уже есть аккаунт?"
+
+msgid "Registration is temporarily closed."
+msgstr "Регистрация временно закрыта."
