@@ -22,6 +22,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+    env:
+      # секрет нужен, чтобы шаг деплоя включался только когда он настроен
+      DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -50,15 +53,20 @@ jobs:
       - name: Deploy over SSH
         # пока секрет не добавлен — шаг просто пропускается, образ всё равно пушится
         if: ${{ env.DEPLOY_KEY != '' }}
-        env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
         uses: appleboy/ssh-action@v1
         with:
           host: zh-gallery.ru
           port: 10022
           username: deploy
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          command_timeout: 10m
+          command_timeout: 15m
           script: |
             cd /srv/zh-gallery
+            # сначала подтягиваем скрипт и конфиги из репозитория — серверная копия
+            # deploy.sh не должна отставать от кода
+            git -C src fetch -q origin refactor
+            git -C src reset -q --hard origin/refactor
+            cp -f src/deploy/deploy.sh src/deploy/docker-compose.prod.yml \
+                  src/deploy/nginx-prod.conf src/deploy/maintenance.html .
+            chmod +x deploy.sh
             IMAGE_TAG=${{ github.sha }} ./deploy.sh
