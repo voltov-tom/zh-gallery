@@ -1,4 +1,10 @@
-/* Миниатюра выбранной работы прямо в форме категории/подкатегории. */
+/* Миниатюра выбранной работы в форме категории/подкатегории.
+ *
+ * Django-админка использует select2 (django.jQuery), который по выбору
+ * элемента вызывает jQuery-события change / select2:select, а нативный
+ * addEventListener("change") при этом не срабатывает. Поэтому подписываемся
+ * и на jQuery, и на нативный обработчик — на случай отключённого select2.
+ */
 (function () {
     "use strict";
 
@@ -17,31 +23,59 @@
             row.appendChild(box);
         }
 
-        function update() {
-            box.innerHTML = "";
-            if (!select.value) {
+        var lastId = null;
+
+        function show(id) {
+            if (id === lastId) {
                 return;
             }
-            fetch("/admin/core/mediaitem/" + select.value + "/thumb/", {
+            lastId = id;
+            box.innerHTML = "";
+
+            if (!id) {
+                return;
+            }
+
+            var img = document.createElement("img");
+            img.alt = "";
+            img.style.maxHeight = "120px";
+            img.style.borderRadius = "8px";
+            img.style.opacity = "0.4";
+            box.appendChild(img);
+
+            fetch("/admin/core/mediaitem/" + id + "/thumb/", {
                 credentials: "same-origin",
             })
                 .then(function (response) {
                     return response.ok ? response.json() : null;
                 })
                 .then(function (data) {
-                    if (!data || !data.url) {
+                    if (!data || !data.url || lastId !== id) {
+                        img.remove();
                         return;
                     }
-                    var img = document.createElement("img");
                     img.src = data.url;
-                    img.alt = "";
-                    img.style.maxHeight = "120px";
-                    img.style.borderRadius = "8px";
-                    box.appendChild(img);
+                    img.style.opacity = "1";
+                })
+                .catch(function () {
+                    img.remove();
                 });
         }
 
+        function update() {
+            show(select.value);
+        }
+
         select.addEventListener("change", update);
+
+        var jq = (window.django && window.django.jQuery) || window.jQuery;
+        if (jq) {
+            jq(select).on(
+                "change select2:select select2:clear select2:unselect",
+                update
+            );
+        }
+
         update();
     }
 
