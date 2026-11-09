@@ -172,8 +172,15 @@ figure.image.review-teaser__image img {
 }
 
 .review-teaser__meta {
-    margin-bottom: 0;
+    /* имя, время и дата — одной группой слева, без переносов между собой */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 2px 8px;
+    margin-bottom: 6px;
     color: var(--text-soft);
+    text-align: left;
 }
 
 .review-teaser__stats {

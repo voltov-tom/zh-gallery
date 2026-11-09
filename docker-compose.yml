@@ -95,6 +95,7 @@ services:
     volumes:
       # NGINX_CONF=./docker/nginx-nextcloud.conf, когда медиа лежит в Nextcloud
       - ${NGINX_CONF:-./docker/nginx.conf}:/etc/nginx/conf.d/default.conf:ro
+      - ./deploy/maintenance.html:/usr/share/nginx/html/maintenance.html:ro
       - static_volume:/static:ro
       - media_volume:/srv/media:ro
     depends_on:
