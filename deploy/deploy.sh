@@ -1,6 +1,6 @@
 #!/bin/sh
-# Деплой на сервере: тянем свежий образ из GHCR и перезапускаем стек.
-# Запускается по SSH пользователем deploy (docker без sudo).
+# Деплой на сервере: синхронизирует конфиги из репозитория, тянет образ и
+# перезапускает стек. Запускается по SSH пользователем deploy (docker без sudo).
 #
 #   IMAGE_TAG=<sha или тег> ./deploy.sh
 set -eu
@@ -8,6 +8,16 @@ set -eu
 cd /srv/zh-gallery
 : "${IMAGE_TAG:=latest}"
 export IMAGE_TAG
+
+# Конфиги (compose, nginx, страница техработ) держим в репозитории и
+# раскладываем сюда — иначе на сервере остаются устаревшие копии.
+if [ -d src/.git ]; then
+    echo "[deploy] обновляем конфиги из репозитория"
+    git -C src fetch -q origin refactor
+    git -C src reset -q --hard origin/refactor
+    cp -f src/deploy/docker-compose.prod.yml src/deploy/nginx-prod.conf \
+          src/deploy/maintenance.html .
+fi
 
 echo "[deploy] тянем образ $IMAGE_TAG"
 docker compose -f docker-compose.prod.yml pull web

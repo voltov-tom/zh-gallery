@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Технические работы — Zh-gallery</title>
+    <style>
+        :root {
+            --pink: #ae7394;
+            --pink-dark: #8d5677;
+            --pink-soft: #fdf3f7;
+            --pink-line: #f0dbe6;
+            --text: #3c2f36;
+            --text-soft: #8a7a82;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: linear-gradient(180deg, #fdf3f7 0%, #ffffff 60%);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .card {
+            max-width: 520px;
+            width: 100%;
+            padding: 40px 32px;
+            text-align: center;
+            background: #fff;
+            border: 1px solid var(--pink-line);
+            border-radius: 22px;
+            box-shadow: 0 18px 40px rgba(174, 115, 148, 0.16);
+        }
+
+        .logo {
+            width: 84px;
+            height: 84px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--pink-soft);
+            border: 1px solid var(--pink-line);
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 26px;
+            line-height: 1.25;
+            color: var(--text);
+        }
+
+        p {
+            margin: 0 0 10px;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-soft);
+        }
+
+        .hint {
+            margin-top: 22px;
+            font-size: 14px;
+        }
+
+        .hint a {
+            color: var(--pink);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+        }
+
+        .hint a:hover {
+            border-bottom-color: currentColor;
+        }
+
+        .code {
+            margin-top: 18px;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #c9a7b8;
+        }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <div class="logo" aria-hidden="true">
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none">
+                <path d="M6 5h12l-7 7 7 7H6l7-7-7-7z" stroke="#ae7394" stroke-width="1.6"
+                      stroke-linejoin="round" fill="none"/>
+            </svg>
+        </div>
+
+        <h1>На сайте ведутся технические работы</h1>
+        <p>Скоро всё вернётся: обновляем галерею и приводим всё в порядок.</p>
+        <p>Зайдите, пожалуйста, чуть позже.</p>
+
+        <p class="hint">
+            Срочный вопрос — <a href="mailto:zhenya@zh-gallery.ru">zhenya@zh-gallery.ru</a>
+        </p>
+
+        <p class="code">503 · service unavailable</p>
+    </main>
+</body>
+</html>
