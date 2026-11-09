@@ -66,12 +66,12 @@ class MainCategory(SluggedModel):
     title = models.CharField(_("title"), max_length=255, unique=True)
     preview_item = models.ForeignKey(
         "MediaItem",
-        verbose_name=_("preview from media"),
+        verbose_name=_("Preview from media"),
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
         related_name="+",
-        help_text=_("Если не выбрано, используется загруженное изображение"),
+        help_text=_("Leave empty to use the uploaded image"),
     )
 
     class Meta:
@@ -113,12 +113,12 @@ class SubCategory(SluggedModel):
     description = models.CharField(_("description"), max_length=255, blank=True, default="")
     preview_item = models.ForeignKey(
         "MediaItem",
-        verbose_name=_("preview from media"),
+        verbose_name=_("Preview from media"),
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
         related_name="+",
-        help_text=_("Если не выбрано, используется загруженное изображение"),
+        help_text=_("Leave empty to use the uploaded image"),
     )
 
     class Meta:
@@ -228,6 +228,11 @@ class MediaItem(SluggedModel):
 
     def slug_siblings(self) -> models.QuerySet:
         return MediaItem.objects.filter(subcategory_id=self.subcategory_id)
+
+    @property
+    def preview_image(self):
+        """У работы превью — её собственное изображение (общий шаблон карточки)."""
+        return self.image
 
 
 class MediaItemReview(models.Model):

@@ -164,3 +164,18 @@ def test_subcategory_preview_falls_back_to_uploaded_image(subcategory, image_fil
     subcategory.refresh_from_db()
 
     assert subcategory.preview_image.name == subcategory.image.name
+
+
+@pytest.mark.django_db
+def test_media_item_preview_image_is_its_own_image(media_item):
+    """Карточка работы показывает её изображение (общий шаблон preview_image)."""
+    assert media_item.preview_image == media_item.image
+
+
+@pytest.mark.django_db
+def test_admin_thumb_endpoint_returns_image_url(admin_client, media_item):
+    """Миниатюра в форме подкатегории берёт URL картинки работы."""
+    response = admin_client.get(f"/admin/core/mediaitem/{media_item.pk}/thumb/")
+
+    assert response.status_code == 200
+    assert response.json()["url"] == media_item.image.url

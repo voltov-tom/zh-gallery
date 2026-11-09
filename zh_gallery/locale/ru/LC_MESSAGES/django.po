@@ -695,3 +695,9 @@ msgstr "Уже есть аккаунт?"
 
 msgid "Registration is temporarily closed."
 msgstr "Регистрация временно закрыта."
+
+msgid "Leave empty to use the uploaded image"
+msgstr "Оставьте пустым, чтобы использовать загруженное изображение"
+
+msgid "Preview from media"
+msgstr "Превью из медиа"
