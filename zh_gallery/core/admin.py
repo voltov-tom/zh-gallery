@@ -17,13 +17,35 @@ from .models import About, MainCategory, MediaItem, MediaItemReview, SubCategory
 from .services import generate_media_description
 
 
+def _thumb_html(image):
+    """Картинка-превью для админки; контейнер заполняет и JS после выбора."""
+    from django.utils.safestring import mark_safe
+
+    if image:
+        return format_html(
+            '<div id="preview-thumb"><img src="{}" alt="" '
+            'style="max-height:120px;border-radius:8px"></div>',
+            image.url,
+        )
+    return mark_safe('<div id="preview-thumb">—</div>')
+
+
 @admin.register(MainCategory)
 class MainCategoryAdmin(TranslationAdmin):
     list_display = ("title", "slug", "subcategories_count")
     list_display_links = ("title",)
     search_fields = ("title", "slug")
     autocomplete_fields = ("preview_item",)
-    readonly_fields = ("slug",)
+    readonly_fields = ("slug", "preview_thumb")
+
+    class Media:
+        js = ("core/js/admin_preview_thumb.js",)
+
+    @admin.display(description="Превью")
+    def preview_thumb(self, obj):
+        """Миниатюра выбранной работы: видно сразу, без перехода в медиа."""
+        image = obj.preview_image if obj else None
+        return _thumb_html(image)
 
     def get_queryset(self, request):
         return (
@@ -44,7 +66,15 @@ class SubCategoryAdmin(TranslationAdmin):
     list_filter = ("category",)
     search_fields = ("title", "slug", "description")
     autocomplete_fields = ("category", "preview_item")
-    readonly_fields = ("slug",)
+    readonly_fields = ("slug", "preview_thumb")
+
+    class Media:
+        js = ("core/js/admin_preview_thumb.js",)
+
+    @admin.display(description="Превью")
+    def preview_thumb(self, obj):
+        image = obj.preview_image if obj else None
+        return _thumb_html(image)
 
     def get_queryset(self, request):
         return (
@@ -148,8 +178,19 @@ class MediaItemAdmin(TranslationAdmin):
                 self.admin_site.admin_view(self.generate_description_view),
                 name="core_mediaitem_generate_description",
             ),
+            path(
+                "<int:pk>/thumb/",
+                self.admin_site.admin_view(self.thumb_view),
+                name="core_mediaitem_thumb",
+            ),
             *super().get_urls(),
         ]
+
+    def thumb_view(self, request, pk):
+        """URL картинки работы — для миниатюры в форме подкатегории."""
+        media_item = MediaItem.objects.filter(pk=pk).first()
+        url = media_item.image.url if media_item and media_item.image else ""
+        return JsonResponse({"url": url})
 
     def generate_description_view(self, request, pk):
         """Кнопка «Сгенерировать описание» на странице работы."""
