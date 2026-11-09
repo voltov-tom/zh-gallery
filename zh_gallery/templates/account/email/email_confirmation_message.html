@@ -3,6 +3,22 @@
 {% load i18n %}
 
 {% block content %}
-{% autoescape off %}{% user_display user as user_display %}{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}You're receiving this e-mail because user {{ user_display }} has given your e-mail address to register an account on {{ site_domain }}.
-To confirm this is correct, go to {{ activate_url }}{% endblocktrans %}{% endautoescape %}
+{% user_display user as user_display %}
+<p style="margin:0 0 12px;">
+    {% blocktrans with domain=current_site.domain %}You're receiving this e-mail because user <b>{{ user_display }}</b> has given your e-mail address to register an account on {{ domain }}.{% endblocktrans %}
+</p>
+<p style="margin:0 0 18px;">
+    {% blocktrans %}To confirm the address, click the button below.{% endblocktrans %}
+</p>
+<p style="margin:0 0 10px;text-align:center;">
+    <a href="{{ activate_url }}"
+       style="display:inline-block;padding:12px 24px;background-color:#ae7394;color:#ffffff;
+              text-decoration:none;border-radius:12px;font-size:15px;">
+        {% trans "Confirm e-mail" %}
+    </a>
+</p>
+<p style="margin:0;font-size:12px;line-height:1.6;color:#8a7a82;">
+    {% blocktrans %}If the button does not work, open this link:{% endblocktrans %}<br>
+    {{ activate_url }}
+</p>
 {% endblock %}
