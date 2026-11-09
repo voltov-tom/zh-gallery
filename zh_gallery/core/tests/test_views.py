@@ -198,7 +198,9 @@ def test_no_raw_template_comments(client, name):
 def test_footer_uses_local_social_icons(client):
     response = client.get(reverse("about_view"))
 
-    assert response.content.count(b'class="footer-social__link"') == 3
+    # Instagram убран из футера — остались VK и X; внешних хотлинков нет
+    assert response.content.count(b'class="footer-social__link"') == 2
+    assert b"instagram" not in response.content.lower()
     assert b"upload.wikimedia.org" not in response.content
 
 

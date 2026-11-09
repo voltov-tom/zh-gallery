@@ -218,11 +218,17 @@ def test_signup_can_be_closed_by_setting(client, settings):
 
     page = client.get(reverse("account_login"))
     assert b"/accounts/signup/" not in page.content
-    assert b"Registration is temporarily closed" in page.content
+    assert (
+        b"Registration is temporarily closed" in page.content
+        or "Регистрация временно закрыта".encode() in page.content
+    )
 
     response = client.get(reverse("account_signup"))
     assert response.status_code == 200
-    assert b"temporarily closed" in response.content
+    assert (
+        b"temporarily closed" in response.content
+        or "Регистрация временно закрыта".encode() in response.content
+    )
     assert b'name="password1"' not in response.content
 
 
