@@ -22,6 +22,7 @@ class MainCategoryAdmin(TranslationAdmin):
     list_display = ("title", "slug", "subcategories_count")
     list_display_links = ("title",)
     search_fields = ("title", "slug")
+    autocomplete_fields = ("preview_item",)
     readonly_fields = ("slug",)
 
     def get_queryset(self, request):
@@ -42,7 +43,7 @@ class SubCategoryAdmin(TranslationAdmin):
     list_display_links = ("title",)
     list_filter = ("category",)
     search_fields = ("title", "slug", "description")
-    autocomplete_fields = ("category",)
+    autocomplete_fields = ("category", "preview_item")
     readonly_fields = ("slug",)
 
     def get_queryset(self, request):

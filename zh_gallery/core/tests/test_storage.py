@@ -199,3 +199,24 @@ def test_storage_url_prefers_public_url(settings):
     storage = NextcloudStorage(client=FakeNextcloudClient())
 
     assert storage.url("b.jpg") == "https://cloud.example/s/abc/download/b.jpg"
+
+
+def test_list_files_parses_multistatus(monkeypatch):
+    """list_files возвращает имена, а не куски XML."""
+    from core.integrations.nextcloud import NextcloudWebDAVClient
+
+    payload = """<?xml version="1.0"?>
+    <d:multistatus xmlns:d="DAV:">
+      <d:response><d:href>/remote.php/dav/files/u/root/</d:href></d:response>
+      <d:response><d:href>/remote.php/dav/files/u/root/first.jpg</d:href></d:response>
+      <d:response><d:href>/remote.php/dav/files/u/root/second.png</d:href></d:response>
+    </d:multistatus>"""
+
+    class FakeResponse:
+        status_code = 207
+        text = payload
+
+    client = NextcloudWebDAVClient(hostname="https://example.com", login="u", password="p")
+    monkeypatch.setattr(client, "_request", lambda *a, **kw: FakeResponse())
+
+    assert client.list_files("root/") == ["first.jpg", "second.png"]

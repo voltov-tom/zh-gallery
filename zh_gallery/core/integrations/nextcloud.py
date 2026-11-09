@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import logging
 import posixpath
-from urllib.parse import quote
+import re
+from urllib.parse import quote, unquote
 
 import requests
 
@@ -131,6 +132,22 @@ class NextcloudWebDAVClient:
         length = response.headers.get("Content-Length")
         return int(length) if length and length.isdigit() else None
 
+    def move(self, source: str, destination: str) -> None:
+        """Перемещает файл (WebDAV MOVE) — без скачивания и повторной загрузки."""
+        directory = posixpath.dirname(destination.strip("/"))
+        if directory:
+            self.mkdirs(directory)
+
+        response = self._request(
+            "MOVE",
+            source,
+            headers={"Destination": self.endpoint(destination), "Overwrite": "F"},
+        )
+        if response.status_code not in (201, 204):
+            raise NextcloudError(
+                f"Не удалось переместить {source} -> {destination}: HTTP {response.status_code}"
+            )
+
     def delete(self, name: str) -> None:
         """Удаляет файл. Отсутствие файла ошибкой не считается."""
         response = self._request("DELETE", name)
@@ -153,7 +170,7 @@ class NextcloudWebDAVClient:
                 )
 
     def list_files(self, directory: str = "") -> list[str]:
-        """Список имён внутри папки (используется healthcheck-ом и отладкой)."""
+        """Имена файлов внутри папки (без самой папки и без подпапок)."""
         body = (
             '<?xml version="1.0"?>'
             '<d:propfind xmlns:d="DAV:"><d:prop><d:resourcetype/></d:prop></d:propfind>'
@@ -163,4 +180,15 @@ class NextcloudWebDAVClient:
             raise NextcloudError(
                 f"Не удалось получить список {directory}: HTTP {response.status_code}"
             )
-        return list(response.text.split("<d:href>")[1:])
+
+        names: list[str] = []
+        for href in re.findall(r"<d:href>([^<]+)</d:href>", response.text):
+            path = unquote(href).rstrip("/")
+            name = path.split("/")[-1]
+            if not name or name in names:
+                continue
+            names.append(name)
+
+        # первым в ответе всегда идёт сама папка — убираем её
+        own_name = posixpath.basename(directory.rstrip("/"))
+        return [name for name in names if name != own_name]
