@@ -72,12 +72,14 @@ class Command(BaseCommand):
                 skipped += 1
                 continue
 
-            # имя занято — добавляем числовой суффикс
-            counter = 2
-            while storage.exists(new_name) and new_name != current:
-                stem, dot, suffix = new_name.rpartition(".")
-                new_name = f"{stem}-{counter}.{suffix}" if dot else f"{new_name}-{counter}"
-                counter += 1
+            source_exists = storage.exists(current)
+            # имя занято, а исходник ещё на месте — добавляем числовой суффикс
+            if source_exists:
+                counter = 2
+                while storage.exists(new_name):
+                    stem, dot, suffix = new_name.rpartition(".")
+                    new_name = f"{stem}-{counter}.{suffix}" if dot else f"{new_name}-{counter}"
+                    counter += 1
 
             self.stdout.write(f"{media_item.pk} {media_item.title}: {current} -> {new_name}")
 
@@ -86,7 +88,7 @@ class Command(BaseCommand):
                 continue
 
             try:
-                if storage.exists(current):
+                if source_exists:
                     if hasattr(storage, "client"):
                         storage.client.move(current, new_name)
                     else:
