@@ -47,33 +47,32 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Check deploy key
-        id: key
-        # secrets нельзя использовать в if, поэтому проверяем их в run
+      - name: Deploy over SSH
+        # Ключ ищем под несколькими частыми именами: секрет мог быть назван иначе.
+        # Если не нашли — предупреждаем и выходим, образ всё равно уже в GHCR.
+        env:
+          KEY_DEPLOY_SSH: ${{ secrets.DEPLOY_SSH_KEY }}
+          KEY_DEPLOY: ${{ secrets.DEPLOY_KEY }}
+          KEY_SSH: ${{ secrets.SSH_KEY }}
+          KEY_DEPLOY_PRIVATE: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
         run: |
-          if [ -n "${{ secrets.DEPLOY_SSH_KEY }}" ]; then
-            echo "present=1" >> "$GITHUB_OUTPUT"
-          else
-            echo "present=0" >> "$GITHUB_OUTPUT"
-            echo "::warning::DEPLOY_SSH_KEY не задан — деплой пропущен"
+          set -eu
+          KEY="${KEY_DEPLOY_SSH:-${KEY_DEPLOY:-${KEY_SSH:-${KEY_DEPLOY_PRIVATE:-}}}}"
+          if [ -z "$KEY" ]; then
+            echo "::warning::Ключ деплоя не найден в секретах (DEPLOY_SSH_KEY / DEPLOY_KEY / SSH_KEY / DEPLOY_SSH_PRIVATE_KEY)"
+            exit 0
           fi
 
-      - name: Deploy over SSH
-        if: steps.key.outputs.present == '1'
-        uses: appleboy/ssh-action@v1
-        with:
-          host: zh-gallery.ru
-          port: 10022
-          username: deploy
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          command_timeout: 15m
-          script: |
-            cd /srv/zh-gallery
-            # сначала подтягиваем скрипт и конфиги из репозитория — серверная копия
-            # deploy.sh не должна отставать от кода
-            git -C src fetch -q origin refactor
-            git -C src reset -q --hard origin/refactor
-            cp -f src/deploy/deploy.sh src/deploy/docker-compose.prod.yml \
-                  src/deploy/nginx-prod.conf src/deploy/maintenance.html .
-            chmod +x deploy.sh
-            IMAGE_TAG=${{ github.sha }} ./deploy.sh
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+          ssh -o StrictHostKeyChecking=accept-new -o BatchMode=yes \
+              -p 10022 -i ~/.ssh/deploy_key deploy@zh-gallery.ru \
+              "cd /srv/zh-gallery && \
+               git -C src fetch -q origin refactor && \
+               git -C src reset -q --hard origin/refactor && \
+               cp -f src/deploy/deploy.sh src/deploy/docker-compose.prod.yml \
+                     src/deploy/nginx-prod.conf src/deploy/maintenance.html . && \
+               chmod +x deploy.sh && \
+               IMAGE_TAG=${{ github.sha }} ./deploy.sh"
