@@ -5,8 +5,8 @@ stat_views / stat_likes / stat_reviews.{% endcomment %}
 <div class="column is-12-mobile is-6-tablet is-3-desktop media_item_card">
     <a class="media-card" href="{{ item.get_absolute_url }}">
         <div class="media-card__media">
-            {% if item.image %}
-                <img src="{{ item.image.url }}" alt="{{ item.title }}" loading="lazy">
+            {% if item.preview_image %}
+                <img src="{{ item.preview_image.url }}" alt="{{ item.title }}" loading="lazy">
             {% else %}
                 <img src="{% static 'core/images/no_photo.jpeg' %}" alt="{% trans 'no photo' %}" loading="lazy">
             {% endif %}

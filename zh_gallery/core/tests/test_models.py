@@ -110,3 +110,57 @@ def test_replaced_image_file_is_removed(media_item):
 
     assert not storage.exists(old_name)
     assert storage.exists(media_item.image.name)
+
+
+@pytest.mark.django_db
+def test_media_item_upload_path_uses_subcategory(subcategory):
+    """Новые файлы раскладываются по папкам подкатегорий, а не по месяцам."""
+    item = MediaItem(subcategory=subcategory, title="Проверка")
+
+    name = item.image.field.generate_filename(item, "Первый кадр.JPG")
+
+    assert name.startswith(f"{subcategory.category.slug}/{subcategory.slug}/"), name
+    assert name.endswith(".jpg")
+    assert " " not in name and "Первый" not in name
+
+
+@pytest.mark.django_db
+def test_reorganize_media_target_name_for_legacy_file(media_item):
+    """Старый файл из корня получает путь подкатегории и slug-имя."""
+    from core.management.commands.reorganize_media import target_name
+
+    media_item.image.name = "ABC-123.JPEG"
+
+    expected = f"{media_item.subcategory.category.slug}/{media_item.subcategory.slug}/abc-123.jpeg"
+    assert target_name(media_item) == expected
+
+
+@pytest.mark.django_db
+def test_reorganize_media_skips_already_organized(media_item):
+    """Файлы, уже лежащие в папке подкатегории, не трогаем."""
+    from io import StringIO
+
+    from django.core.management import call_command
+
+    out = StringIO()
+    call_command("reorganize_media", "--dry-run", stdout=out)
+
+    assert "пропущено: 1" in out.getvalue()
+
+
+@pytest.mark.django_db
+def test_subcategory_preview_prefers_media_item(subcategory, media_item):
+    """Превью подкатегории — выбранная работа, если она задана."""
+    subcategory.preview_item = media_item
+    subcategory.save(update_fields=["preview_item"])
+
+    assert subcategory.preview_image == media_item.image
+
+
+@pytest.mark.django_db
+def test_subcategory_preview_falls_back_to_uploaded_image(subcategory, image_file):
+    """Если работа не выбрана — используется загруженная картинка."""
+    subcategory.image.save("preview.jpg", image_file(), save=True)
+    subcategory.refresh_from_db()
+
+    assert subcategory.preview_image.name == subcategory.image.name
