@@ -182,6 +182,38 @@ figure.image.review-teaser__image img {
     right: 10px;
 }
 
+/* На телефонах карточка не помещается в одну строку: 128px картинки + 56px
+   отступа под статистику оставляли тексту ~100px, и слова рвались по буквам.
+   Складываем картинку с текстом в свободную строку, а статистику уводим вниз. */
+@media screen and (max-width: 767px) {
+    .review-teaser__inner {
+        flex-wrap: wrap;
+        gap: 10px 12px;
+        padding-right: 0;
+    }
+
+    figure.image.review-teaser__image {
+        min-width: 96px;
+        max-width: 96px;
+    }
+
+    .review-teaser__body {
+        flex: 1 1 calc(100% - 108px);
+    }
+
+    .review-teaser__stats {
+        position: static;
+        flex: 1 1 100%;
+        display: flex;
+        justify-content: flex-start;
+        gap: 12px;
+    }
+
+    .review_body {
+        -webkit-line-clamp: 6;
+    }
+}
+
 /* --- карточки галереи (категории, подкатегории, работы) -------------- */
 .detail {
     gap: 24px 0;
