@@ -22,9 +22,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-    env:
-      # секрет нужен, чтобы шаг деплоя включался только когда он настроен
-      DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
 
     steps:
       - uses: actions/checkout@v4
@@ -50,9 +47,19 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Check deploy key
+        id: key
+        # secrets нельзя использовать в if, поэтому проверяем их в run
+        run: |
+          if [ -n "${{ secrets.DEPLOY_SSH_KEY }}" ]; then
+            echo "present=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=0" >> "$GITHUB_OUTPUT"
+            echo "::warning::DEPLOY_SSH_KEY не задан — деплой пропущен"
+          fi
+
       - name: Deploy over SSH
-        # пока секрет не добавлен — шаг просто пропускается, образ всё равно пушится
-        if: ${{ env.DEPLOY_KEY != '' }}
+        if: steps.key.outputs.present == '1'
         uses: appleboy/ssh-action@v1
         with:
           host: zh-gallery.ru
