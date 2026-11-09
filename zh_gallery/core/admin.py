@@ -174,7 +174,9 @@ class MediaItemAdmin(TranslationAdmin):
     def generate_description_action(self, request, queryset):
         """Пакетная генерация для выбранных работ в списке."""
         if not settings.AI_API_KEY:
-            self.message_user(request, "AI_API_KEY не задан — генерация отключена", level=messages.ERROR)
+            self.message_user(
+                request, "AI_API_KEY не задан — генерация отключена", level=messages.ERROR
+            )
             return
 
         done = failed = 0
@@ -183,9 +185,7 @@ class MediaItemAdmin(TranslationAdmin):
                 generate_media_description(media_item)
             except AIDescriptionError as error:
                 failed += 1
-                self.message_user(
-                    request, f"«{media_item.title}»: {error}", level=messages.WARNING
-                )
+                self.message_user(request, f"«{media_item.title}»: {error}", level=messages.WARNING)
             else:
                 done += 1
         if done:

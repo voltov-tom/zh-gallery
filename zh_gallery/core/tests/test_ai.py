@@ -37,7 +37,9 @@ def ai_settings(settings):
 
 def test_generate_description_saves_both_languages(media_item, ai_settings, monkeypatch):
     payload = json.dumps({"ru": "Мягкий свет и тёплая стена.", "en": "Soft light and a warm wall."})
-    monkeypatch.setattr(ai.requests, "post", lambda *a, **kw: make_api_response(f"```json\n{payload}\n```"))
+    monkeypatch.setattr(
+        ai.requests, "post", lambda *a, **kw: make_api_response(f"```json\n{payload}\n```")
+    )
 
     texts = generate_media_description(media_item)
 
@@ -87,7 +89,9 @@ def test_response_without_required_field_is_rejected(media_item, ai_settings, mo
 
 
 @pytest.mark.django_db
-def test_admin_button_generates_description(client, admin_user, media_item, ai_settings, monkeypatch):
+def test_admin_button_generates_description(
+    client, admin_user, media_item, ai_settings, monkeypatch
+):
     payload = json.dumps({"ru": "Описание из админки.", "en": "Description from admin."})
     monkeypatch.setattr(ai.requests, "post", lambda *a, **kw: make_api_response(payload))
     client.force_login(admin_user)
@@ -102,7 +106,9 @@ def test_admin_button_generates_description(client, admin_user, media_item, ai_s
 
 
 @pytest.mark.django_db
-def test_admin_button_returns_json_for_ajax(client, admin_user, media_item, ai_settings, monkeypatch):
+def test_admin_button_returns_json_for_ajax(
+    client, admin_user, media_item, ai_settings, monkeypatch
+):
     payload = json.dumps({"ru": "Текст из AJAX.", "en": "Text from AJAX."})
     monkeypatch.setattr(ai.requests, "post", lambda *a, **kw: make_api_response(payload))
     client.force_login(admin_user)
@@ -117,7 +123,9 @@ def test_admin_button_returns_json_for_ajax(client, admin_user, media_item, ai_s
 
 
 @pytest.mark.django_db
-def test_admin_button_reports_error_in_json(client, admin_user, media_item, ai_settings, monkeypatch):
+def test_admin_button_reports_error_in_json(
+    client, admin_user, media_item, ai_settings, monkeypatch
+):
     monkeypatch.setattr(ai.requests, "post", lambda *a, **kw: FakeResponse({"error": "boom"}, 500))
     client.force_login(admin_user)
 
@@ -150,7 +158,9 @@ def test_admin_add_form_has_no_button(client, admin_user, ai_settings):
 
 
 @pytest.mark.django_db
-def test_admin_generate_response_is_not_cached(client, admin_user, media_item, ai_settings, monkeypatch):
+def test_admin_generate_response_is_not_cached(
+    client, admin_user, media_item, ai_settings, monkeypatch
+):
     """Повторное нажатие не должно получать закэшированный ответ."""
     payload = json.dumps({"ru": "Новый текст.", "en": "New text."})
     monkeypatch.setattr(ai.requests, "post", lambda *a, **kw: make_api_response(payload))
@@ -166,7 +176,9 @@ def test_admin_generate_response_is_not_cached(client, admin_user, media_item, a
 
 
 @pytest.mark.django_db
-def test_second_generation_overwrites_description(client, admin_user, media_item, ai_settings, monkeypatch):
+def test_second_generation_overwrites_description(
+    client, admin_user, media_item, ai_settings, monkeypatch
+):
     """Повторное нажатие перезаписывает уже существующее описание."""
     media_item.description_ru = "старое описание"
     media_item.description_en = "old description"
