@@ -331,3 +331,21 @@ def test_ai_badge_is_hidden_for_manual_description(client, media_item):
     content = client.get(media_item.get_absolute_url()).content
 
     assert b"ai-badge" not in content
+
+
+@pytest.mark.django_db
+def test_media_detail_has_prev_next_navigation(client, subcategory, media_item):
+    """На странице работы есть перелистывание и счётчик позиции."""
+    from core.models import MediaItem
+
+    later = MediaItem.objects.create(subcategory=subcategory, title="Яблочный сад")
+    media_item.title = "Апрель"
+    media_item.save(update_fields=["title"])
+
+    response = client.get(media_item.get_absolute_url())
+
+    content = response.content.decode()
+    assert 'class="media-nav"' in content
+    assert f'href="{later.get_absolute_url()}"' in content
+    # «Апрель» идёт первой в алфавитном порядке
+    assert "1 / 2" in content
