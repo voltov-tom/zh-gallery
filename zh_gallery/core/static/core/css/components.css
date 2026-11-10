@@ -413,6 +413,7 @@ figure.image.mini-card__image img {
 .media-detail__frame {
     height: auto;
     max-width: 720px;
+    position: relative;
     margin: 0 auto;
     padding: 12px;
     background-color: #ffffff;
@@ -437,8 +438,12 @@ figure.image.mini-card__image img {
 
 .media-zoom__image {
     display: block;
-    width: 100%;
+    /* вертикальные фото иначе занимают весь экран и прячут навигацию */
+    max-width: 100%;
+    max-height: 68vh;
+    width: auto;
     height: auto;
+    margin: 0 auto;
     border-radius: 10px;
     transform: scale(1);
     transform-origin: 50% 50%;
@@ -488,44 +493,60 @@ figure.image.mini-card__image img {
     }
 }
 
-/* Перелистывание работ внутри подкатегории */
+/* Скрытый текст для скринридеров (подписи к стрелкам навигации) */
+.visually-hidden {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Перелистывание работ: стрелки поверх изображения, счётчик под ним */
 .media-nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 12px;
-    margin: 12px 0 18px;
-    padding: 0 4px;
+    margin: 10px 0 16px;
 }
 
-.media-nav__link {
-    display: inline-flex;
+.media-nav__arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: flex;
     align-items: center;
-    gap: 8px;
-    max-width: 44%;
-    padding: 8px 14px;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    margin-top: -23px;
     border: 1px solid var(--pink-line);
-    border-radius: 12px;
-    background: #fff;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
     color: var(--pink-dark);
-    font-size: 14px;
+    font-size: 20px;
+    line-height: 1;
     text-decoration: none;
-    transition: background 0.15s ease;
+    box-shadow: 0 6px 18px rgba(174, 115, 148, 0.18);
+    transition: background 0.15s ease, transform 0.15s ease;
 }
 
-.media-nav__link:hover {
-    background: var(--pink-soft);
+.media-nav__arrow:hover {
+    background: #ffffff;
+    transform: scale(1.06);
 }
 
-.media-nav__link.is-disabled {
-    opacity: 0.35;
-    pointer-events: none;
+.media-nav__arrow--prev {
+    left: -64px;
 }
 
-.media-nav__label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.media-nav__arrow--next {
+    right: -64px;
 }
 
 .media-nav__counter {
@@ -534,9 +555,23 @@ figure.image.mini-card__image img {
     white-space: nowrap;
 }
 
+/* На узких экранах стрелки не вылезают за рамку */
+@media screen and (max-width: 900px) {
+    .media-nav__arrow--prev {
+        left: 6px;
+    }
+
+    .media-nav__arrow--next {
+        right: 6px;
+    }
+}
+
 @media screen and (max-width: 767px) {
-    .media-nav__label {
-        display: none;
+    .media-nav__arrow {
+        width: 38px;
+        height: 38px;
+        margin-top: -19px;
+        font-size: 17px;
     }
 }
 
