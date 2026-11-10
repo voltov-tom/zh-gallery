@@ -22,6 +22,11 @@ echo "[deploy] обновляем кэш медиа в фоне"
 docker compose -f docker-compose.prod.yml exec -T web python manage.py media_cache --clear >/dev/null 2>&1 || true
 docker compose -f docker-compose.prod.yml exec -d -T web python manage.py media_cache >/dev/null 2>&1 || true
 
+# Старые образы копятся по ~380 МБ на деплой. Любой прошлый sha можно снова
+# скачать из GHCR, поэтому локально держим только свежие.
+echo "[deploy] чистим старые образы"
+docker image prune -af --filter "until=72h" >/dev/null 2>&1 || true
+
 echo "[deploy] ждём health"
 i=0
 while [ "$i" -lt 40 ]; do
