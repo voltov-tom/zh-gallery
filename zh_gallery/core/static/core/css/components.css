@@ -555,6 +555,27 @@ figure.image.mini-card__image img {
     white-space: nowrap;
 }
 
+/* Подсказка о свайпе — только там, где есть тач */
+.media-nav__hint {
+    display: none;
+    font-size: 12px;
+    color: var(--text-soft);
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .media-nav__hint {
+        display: inline;
+    }
+}
+
+/* На тач-устройствах листают свайпом, на узких экранах — тапом по краям:
+   стрелки там только мешают */
+@media (hover: none) and (pointer: coarse), (max-width: 640px) {
+    .media-nav__arrow {
+        display: none;
+    }
+}
+
 /* На узких экранах стрелки не вылезают за рамку */
 @media screen and (max-width: 900px) {
     .media-nav__arrow--prev {

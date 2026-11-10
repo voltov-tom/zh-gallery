@@ -769,6 +769,9 @@ msgstr "Вам понравилось"
 msgid "Total user's liked items"
 msgstr "Всего понравившихся работ"
 
+msgid "Swipe to browse"
+msgstr "Листайте свайпом"
+
 #~ msgid "no description"
 #~ msgstr "нет описания"
 
