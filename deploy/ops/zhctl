@@ -1,0 +1,4 @@
+#!/bin/sh
+# Точка входа для SSH-ключа CI: SSH_ORIGINAL_COMMAND → sudo → zhctl-root.
+# Ограничивается в authorized_keys: restrict,command="/usr/local/bin/zhctl"
+exec sudo -n /usr/local/bin/zhctl-root "${SSH_ORIGINAL_COMMAND:-}"
