@@ -19,37 +19,29 @@
                     {% endif %}
                     <span class="media-zoom__hint">{% trans "Hover to zoom in" %}</span>
                 </div>
+                                {% if prev_item %}
+                    <a class="media-nav__arrow media-nav__arrow--prev"
+                       href="{{ prev_item.get_absolute_url }}" rel="prev" title="{{ prev_item.title }}">
+                        <span aria-hidden="true">←</span>
+                        <span class="visually-hidden">{{ prev_item.title }}</span>
+                    </a>
+                {% endif %}
+                {% if next_item %}
+                    <a class="media-nav__arrow media-nav__arrow--next"
+                       href="{{ next_item.get_absolute_url }}" rel="next" title="{{ next_item.title }}">
+                        <span aria-hidden="true">→</span>
+                        <span class="visually-hidden">{{ next_item.title }}</span>
+                    </a>
+                {% endif %}
             </figure>
         </div>
 
-        <nav class="media-nav" data-media-nav
+
+        <div class="media-nav" data-media-nav
              {% if prev_item %}data-prev="{{ prev_item.get_absolute_url }}"{% endif %}
-             {% if next_item %}data-next="{{ next_item.get_absolute_url }}"{% endif %}
-             aria-label="{% trans 'Browse works' %}">
-            {% if prev_item %}
-                <a class="media-nav__link" href="{{ prev_item.get_absolute_url }}" rel="prev"
-                   title="{{ prev_item.title }}">
-                    <span aria-hidden="true">←</span>
-                    <span class="media-nav__label">{{ prev_item.title }}</span>
-                </a>
-            {% else %}
-                <span class="media-nav__link is-disabled" aria-disabled="true">←</span>
-            {% endif %}
-
-            {% if position %}
-                <span class="media-nav__counter">{{ position }} / {{ total }}</span>
-            {% endif %}
-
-            {% if next_item %}
-                <a class="media-nav__link" href="{{ next_item.get_absolute_url }}" rel="next"
-                   title="{{ next_item.title }}">
-                    <span class="media-nav__label">{{ next_item.title }}</span>
-                    <span aria-hidden="true">→</span>
-                </a>
-            {% else %}
-                <span class="media-nav__link is-disabled" aria-disabled="true">→</span>
-            {% endif %}
-        </nav>
+             {% if next_item %}data-next="{{ next_item.get_absolute_url }}"{% endif %}>
+            {% if position %}<span class="media-nav__counter">{{ position }} / {{ total }}</span>{% endif %}
+        </div>
 
         <div class="block is-flex media-detail__counters">
             <div class="media-detail__counter">
