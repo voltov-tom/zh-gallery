@@ -75,3 +75,49 @@ def test_leading_slash_stays_inside_media_root(rf, db):
 @pytest.mark.django_db
 def test_media_view_is_get_only(client, stored_file):
     assert client.post(reverse("media_file", args=[stored_file])).status_code == 405
+
+
+def test_shrink_reduces_large_photo(settings):
+    """Большая фотография уменьшается до веб-размера и весит меньше."""
+    import io
+
+    from PIL import Image
+
+    from core.imaging import shrink
+
+    settings.MEDIA_SERVE_MAX_SIDE = 1600
+    settings.MEDIA_SERVE_QUALITY = 82
+
+    buffer = io.BytesIO()
+    Image.new("RGB", (3200, 2400), (120, 140, 200)).save(buffer, format="JPEG", quality=95)
+    original = buffer.getvalue()
+
+    result = shrink(original, "photo.jpg")
+
+    with Image.open(io.BytesIO(result)) as image:
+        assert max(image.size) <= 1600
+    assert len(result) < len(original)
+
+
+def test_shrink_keeps_small_image(settings):
+    """Маленькую картинку не пережимаем — отдаём как есть."""
+    import io
+
+    from PIL import Image
+
+    from core.imaging import shrink
+
+    buffer = io.BytesIO()
+    Image.new("RGB", (400, 300), (10, 20, 30)).save(buffer, format="JPEG", quality=90)
+    original = buffer.getvalue()
+
+    assert shrink(original, "small.jpg") == original
+
+
+def test_shrink_returns_original_for_broken_file():
+    """Битые байты не ломают отдачу — возвращаем исходник."""
+    from core.imaging import shrink
+
+    payload = b"not an image at all"
+
+    assert shrink(payload, "broken.jpg") == payload

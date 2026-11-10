@@ -15,7 +15,7 @@ from __future__ import annotations
 from django.core.files.storage import default_storage
 from django.core.management.base import BaseCommand
 
-from core import media_cache
+from core import imaging, media_cache
 from core.selectors import all_image_names
 
 
@@ -59,6 +59,7 @@ class Command(BaseCommand):
             except (FileNotFoundError, OSError):
                 missing.append(name)
                 continue
+            payload = imaging.shrink(payload, name)
             if media_cache.store(name, payload) is not None:
                 added += 1
 
