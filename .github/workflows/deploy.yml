@@ -49,7 +49,8 @@ jobs:
 
       - name: Deploy over SSH
         # Ключ ищем под несколькими частыми именами: секрет мог быть назван иначе.
-        # Если не нашли — предупреждаем и выходим, образ всё равно уже в GHCR.
+        # На сервере ключ ограничен forced-command: разрешены только status,
+        # logs web и deploy <sha> (см. deploy/ops/zhctl-root).
         env:
           KEY_DEPLOY_SSH: ${{ secrets.DEPLOY_SSH_KEY }}
           KEY_DEPLOY: ${{ secrets.DEPLOY_KEY }}
@@ -69,10 +70,4 @@ jobs:
 
           ssh -o StrictHostKeyChecking=accept-new -o BatchMode=yes \
               -p 10022 -i ~/.ssh/deploy_key deploy@zh-gallery.ru \
-              "cd /srv/zh-gallery && \
-               git -C src fetch -q origin refactor && \
-               git -C src reset -q --hard origin/refactor && \
-               cp -f src/deploy/deploy.sh src/deploy/docker-compose.prod.yml \
-                     src/deploy/nginx-prod.conf src/deploy/maintenance.html . && \
-               chmod +x deploy.sh && \
-               IMAGE_TAG=${{ github.sha }} ./deploy.sh"
+              "deploy ${{ github.sha }}"

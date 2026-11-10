@@ -1,0 +1,48 @@
+#!/bin/sh
+# Разрешённые операции деплоя. Запускается только через /usr/local/bin/zhctl
+# (forced command в authorized_keys) и sudo-правилом для пользователя deploy.
+# Никакого eval и свободных аргументов: строгий разбор строки.
+set -eu
+
+CMD="${1:-}"
+ROOT=/srv/zh-gallery
+COMPOSE="docker compose -f $ROOT/docker-compose.prod.yml"
+
+case "$CMD" in
+    status)
+        cd "$ROOT"
+        $COMPOSE ps
+        ;;
+
+    "logs web")
+        cd "$ROOT"
+        $COMPOSE logs --tail 100 web
+        ;;
+
+    deploy\ *)
+        SHA="${CMD#deploy }"
+        case "$SHA" in
+            *[!0-9a-f]*)
+                echo "ошибка: ожидается только 40 hex-символов sha" >&2
+                exit 2
+                ;;
+        esac
+        if [ "${#SHA}" -ne 40 ]; then
+            echo "ошибка: sha должен быть длиной 40 символов" >&2
+            exit 2
+        fi
+
+        cd "$ROOT"
+        git -C src fetch -q origin refactor
+        git -C src reset -q --hard origin/refactor
+        cp -f src/deploy/deploy.sh src/deploy/docker-compose.prod.yml \
+              src/deploy/nginx-prod.conf src/deploy/maintenance.html .
+        chmod +x deploy.sh
+        IMAGE_TAG="$SHA" exec ./deploy.sh
+        ;;
+
+    *)
+        echo "команда не разрешена" >&2
+        exit 1
+        ;;
+esac
