@@ -37,9 +37,26 @@ function initZoom(box) {
         image.style.transformOrigin = `${x}% ${y}%`;
     };
 
+    // При увеличении подменяем лёгкую версию оригиналом: в карточке и на
+    // странице сразу грузится быстрая копия, а полное качество — только когда
+    // пользователь действительно приближает.
+    const swapToOriginal = () => {
+        const original = image.dataset.original;
+        if (!original || image.dataset.originalLoaded === "1") {
+            return;
+        }
+        image.dataset.originalLoaded = "1";
+        const loader = new Image();
+        loader.onload = () => {
+            image.src = original;
+        };
+        loader.src = original;
+    };
+
     const zoomIn = () => {
         image.style.setProperty("--zoom-scale", naturalZoom().toFixed(2));
         box.classList.add("is-zoomed");
+        swapToOriginal();
     };
 
     const zoomOut = () => {

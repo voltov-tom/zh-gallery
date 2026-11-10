@@ -121,3 +121,48 @@ def test_shrink_returns_original_for_broken_file():
     payload = b"not an image at all"
 
     assert shrink(payload, "broken.jpg") == payload
+
+
+@pytest.fixture
+def big_stored_file():
+    """Большая картинка, как фото с камеры."""
+    import io
+
+    from PIL import Image
+
+    buffer = io.BytesIO()
+    Image.new("RGB", (3200, 2400), (90, 120, 160)).save(buffer, format="JPEG", quality=95)
+    name = "galleries/fotoplenka/big.jpg"
+    default_storage.save(name, ContentFile(buffer.getvalue()))
+    return name
+
+
+@pytest.mark.django_db
+def test_media_view_shrinks_by_default(client, big_stored_file):
+    """Карточки получают лёгкую версию, а не оригинал."""
+    original_size = default_storage.size(big_stored_file)
+
+    response = client.get(reverse("media_file", args=[big_stored_file]))
+
+    assert response.status_code == 200
+    assert response["X-Media-Variant"] == "web"
+    assert len(response.content) < original_size
+
+
+@pytest.mark.django_db
+def test_media_view_returns_original_with_param(client, big_stored_file):
+    """Страница работы запрашивает оригинал: байты совпадают, размер не меньше."""
+    with default_storage.open(big_stored_file, "rb") as handle:
+        original = handle.read()
+
+    response = client.get(reverse("media_file", args=[big_stored_file]) + "?original=1")
+
+    assert response.status_code == 200
+    assert response["X-Media-Variant"] == "orig"
+    assert response.content == original
+
+
+@pytest.mark.django_db
+def test_original_url_points_to_original_variant(media_item):
+    """У работы есть ссылка на оригинал с параметром ?original=1."""
+    assert media_item.original_url == f"{media_item.image.url}?original=1"

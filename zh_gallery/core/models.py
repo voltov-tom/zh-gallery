@@ -234,6 +234,13 @@ class MediaItem(SluggedModel):
         """У работы превью — её собственное изображение (общий шаблон карточки)."""
         return self.image
 
+    @property
+    def original_url(self) -> str:
+        """Ссылка на оригинал: страница работы подменяет им лёгкую версию."""
+        if not self.image:
+            return ""
+        return f"{self.image.url}?original=1"
+
 
 class MediaItemReview(models.Model):
     """Комментарий пользователя к медиа-элементу."""
