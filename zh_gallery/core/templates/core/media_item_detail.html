@@ -12,6 +12,7 @@
                 <div class="media-zoom" data-media-zoom>
                     {% if media_item.image %}
                         <img class="media-zoom__image" src="{{ media_item.image.url }}"
+                             data-original="{{ media_item.original_url }}"
                              alt="{{ media_item.title }}">
                     {% else %}
                         <img class="media-zoom__image" src="{% static 'core/images/no_photo.jpeg' %}" alt="">

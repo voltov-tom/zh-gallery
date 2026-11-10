@@ -31,30 +31,35 @@ def cache_root() -> Path | None:
     return Path(root) if root else None
 
 
-def cache_path(name: str) -> Path | None:
-    """Путь файла в кэше с защитой от выхода за пределы каталога."""
+def cache_path(name: str, variant: str = "web") -> Path | None:
+    """Путь файла в кэше с защитой от выхода за пределы каталога.
+
+    ``variant`` разделяет лёгкие версии (``web``) и оригиналы (``orig``):
+    одно и то же имя файла живёт в разных подкаталогах.
+    """
     root = cache_root()
     if root is None:
         return None
     try:
-        path = (root / name).resolve()
-        path.relative_to(root.resolve())
+        base = (root / variant).resolve()
+        path = (base / name).resolve()
+        path.relative_to(base)
     except (ValueError, OSError):
         return None
     return path
 
 
-def read(name: str) -> Path | None:
+def read(name: str, variant: str = "web") -> Path | None:
     """Возвращает путь к закэшированному файлу или None."""
-    path = cache_path(name)
+    path = cache_path(name, variant)
     if path is not None and path.is_file() and path.stat().st_size:
         return path
     return None
 
 
-def store(name: str, payload: bytes) -> Path | None:
+def store(name: str, payload: bytes, variant: str = "web") -> Path | None:
     """Кладёт файл в кэш атомарно (через временный файл)."""
-    path = cache_path(name)
+    path = cache_path(name, variant)
     if path is None:
         return None
     try:

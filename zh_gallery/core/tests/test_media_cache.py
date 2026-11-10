@@ -152,3 +152,14 @@ def test_warm_command_disabled(settings, capsys):
     call_command("media_cache", verbosity=0)
 
     assert "Кэш медиа выключен" in capsys.readouterr().err
+
+
+def test_cache_keeps_web_and_original_separately(cache_dir):
+    """Лёгкая версия и оригинал лежат в разных подкаталогах."""
+    from core import media_cache
+
+    media_cache.store("pic.jpg", b"web-bytes", "web")
+    media_cache.store("pic.jpg", b"original-bytes", "orig")
+
+    assert media_cache.read("pic.jpg", "web").read_bytes() == b"web-bytes"
+    assert media_cache.read("pic.jpg", "orig").read_bytes() == b"original-bytes"

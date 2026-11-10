@@ -45,17 +45,19 @@ def _content_type(name: str) -> str:
     return mimetypes.guess_type(name)[0] or "application/octet-stream"
 
 
-def _cached_response(path: Path, name: str) -> FileResponse:
+def _cached_response(path: Path, name: str, variant: str = "web") -> FileResponse:
     response = FileResponse(path.open("rb"), content_type=_content_type(name))
     response["Cache-Control"] = "public, max-age=604800, immutable"
     response["X-Media-Cache"] = "hit"
+    response["X-Media-Variant"] = variant
     return response
 
 
-def _bytes_response(payload: bytes, name: str) -> HttpResponse:
+def _bytes_response(payload: bytes, name: str, variant: str = "web") -> HttpResponse:
     response = HttpResponse(payload, content_type=_content_type(name))
     response["Cache-Control"] = "public, max-age=604800, immutable"
     response["X-Media-Cache"] = "miss"
+    response["X-Media-Variant"] = variant
     return response
 
 
@@ -70,12 +72,18 @@ def _placeholder_response():
 
 @require_GET
 def media_file(request, path: str):
-    """Отдаёт файл из кэша или из default_storage (диск / Nextcloud)."""
-    name = _clean_path(path)
+    """Отдаёт файл из кэша или из default_storage (диск / Nextcloud).
 
-    cached = media_cache.read(name)
+    По умолчанию — лёгкая версия для карточек. С ``?original=1`` отдаётся
+    оригинал (страница работы): он тоже кэшируется, но отдельным вариантом.
+    """
+    name = _clean_path(path)
+    original = request.GET.get("original") in {"1", "true", "yes"}
+    variant = "orig" if original else "web"
+
+    cached = media_cache.read(name, variant)
     if cached is not None:
-        return _cached_response(cached, name)
+        return _cached_response(cached, name, variant)
 
     try:
         stored = default_storage.open(name, "rb")
@@ -91,8 +99,9 @@ def media_file(request, path: str):
         logger.warning("Медиафайл %s пустой — отдаём заглушку", name)
         return _placeholder_response()
 
-    # в кэш и в ответ кладём «веб-размер», а не оригинал с камеры
-    payload = imaging.shrink(payload, name)
+    if not original:
+        # в кэш и в ответ кладём «веб-размер», а не оригинал с камеры
+        payload = imaging.shrink(payload, name)
 
-    media_cache.store(name, payload)
-    return _bytes_response(payload, name)
+    media_cache.store(name, payload, variant)
+    return _bytes_response(payload, name, variant)
