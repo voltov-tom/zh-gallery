@@ -41,6 +41,7 @@
              {% if prev_item %}data-prev="{{ prev_item.get_absolute_url }}"{% endif %}
              {% if next_item %}data-next="{{ next_item.get_absolute_url }}"{% endif %}>
             {% if position %}<span class="media-nav__counter">{{ position }} / {{ total }}</span>{% endif %}
+            <span class="media-nav__hint">{% trans "Swipe to browse" %}</span>
         </div>
 
         <div class="block is-flex media-detail__counters">
