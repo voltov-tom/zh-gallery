@@ -25,6 +25,12 @@ docker compose -f docker-compose.prod.yml pull web
 echo "[deploy] поднимаем стек"
 docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
+# Кэш хранит «веб-размер» картинок: чистим старые копии и греем новые в фоне,
+# чтобы первые посетители не ждали скачивания из Nextcloud.
+echo "[deploy] обновляем кэш медиа в фоне"
+docker compose -f docker-compose.prod.yml exec -T web python manage.py media_cache --clear >/dev/null 2>&1 || true
+docker compose -f docker-compose.prod.yml exec -d -T web python manage.py media_cache >/dev/null 2>&1 || true
+
 echo "[deploy] ждём health"
 i=0
 while [ "$i" -lt 40 ]; do

@@ -23,7 +23,7 @@ from django.shortcuts import redirect
 from django.templatetags.static import static
 from django.views.decorators.http import require_GET
 
-from core import media_cache
+from core import imaging, media_cache
 
 logger = logging.getLogger(__name__)
 
@@ -90,6 +90,9 @@ def media_file(request, path: str):
     if not payload:
         logger.warning("Медиафайл %s пустой — отдаём заглушку", name)
         return _placeholder_response()
+
+    # в кэш и в ответ кладём «веб-размер», а не оригинал с камеры
+    payload = imaging.shrink(payload, name)
 
     media_cache.store(name, payload)
     return _bytes_response(payload, name)

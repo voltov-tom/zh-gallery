@@ -310,6 +310,9 @@ if MEDIA_STORAGE == "nextcloud":
 # при недоступном Nextcloud. Для локального диска выключен — файлы и так рядом.
 MEDIA_CACHE_ENABLED = env.bool("MEDIA_CACHE_ENABLED", default=(MEDIA_STORAGE != "local"))
 MEDIA_CACHE_ROOT = Path(env.str("MEDIA_CACHE_ROOT", default=str(BASE_DIR / "media-cache")))
+# Длинная сторона отдаваемой картинки: оригиналы с камеры весят 3–7 МБ
+MEDIA_SERVE_MAX_SIDE = env.int("MEDIA_SERVE_MAX_SIDE", default=1600)
+MEDIA_SERVE_QUALITY = env.int("MEDIA_SERVE_QUALITY", default=82)
 
 # Nextcloud / WebDAV. Старые имена WEBDAV_* оставлены для совместимости.
 # HOSTNAME может быть как доменом, так и полным адресом WebDAV-корня
