@@ -114,4 +114,5 @@ class MediaItemDetailView(WithBackUrlMixin, DetailView):
             self.request.user.is_authenticated
             and self.object.likes.filter(pk=self.request.user.pk).exists()
         )
+        context.update(selectors.media_item_neighbours(self.object))
         return context

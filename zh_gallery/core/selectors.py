@@ -49,6 +49,32 @@ def media_items_with_stats(subcategory: SubCategory) -> QuerySet[MediaItem]:
     return MediaItem.objects.with_stats().filter(subcategory=subcategory)
 
 
+def media_item_neighbours(media_item: MediaItem) -> dict:
+    """Соседи работы в её подкатегории — для перелистывания.
+
+    Порядок совпадает с сеткой подкатегории (по названию), поэтому «следующая»
+    работа визуально та же, что справа в списке.
+    """
+    siblings = MediaItem.objects.filter(subcategory_id=media_item.subcategory_id).order_by("title")
+    ids = list(siblings.values_list("pk", flat=True))
+    if media_item.pk not in ids:
+        return {"prev_item": None, "next_item": None, "position": None, "total": len(ids)}
+
+    index = ids.index(media_item.pk)
+    prev_id = ids[index - 1] if index > 0 else None
+    next_id = ids[index + 1] if index < len(ids) - 1 else None
+    neighbours = {
+        item.pk: item for item in siblings.filter(pk__in=[i for i in (prev_id, next_id) if i])
+    }
+
+    return {
+        "prev_item": neighbours.get(prev_id),
+        "next_item": neighbours.get(next_id),
+        "position": index + 1,
+        "total": len(ids),
+    }
+
+
 def last_reviews(limit: int = 10) -> QuerySet[MediaItemReview]:
     """Последние комментарии для главной."""
     return (

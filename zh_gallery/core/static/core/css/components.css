@@ -488,6 +488,58 @@ figure.image.mini-card__image img {
     }
 }
 
+/* Перелистывание работ внутри подкатегории */
+.media-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 12px 0 18px;
+    padding: 0 4px;
+}
+
+.media-nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 44%;
+    padding: 8px 14px;
+    border: 1px solid var(--pink-line);
+    border-radius: 12px;
+    background: #fff;
+    color: var(--pink-dark);
+    font-size: 14px;
+    text-decoration: none;
+    transition: background 0.15s ease;
+}
+
+.media-nav__link:hover {
+    background: var(--pink-soft);
+}
+
+.media-nav__link.is-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.media-nav__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.media-nav__counter {
+    font-size: 13px;
+    color: var(--text-soft);
+    white-space: nowrap;
+}
+
+@media screen and (max-width: 767px) {
+    .media-nav__label {
+        display: none;
+    }
+}
+
 .media-detail__counters {
     justify-content: center;
     gap: 72px;

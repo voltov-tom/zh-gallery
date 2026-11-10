@@ -84,3 +84,27 @@ def test_last_reviews_prefetch_media_item_stats(media_item, user, django_assert_
 @pytest.mark.django_db
 def test_get_random_media_item_returns_none_for_empty_gallery(db):
     assert selectors.get_random_media_item() is None
+
+
+@pytest.mark.django_db
+def test_media_item_neighbours_follow_title_order(subcategory, media_item):
+    """Соседи считаются по тому же порядку, что и сетка, — по названию."""
+    from core.models import MediaItem
+    from core.selectors import media_item_neighbours
+
+    later = MediaItem.objects.create(subcategory=subcategory, title="Яблочный сад")
+    earlier = MediaItem.objects.create(subcategory=subcategory, title="Апрель")
+
+    middle = media_item_neighbours(media_item)
+    assert middle["prev_item"] == earlier
+    assert middle["next_item"] == later
+    assert middle["position"] == 2
+    assert middle["total"] == 3
+
+    first = media_item_neighbours(earlier)
+    assert first["prev_item"] is None
+    assert first["position"] == 1
+
+    last = media_item_neighbours(later)
+    assert last["next_item"] is None
+    assert last["position"] == 3
