@@ -5,18 +5,20 @@
 set -eu
 
 CMD="${1:-}"
-ROOT=/srv/zh-gallery
+ROOT=/home/zhdocker/zh-gallery
+# rootless-демон и окружение пользователя zhdocker (UID 988)
+AS_ZH="sudo -u zhdocker env XDG_RUNTIME_DIR=/run/user/988 DOCKER_HOST=unix:///run/user/988/docker.sock HOME=/home/zhdocker"
 COMPOSE="docker compose -f $ROOT/docker-compose.prod.yml"
 
 case "$CMD" in
     status)
         cd "$ROOT"
-        $COMPOSE ps
+        $AS_ZH $COMPOSE ps
         ;;
 
     "logs web")
         cd "$ROOT"
-        $COMPOSE logs --tail 100 web
+        $AS_ZH $COMPOSE logs --tail 100 web
         ;;
 
     deploy\ *)
@@ -33,12 +35,16 @@ case "$CMD" in
         fi
 
         cd "$ROOT"
-        git -C src fetch -q origin refactor
-        git -C src reset -q --hard origin/refactor
-        cp -f src/deploy/deploy.sh src/deploy/docker-compose.prod.yml \
-              src/deploy/nginx-prod.conf src/deploy/maintenance.html .
-        chmod +x deploy.sh
-        IMAGE_TAG="$SHA" exec ./deploy.sh
+        # синхронизация конфигов: только здесь, до запуска deploy.sh, чтобы
+        # скрипт не перезаписывал сам себя во время выполнения
+        $AS_ZH git -C src fetch -q origin refactor
+        $AS_ZH git -C src reset -q --hard origin/refactor
+        $AS_ZH cp -f src/deploy/docker-compose.prod.yml \
+                     src/deploy/nginx-prod.conf src/deploy/maintenance.html .
+        $AS_ZH cp -f src/deploy/deploy.sh ./deploy.sh.new
+        $AS_ZH mv -f ./deploy.sh.new ./deploy.sh
+        $AS_ZH chmod +x deploy.sh
+        exec $AS_ZH env IMAGE_TAG="$SHA" ./deploy.sh
         ;;
 
     *)
