@@ -11,6 +11,13 @@ __pycache__
 .env
 .env.*
 !.env.example
+# Локальные секреты не должны попасть в образ: Dockerfile делает COPY . .
+.secrets
+*.pem
+*.key
+*.pgc
+*.sql.gz
+.chrome-*
 zh_gallery/static/
 zh_gallery/media/
 .pytest_cache
