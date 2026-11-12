@@ -21,7 +21,7 @@ from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import redirect
 from django.templatetags.static import static
 from django.utils.http import content_disposition_header
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_safe
 
 from core import imaging, media_cache
 
@@ -91,7 +91,7 @@ def _placeholder_response():
     return response
 
 
-@require_GET
+@require_safe
 def media_file(request, path: str):
     """Отдаёт файл из кэша или из default_storage (диск / Nextcloud).
 

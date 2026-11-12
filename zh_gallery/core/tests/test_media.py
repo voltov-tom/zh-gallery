@@ -68,6 +68,15 @@ def test_media_view_serves_unknown_type_as_attachment(client):
 
 
 @pytest.mark.django_db
+def test_media_view_answers_head(client, stored_file):
+    """HEAD не должен отдавать 405: так картинку проверяют краулеры и кэши."""
+    response = client.head(reverse("media_file", args=[stored_file]))
+
+    assert response.status_code == 200
+    assert response["Content-Type"] == "image/jpeg"
+
+
+@pytest.mark.django_db
 def test_media_view_marks_images_inline(client, stored_file):
     """Картинки отдаются inline — их показывает <img>, а не скачивает браузер."""
     response = client.get(reverse("media_file", args=[stored_file]))
