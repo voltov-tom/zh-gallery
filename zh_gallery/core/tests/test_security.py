@@ -50,11 +50,23 @@ def test_healthz_does_not_leak_details(client):
     assert response.json() == {"status": "ok", "database": "ok"}
 
 
-@pytest.mark.parametrize("conf", ["docker/nginx.conf", "docker/nginx-nextcloud.conf"])
+@pytest.mark.parametrize(
+    "conf",
+    ["docker/nginx.conf", "docker/nginx-nextcloud.conf", "deploy/nginx-prod.conf"],
+)
 def test_nginx_hides_version(conf):
     config = (REPO_DIR / conf).read_text()
 
     assert "server_tokens off;" in config
+
+
+def test_nginx_rate_limits_admin_login():
+    """Перебор пароля в админке режет nginx: сам django-admin лимитов не имеет."""
+    config = (REPO_DIR / "deploy/nginx-prod.conf").read_text()
+
+    assert "limit_req_zone" in config
+    assert "limit_req zone=admin" in config
+    assert "location ~ ^/admin/" in config
 
 
 def test_dockerfile_runs_as_non_root_user():
@@ -90,6 +102,19 @@ def test_telegram_api_requires_correct_token(client, media_item, settings):
     assert forbidden.status_code == 403
     assert allowed.status_code == 200
     assert allowed.json()["title"] == media_item.title
+
+
+@pytest.mark.django_db
+def test_telegram_api_rejects_wrong_length_token(client, media_item, settings):
+    """Токен сравнивается за постоянное время и не падает на другой длине."""
+    settings.TELEGRAM_BOT_TOKEN = "secret-bot-token"
+
+    response = client.get(
+        reverse("get_media_item", args=[media_item.slug]),
+        headers={"X-Bot-Token": "short"},
+    )
+
+    assert response.status_code == 403
 
 
 @pytest.mark.django_db
