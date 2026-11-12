@@ -16,6 +16,13 @@ docker compose -f docker-compose.prod.yml pull web
 echo "[deploy] поднимаем стек"
 docker compose -f docker-compose.prod.yml up -d --remove-orphans
 
+# Конфиг nginx примонтирован файлом: compose его не пересоздаёт, поэтому без
+# reload контейнер продолжает работать со старыми правилами. Сначала проверка —
+# кривой конфиг не должен уронить сайт, тогда остаёмся на прежнем.
+echo "[deploy] перечитываем конфиг nginx"
+docker compose -f docker-compose.prod.yml exec -T nginx nginx -t
+docker compose -f docker-compose.prod.yml exec -T nginx nginx -s reload
+
 # Кэш хранит «веб-размер» картинок: чистим старые копии и греем новые в фоне,
 # чтобы первые посетители не ждали скачивания из Nextcloud.
 echo "[deploy] обновляем кэш медиа в фоне"

@@ -69,6 +69,16 @@ def test_nginx_rate_limits_admin_login():
     assert "location ~ ^/admin/" in config
 
 
+def test_deploy_reloads_nginx_after_config_sync():
+    """Конфиг монтируется файлом: без reload контейнер живёт со старыми правилами."""
+    script = (REPO_DIR / "deploy/deploy.sh").read_text()
+
+    assert "nginx -t" in script
+    assert "nginx -s reload" in script
+    # сначала проверка конфига, только потом reload
+    assert script.index("nginx -t") < script.index("nginx -s reload")
+
+
 def test_dockerfile_runs_as_non_root_user():
     dockerfile = (REPO_DIR / "Dockerfile").read_text()
 
