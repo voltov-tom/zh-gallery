@@ -114,6 +114,41 @@ def test_shrink_keeps_small_image(settings):
     assert shrink(original, "small.jpg") == original
 
 
+def test_shrink_applies_exif_orientation(settings):
+    """Фото с поворотом в EXIF показывается прямо: пиксели поворачиваем сами.
+
+    Телефон хранит кадр боком, а поворот пишет тегом 6. При пересохранении
+    тег теряется, поэтому без явного поворота уменьшенная копия выглядит
+    боком — именно так и «поворачивались» картинки на сайте.
+    """
+    import io
+
+    from PIL import Image, ImageDraw
+
+    from core.imaging import shrink
+
+    settings.MEDIA_SERVE_MAX_SIDE = 1600
+    settings.MEDIA_SERVE_QUALITY = 82
+
+    # Кадр «боком»: левая половина красная, правая синяя, поворот — тегом EXIF.
+    image = Image.new("RGB", (2400, 3200), (0, 0, 255))
+    ImageDraw.Draw(image).rectangle((0, 0, 1199, 3199), fill=(255, 0, 0))
+    exif = Image.Exif()
+    exif[0x0112] = 6
+    buffer = io.BytesIO()
+    image.save(buffer, format="JPEG", quality=95, exif=exif)
+
+    result = shrink(buffer.getvalue(), "rotated.jpg")
+
+    with Image.open(io.BytesIO(result)) as shrunk:
+        assert shrunk.size == (1600, 1200)
+        assert shrunk.getexif().get(0x0112) is None
+        red = shrunk.convert("RGB").getpixel((800, 100))
+        blue = shrunk.convert("RGB").getpixel((800, 1100))
+    assert red[0] > 200 and red[2] < 60
+    assert blue[2] > 200 and blue[0] < 60
+
+
 def test_shrink_returns_original_for_broken_file():
     """Битые байты не ломают отдачу — возвращаем исходник."""
     from core.imaging import shrink
