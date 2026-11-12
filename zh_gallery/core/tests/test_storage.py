@@ -74,6 +74,17 @@ def test_endpoint_includes_login_root_and_quotes_path():
     assert " " not in url
 
 
+def test_endpoint_drops_dot_segments():
+    """«..» в имени не выводит за пределы root — сегменты просто отбрасываются."""
+    client = NextcloudWebDAVClient(
+        hostname="https://cloud.example", login="user", password="pw", root="gallery"
+    )
+
+    url = client.endpoint("../../etc/passwd")
+
+    assert url == "https://cloud.example/remote.php/dav/files/user/gallery/etc/passwd"
+
+
 def test_upload_creates_directories_then_puts_file():
     session = StubSession([StubResponse(201), StubResponse(405), StubResponse(201)])
     client = NextcloudWebDAVClient(

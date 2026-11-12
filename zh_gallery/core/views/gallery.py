@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.http import urlencode
 from django.views.generic import DetailView
 
 from core import selectors, services
@@ -93,7 +94,8 @@ class MediaItemDetailView(WithBackUrlMixin, DetailView):
         self.object = self.get_object()
         if not request.user.is_authenticated:
             # Форма комментария видна только авторизованным
-            return redirect(f"{reverse('account_login')}?next={request.path}")
+            query = urlencode({"next": request.path})
+            return redirect(f"{reverse('account_login')}?{query}")
 
         form = self.form_class(request.POST)
         if form.is_valid():
