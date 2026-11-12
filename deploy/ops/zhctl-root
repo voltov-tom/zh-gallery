@@ -47,6 +47,11 @@ case "$CMD" in
         exec $AS_ZH env IMAGE_TAG="$SHA" ./deploy.sh
         ;;
 
+    bot\ *)
+        # стек бота живёт отдельно: свой каталог, свой скрипт, те же правила
+        exec /usr/local/bin/zhbotctl-root "${CMD#bot }"
+        ;;
+
     *)
         echo "команда не разрешена" >&2
         exit 1

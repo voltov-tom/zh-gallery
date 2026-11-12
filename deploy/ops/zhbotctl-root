@@ -1,0 +1,77 @@
+#!/bin/sh
+# Разрешённые операции со стеком бота (zh_bot). Вызывается только из
+# /usr/local/bin/zhctl-root, который запускается forced-command'ом из sshd.
+# Никакого eval: строгий разбор аргументов.
+set -eu
+
+CMD="${1:-}"
+ROOT=/home/zhdocker/zh-bot
+SRC=/home/zhdocker/zh-gallery/src/deploy/bot
+AS_ZH="sudo -u zhdocker env XDG_RUNTIME_DIR=/run/user/988 DOCKER_HOST=unix:///run/user/988/docker.sock HOME=/home/zhdocker"
+COMPOSE="docker compose -f $ROOT/docker-compose.prod.yml"
+
+case "$CMD" in
+    status)
+        cd "$ROOT"
+        $AS_ZH $COMPOSE ps
+        ;;
+
+    "logs bot")
+        cd "$ROOT"
+        $AS_ZH $COMPOSE logs --tail 100 bot
+        ;;
+
+    deploy\ *)
+        SHA="${CMD#deploy }"
+        case "$SHA" in
+            *[!0-9a-f]*)
+                echo "ошибка: ожидается только 40 hex-символов sha" >&2
+                exit 2
+                ;;
+        esac
+        if [ "${#SHA}" -ne 40 ]; then
+            echo "ошибка: sha должен быть длиной 40 символов" >&2
+            exit 2
+        fi
+
+        cd "$ROOT"
+        # compose держим рядом с сайтом: обновляем его из клона перед запуском
+        if [ -f "$SRC/docker-compose.prod.yml" ]; then
+            $AS_ZH cp -f "$SRC/docker-compose.prod.yml" ./docker-compose.prod.yml.new
+            $AS_ZH mv -f ./docker-compose.prod.yml.new ./docker-compose.prod.yml
+        fi
+
+        # конфиг xray с секретами лежит только здесь, права 600
+        if [ ! -s xray/config.json ]; then
+            echo "ошибка: нет $ROOT/xray/config.json — бот без прокси не поднимется" >&2
+            exit 1
+        fi
+
+        $AS_ZH env IMAGE_TAG="$SHA" $COMPOSE pull bot
+        $AS_ZH env IMAGE_TAG="$SHA" $COMPOSE up -d --remove-orphans
+
+        # health: контейнер живёт и в логах есть строка запуска
+        i=0
+        while [ "$i" -lt 24 ]; do
+            if $AS_ZH $COMPOSE ps --status running --format '{{.Name}}' | grep -q bot; then
+                if $AS_ZH $COMPOSE logs --since 2m bot 2>/dev/null | grep -q "Бот запускается"; then
+                    echo "ok: $SHA"
+                    $AS_ZH docker image prune -af --filter "until=72h" >/dev/null 2>&1 || true
+                    exit 0
+                fi
+            fi
+            i=$((i + 1))
+            sleep 5
+        done
+
+        echo "бот не поднялся за отведённое время" >&2
+        $AS_ZH $COMPOSE ps >&2
+        $AS_ZH $COMPOSE logs --tail 60 bot >&2
+        exit 1
+        ;;
+
+    *)
+        echo "команда не разрешена" >&2
+        exit 1
+        ;;
+esac
