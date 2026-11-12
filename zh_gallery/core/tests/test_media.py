@@ -55,6 +55,27 @@ def test_media_view_rejects_path_traversal(client):
 
 
 @pytest.mark.django_db
+def test_media_view_serves_unknown_type_as_attachment(client):
+    """Если в хранилище попал .html, он не должен исполниться на нашем домене."""
+    name = "media_items/test/evil.html"
+    default_storage.save(name, ContentFile(b"<script>alert(1)</script>"))
+
+    response = client.get(reverse("media_file", args=[name]))
+
+    assert response.status_code == 200
+    assert response["Content-Type"] == "application/octet-stream"
+    assert response["Content-Disposition"].startswith("attachment")
+
+
+@pytest.mark.django_db
+def test_media_view_marks_images_inline(client, stored_file):
+    """Картинки отдаются inline — их показывает <img>, а не скачивает браузер."""
+    response = client.get(reverse("media_file", args=[stored_file]))
+
+    assert response["Content-Disposition"].startswith("inline")
+
+
+@pytest.mark.django_db
 def test_media_view_rejects_traversal_in_view(rf, db):
     from django.http import Http404
 
