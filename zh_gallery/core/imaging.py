@@ -12,7 +12,7 @@ import io
 import logging
 
 from django.conf import settings
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, ImageOps, UnidentifiedImageError
 
 logger = logging.getLogger(__name__)
 
@@ -46,6 +46,10 @@ def shrink(payload: bytes, name: str = "") -> bytes:
     try:
         with Image.open(io.BytesIO(payload)) as image:
             image.load()
+            # Телефон пишет поворот в EXIF, а пиксели хранит «как легли».
+            # При пересохранении тег теряется — поворачиваем пиксели сами,
+            # иначе уменьшенная копия окажется боком.
+            image = ImageOps.exif_transpose(image)
             width, height = image.size
             limit = _max_side()
             if max(width, height) <= limit:
