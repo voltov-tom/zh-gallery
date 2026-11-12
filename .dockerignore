@@ -13,6 +13,7 @@ __pycache__
 !.env.example
 # Локальные секреты не должны попасть в образ: Dockerfile делает COPY . .
 .secrets
+audit
 *.pem
 *.key
 *.pgc
