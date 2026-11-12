@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import pathlib
+import subprocess
 
 import pytest
 from django.conf import settings
@@ -77,6 +78,37 @@ def test_deploy_reloads_nginx_after_config_sync():
     assert "nginx -s reload" in script
     # сначала проверка конфига, только потом reload
     assert script.index("nginx -t") < script.index("nginx -s reload")
+
+
+def _run_botctl(*args: str) -> subprocess.CompletedProcess:
+    script = REPO_DIR / "deploy" / "ops" / "zhbotctl-root"
+    return subprocess.run(["sh", str(script), *args], capture_output=True, text=True, check=False)
+
+
+def test_zhctl_root_routes_bot_commands_to_its_own_script():
+    """Стек бота обслуживает отдельный скрипт — значит, и whitelist отдельный."""
+    script = (REPO_DIR / "deploy/ops/zhctl-root").read_text()
+
+    assert "zhbotctl-root" in script
+    assert "bot\\ *)" in script
+
+
+def test_bot_deploy_accepts_only_full_sha():
+    """Короткий, неполный и не-hex sha отбиваются до запуска docker."""
+    for bad in ("deploy ", "deploy abc", "deploy " + "z" * 40):
+        result = _run_botctl(bad)
+        assert result.returncode == 2, bad
+        assert "sha" in result.stderr
+
+    # «deploy» без аргумента — вообще не разрешённая команда
+    assert _run_botctl("deploy").returncode == 1
+
+
+def test_bot_deploy_rejects_unknown_commands():
+    result = _run_botctl("rm -rf /")
+
+    assert result.returncode == 1
+    assert "не разрешена" in result.stderr
 
 
 def test_dockerfile_runs_as_non_root_user():

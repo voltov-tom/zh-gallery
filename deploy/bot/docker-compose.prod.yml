@@ -1,0 +1,49 @@
+# Стек бота: живёт на том же сервере, что и сайт, отдельным compose-проектом.
+# Telegram в РФ недоступен, поэтому трафик бота идёт через sidecar xray,
+# который ходит на KZ; к API сайта бот обращается напрямую (NO_PROXY).
+name: zh_bot
+
+services:
+  bot:
+    image: ghcr.io/voltov-tom/zh-gallery-bot:${IMAGE_TAG:-latest}
+    env_file: .env
+    environment:
+      # socks5h: DNS решает уже прокси, а не сервер в РФ
+      HTTPS_PROXY: socks5h://xray:1080
+      HTTP_PROXY: socks5h://xray:1080
+      NO_PROXY: zh-gallery.ru,localhost,127.0.0.1
+    depends_on:
+      - xray
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  xray:
+    # версия закреплена как на KZ: конфиг с xhttp должен читаться тем же ядром
+    image: ghcr.io/xtls/xray-core:26.10.21
+    command: ["run", "-c", "/etc/xray/config.json"]
+    volumes:
+      - ./xray/config.json:/etc/xray/config.json:ro
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
