@@ -8,6 +8,7 @@
 
 from __future__ import annotations
 
+import hmac
 import json
 import logging
 
@@ -40,7 +41,8 @@ def _bot_token_is_valid(request) -> bool:
     token = settings.TELEGRAM_BOT_TOKEN
     if not token:
         return False
-    return request.headers.get("X-Bot-Token") == token
+    # сравнение за постоянное время: обычное == подсказывает длину совпавшего префикса
+    return hmac.compare_digest(request.headers.get("X-Bot-Token", ""), token)
 
 
 def _media_item_payload(request, media_item: MediaItem) -> dict:

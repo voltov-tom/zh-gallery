@@ -81,7 +81,10 @@ class NextcloudWebDAVClient:
         segments: list[str] = []
         for chunk in (self.root, name.strip("/")):
             if chunk:
-                segments.extend(part for part in chunk.split("/") if part)
+                # «..» и «.» не пропускаем: иначе имя файла уводит за пределы root
+                segments.extend(
+                    part for part in chunk.split("/") if part and part not in (".", "..")
+                )
         if not segments:
             return self.base_url
         return self.base_url + "/".join(quote(part) for part in segments)
