@@ -14,13 +14,13 @@
 from __future__ import annotations
 
 import logging
-import mimetypes
 from pathlib import Path
 
 from django.core.files.storage import default_storage
 from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import redirect
 from django.templatetags.static import static
+from django.utils.http import content_disposition_header
 from django.views.decorators.http import require_GET
 
 from core import imaging, media_cache
@@ -28,6 +28,17 @@ from core import imaging, media_cache
 logger = logging.getLogger(__name__)
 
 PLACEHOLDER_STATIC_PATH = "core/images/no_photo.jpeg"
+
+# Отдаём как картинки только эти расширения. Всё остальное — вложением:
+# иначе случайно попавший в хранилище .html/.svg исполнится на нашем домене.
+IMAGE_CONTENT_TYPES = {
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".png": "image/png",
+    ".webp": "image/webp",
+    ".gif": "image/gif",
+    ".avif": "image/avif",
+}
 
 
 def _clean_path(path: str) -> str:
@@ -42,22 +53,32 @@ def _clean_path(path: str) -> str:
 
 
 def _content_type(name: str) -> str:
-    return mimetypes.guess_type(name)[0] or "application/octet-stream"
+    return IMAGE_CONTENT_TYPES.get(Path(name).suffix.lower(), "application/octet-stream")
+
+
+def _is_image(name: str) -> bool:
+    return Path(name).suffix.lower() in IMAGE_CONTENT_TYPES
+
+
+def _set_media_headers(response, name: str, variant: str) -> None:
+    response["Cache-Control"] = "public, max-age=604800, immutable"
+    response["X-Media-Variant"] = variant
+    response["Content-Disposition"] = content_disposition_header(
+        as_attachment=not _is_image(name), filename=Path(name).name
+    )
 
 
 def _cached_response(path: Path, name: str, variant: str = "web") -> FileResponse:
     response = FileResponse(path.open("rb"), content_type=_content_type(name))
-    response["Cache-Control"] = "public, max-age=604800, immutable"
+    _set_media_headers(response, name, variant)
     response["X-Media-Cache"] = "hit"
-    response["X-Media-Variant"] = variant
     return response
 
 
 def _bytes_response(payload: bytes, name: str, variant: str = "web") -> HttpResponse:
     response = HttpResponse(payload, content_type=_content_type(name))
-    response["Cache-Control"] = "public, max-age=604800, immutable"
+    _set_media_headers(response, name, variant)
     response["X-Media-Cache"] = "miss"
-    response["X-Media-Variant"] = variant
     return response
 
 
