@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pathlib
+import re
 
 import pytest
 from django.conf import settings
@@ -10,6 +11,8 @@ from django.urls import reverse
 
 from core.models import MediaItem, MediaItemReview, SubCategory
 from core.tests.conftest_helpers import make_image_file
+
+REPO_DIR = pathlib.Path(settings.BASE_DIR).parent
 
 
 @pytest.mark.django_db
@@ -278,6 +281,40 @@ def test_css_is_served_locally(client):
     assert b"cdn.jsdelivr.net" not in content
     assert b"fonts.googleapis.com" not in content
     assert b"fonts.gstatic.com" not in content
+
+
+@pytest.mark.django_db
+def test_no_external_scripts_or_styles(client):
+    """Ни один script/link не грузится с чужого домена.
+
+    Сторонний JS на странице — это чужой код с доступом к CSRF-токену;
+    утечка IP посетителей на зарубежный CDN — ещё и вопрос 152-ФЗ.
+    """
+    live = reverse("frontpage_view")
+    for url in (live, reverse("account_login")):
+        html = client.get(url).content.decode()
+        for tag in re.findall(r"<(?:script|link)\b[^>]*>", html):
+            for url_attr in re.findall(r'(?:src|href)="(https?://[^"]+)"', tag):
+                pytest.fail(f"Внешний ресурс {url_attr} на странице {url}")
+
+
+def test_every_used_icon_is_vendored():
+    """Все имена иконок из шаблонов есть в локальном наборе.
+
+    Иконки подгружаются по имени из ``core/vendor/ionicons/svg``. Если иконку
+    забыли положить, на сайте будет пустое место — поэтому проверяем списком.
+    """
+    templates_dir = REPO_DIR / "zh_gallery" / "core" / "templates"
+    vendored = {
+        path.stem
+        for path in (REPO_DIR / "zh_gallery/core/static/core/vendor/ionicons/svg").glob("*.svg")
+    }
+    used: set[str] = set()
+    for path in templates_dir.rglob("*.html"):
+        used.update(re.findall(r'<ion-icon[^>]*\bname="([a-z0-9-]+)"', path.read_text()))
+
+    assert used, "в шаблонах не нашлось ни одной иконки — проверка потеряла смысл"
+    assert used <= vendored, f"нет локальных иконок: {sorted(used - vendored)}"
 
 
 @pytest.mark.django_db
