@@ -28,7 +28,7 @@
         <div class="column is-8">
             <p class="subtitle profile-caption">
                 {% if profile_user == user %}{% trans "Your added comments" %}{% else %}{% trans "Total user's comments" %}{% endif %}
-                : {{ reviews|length }}
+                : <span data-reviews-count>{{ reviews|length }}</span>
             </p>
 
             {% for review in reviews %}
@@ -78,9 +78,12 @@
                         </button>
                     {% endif %}
                 </article>
-            {% empty %}
-                <p class="profile-caption">{% trans "No comments yet" %}...</p>
             {% endfor %}
+
+            {# пустое состояние отдельно от цикла: JS показывает его, когда удалили последний #}
+            <p class="profile-caption" data-reviews-empty {% if reviews %}hidden{% endif %}>
+                {% trans "No comments yet" %}...
+            </p>
         </div>
 
         <div class="column is-4 column_frontpage">

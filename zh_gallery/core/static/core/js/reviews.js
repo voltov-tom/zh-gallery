@@ -26,6 +26,21 @@ async function postJson(url, payload) {
     return { ok: response.ok, data };
 }
 
+function refreshReviewsSummary(app) {
+    // счётчик и «Комментариев пока нет» считаем по DOM: после удаления
+    // серверный рендер устаревает, а перезагрузка ради цифры ни к чему
+    const items = app.querySelectorAll('[data-review-item]');
+    const counter = app.querySelector('[data-reviews-count]');
+    const empty = app.querySelector('[data-reviews-empty]');
+
+    if (counter) {
+        counter.textContent = String(items.length);
+    }
+    if (empty) {
+        empty.hidden = items.length !== 0;
+    }
+}
+
 function initReview(app, item) {
     const reviewId = item.dataset.reviewId;
     const text = item.querySelector('[data-review-text]');
@@ -76,6 +91,7 @@ function initReview(app, item) {
             const { ok, data } = await postJson(app.dataset.deleteUrl, { review_id: reviewId });
             if (ok && data.success) {
                 item.remove();
+                refreshReviewsSummary(app);
             } else {
                 showError(data.error || 'не удалось удалить комментарий');
             }

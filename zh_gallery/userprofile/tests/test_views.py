@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+from allauth.account.models import EmailAddress
 from django.urls import reverse
 
 from core.models import MediaItemReview
@@ -26,6 +27,28 @@ def test_my_account_shows_own_reviews_and_edit_controls(client, user, review):
     assert review.content.encode() in response.content
     assert b"data-review-item" in response.content
     assert b"data-review-textarea" in response.content
+
+
+@pytest.mark.django_db
+def test_my_account_marks_reviews_counter_for_js(client, user, review):
+    """Счётчик и пустое состояние помечены для пересчёта после удаления."""
+    client.force_login(user)
+
+    content = client.get(reverse("my_account_view")).content
+
+    assert b"data-reviews-count" in content
+    assert b"data-reviews-empty" in content
+
+
+@pytest.mark.django_db
+def test_empty_profile_hides_counter_value(client, user):
+    """Без комментариев счётчик равен нулю, а пустое состояние видно сразу."""
+    client.force_login(user)
+
+    content = client.get(reverse("my_account_view")).content.decode()
+
+    assert "<span data-reviews-count>0</span>" in content
+    assert "data-reviews-empty hidden" not in content
 
 
 @pytest.mark.django_db
@@ -90,3 +113,18 @@ def test_profile_does_not_duplicate_queries_per_review(
         response = client.get(reverse("my_account_view"))
 
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_email_page_uses_structured_rows(client, user):
+    """Адреса почты разложены строками с бейджами, кнопки — отдельной строкой."""
+    EmailAddress.objects.create(user=user, email=user.email, primary=True, verified=True)
+    client.force_login(user)
+
+    content = client.get(reverse("account_email")).content
+
+    assert b'class="email-row"' in content
+    assert b"email-actions" in content
+    assert b"email_confirm.js" in content
+    # инлайнового скрипта с confirm больше нет
+    assert b"function() {\n    var message" not in content

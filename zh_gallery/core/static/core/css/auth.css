@@ -218,3 +218,82 @@
 .auth-page main .field.is-grouped .button {
     min-width: 140px;
 }
+
+/* --- Адреса e-mail (страница «Адреса электронной почты») -------------- */
+.auth-page main .email-page__hint {
+    margin-bottom: 1rem;
+}
+
+.auth-page main .email-list {
+    border: 0;
+    margin: 0 0 1rem;
+    padding: 0;
+    min-width: 0;
+}
+
+/* Строка с адресом: radio + адрес + бейджи. Заменяет дефолтный label,
+   которому .auth-page main label задаёт display: block. */
+.auth-page main label.email-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.625rem;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--pink-line);
+    border-radius: var(--radius-control);
+    background: #ffffff;
+    font-weight: 400;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.auth-page main label.email-row:hover {
+    border-color: var(--pink);
+}
+
+.auth-page main label.email-row:has(.email-row__radio:checked) {
+    border-color: var(--pink);
+    box-shadow: 0 0 0 2px rgba(174, 115, 148, 0.16);
+}
+
+.auth-page main .email-row__radio {
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+.auth-page main .email-row__address {
+    font-weight: 600;
+    color: #4a3541;
+    word-break: break-all;
+}
+
+.auth-page main .email-row .tag {
+    flex: 0 0 auto;
+    margin: 0;
+}
+
+/* Действия со списком: отдельной строкой, с воздухом между кнопками */
+.auth-page main .email-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+/* Блок добавления адреса отделён от списка */
+.auth-page main .email-add {
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--pink-line);
+}
+
+.auth-page main .email-add .subtitle {
+    margin-bottom: 0.875rem;
+    text-align: left;
+    font-size: 1.0625rem;
+}
+
+.auth-page main .add_email .auth-field {
+    margin-bottom: 0.875rem;
+}
