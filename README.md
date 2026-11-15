@@ -2,11 +2,11 @@
 
 # zh-gallery
 
-Учебный Django-проект: галерея работ творческого человека. Категории → подкатегории →
-медиа-элементы, лайки, комментарии, страница «О проекте», вход через django-allauth
-(включая Google), переводы ru/en, JSON API для Telegram-бота и мобильного клиента.
-
-Сайт: [zh-gallery.ru](https://zh-gallery.ru)
+Продакшн-проект: галерея работ творческого человека на [zh-gallery.ru](https://zh-gallery.ru).
+Категории → подкатегории → медиа-элементы, лайки, комментарии, страница «О проекте»,
+вход через django-allauth (ВКонтакте и Mail.ru), переводы ru/en, JSON API для
+[Telegram-бота](https://github.com/voltov-tom/zh_gallery_bot) и мобильного клиента,
+генерация описаний работ через ИИ.
 
 ---
 
@@ -126,7 +126,7 @@ curl -s localhost:8080/healthz/            # {"status": "ok", ...}
 curl -s localhost:8080/ | grep -c vue      # 0 — Vue больше нет
 open http://localhost:8080                 # каталог, лайки, комментарии
 open http://localhost:8025                 # письма после регистрации
-make test && make lint                     # 105 тестов + ruff
+make test && make lint                     # 200+ тестов + ruff
 ```
 
 ## Медиа в Nextcloud
