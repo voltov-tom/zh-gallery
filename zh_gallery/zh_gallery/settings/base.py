@@ -162,6 +162,8 @@ SITE_DOMAIN = env.str("SITE_DOMAIN", default="zh-gallery.ru")
 # При изменении текста политики поднимите и это значение.
 PRIVACY_POLICY_VERSION = env.str("PRIVACY_POLICY_VERSION", default="2026-11-02")
 SITE_NAME = env.str("SITE_NAME", default="zh-gallery")
+# Номер счётчика Яндекс Метрики. Пусто — аналитика не подключается вообще.
+YANDEX_METRIKA_ID = env.str("YANDEX_METRIKA_ID", default="").strip()
 
 # django-allauth 65.x
 ACCOUNT_LOGIN_METHODS = {"username", "email"}

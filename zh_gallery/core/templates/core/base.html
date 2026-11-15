@@ -19,6 +19,11 @@
     <script type="module" src="{% static 'core/vendor/ionicons/ionicons.esm.js' %}"></script>
     <script type="module" src="{% static 'core/js/base.js' %}"></script>
     <script type="module" src="{% static 'core/js/cookie.js' %}"></script>
+    {% if yandex_metrika_id %}
+    {# Метрика грузится из JS и только после согласия — см. core/js/metrika.js #}
+    <script type="module" src="{% static 'core/js/metrika.js' %}"
+            data-metrika-id="{{ yandex_metrika_id }}"></script>
+    {% endif %}
 </head>
 
 <body{% if is_auth_page %} class="auth-page"{% endif %}>

@@ -37,4 +37,5 @@ def site_context(request: HttpRequest) -> dict:
         "is_auth_page": is_auth_page(request),
         "policy_version": settings.PRIVACY_POLICY_VERSION,
         "signup_enabled": settings.SIGNUP_ENABLED,
+        "yandex_metrika_id": settings.YANDEX_METRIKA_ID,
     }

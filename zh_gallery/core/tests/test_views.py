@@ -284,6 +284,37 @@ def test_css_is_served_locally(client):
 
 
 @pytest.mark.django_db
+def test_cookie_notice_mentions_analytics(client):
+    """В плашке честно написано, что аналитика включается по согласию."""
+    html = client.get(reverse("frontpage_view"), headers={"accept-language": "ru"}).content.decode()
+
+    assert "Аналитические" in html
+    assert "Яндекс Метрика" in html
+
+
+@pytest.mark.django_db
+def test_metrika_is_off_without_counter(client):
+    """Без номера счётчика на странице нет ни скрипта, ни упоминания Метрики."""
+    content = client.get(reverse("frontpage_view")).content
+
+    assert b"data-metrika-id" not in content
+    assert b"core/js/metrika.js" not in content
+
+
+@pytest.mark.django_db
+def test_metrika_script_is_rendered_with_counter(client, settings):
+    """Счётчик передаётся в локальный скрипт, который грузит его после согласия."""
+    settings.YANDEX_METRIKA_ID = "98765432"
+
+    content = client.get(reverse("frontpage_view")).content
+
+    assert b'data-metrika-id="98765432"' in content
+    assert b"core/js/metrika.js" in content
+    # сам счётчик в статике не появляется: его подключает JS, а не HTML
+    assert b"mc.yandex.ru" not in content
+
+
+@pytest.mark.django_db
 def test_no_external_scripts_or_styles(client):
     """Ни один script/link не грузится с чужого домена.
 

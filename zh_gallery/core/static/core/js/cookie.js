@@ -29,6 +29,8 @@ if (notice && !storageGet(STORAGE_KEY)) {
         accept.addEventListener("click", () => {
             storageSet(STORAGE_KEY, new Date().toISOString());
             notice.hidden = true;
+            // метрика (metrika.js) слушает это событие и только тогда грузится
+            window.dispatchEvent(new CustomEvent("zh-gallery:cookie-accepted"));
         });
     }
 }

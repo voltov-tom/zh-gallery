@@ -265,16 +265,20 @@ msgid "Back"
 msgstr "Назад"
 
 #: core/templates/core/parts/cookie_notice.html:4
-msgid "This site uses technical cookies for sign-in and language selection."
-msgstr "Сайт использует технические cookie для входа и выбора языка."
+msgid ""
+"This site uses technical cookies for sign-in and language selection. Analytics "
+"cookies (Yandex Metrika) are enabled only with your consent."
+msgstr ""
+"Сайт использует технические cookie для входа и выбора языка. Аналитические "
+"cookie (Яндекс Метрика) включаются только с вашего согласия."
 
 #: core/templates/core/parts/cookie_notice.html:5
 msgid "Learn more"
 msgstr "Подробнее"
 
 #: core/templates/core/parts/cookie_notice.html:7
-msgid "Got it"
-msgstr "Понятно"
+msgid "Accept"
+msgstr "Согласен"
 
 #: core/templates/core/parts/gallery_card.html:12
 msgid "no photo"
