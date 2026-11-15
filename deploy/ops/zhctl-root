@@ -40,7 +40,8 @@ case "$CMD" in
         $AS_ZH git -C src fetch -q origin refactor
         $AS_ZH git -C src reset -q --hard origin/refactor
         $AS_ZH cp -f src/deploy/docker-compose.prod.yml \
-                     src/deploy/nginx-prod.conf src/deploy/maintenance.html .
+                     src/deploy/nginx-prod.conf src/deploy/maintenance.html \
+                     src/deploy/nginx-health.txt .
         $AS_ZH cp -f src/deploy/deploy.sh ./deploy.sh.new
         $AS_ZH mv -f ./deploy.sh.new ./deploy.sh
         $AS_ZH chmod +x deploy.sh
