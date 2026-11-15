@@ -15,6 +15,19 @@ services:
     depends_on:
       - xray
     restart: unless-stopped
+    healthcheck:
+      # проверяем то, что реально важно: бот достаёт Telegram через прокси
+      test:
+        - CMD
+        - python
+        - -c
+        - |
+          import urllib.request
+          urllib.request.urlopen("https://api.telegram.org/", timeout=8)
+      interval: 60s
+      timeout: 15s
+      retries: 3
+      start_period: 20s
     read_only: true
     tmpfs:
       - /tmp
@@ -35,6 +48,13 @@ services:
     volumes:
       - ./xray/config.json:/etc/xray/config.json:ro
     restart: unless-stopped
+    healthcheck:
+      # локальный API xray: отвечает только если процесс жив и конфиг загружен
+      test: ["CMD", "/usr/local/bin/xray", "api", "statsquery", "--server=127.0.0.1:10085"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     read_only: true
     tmpfs:
       - /tmp
