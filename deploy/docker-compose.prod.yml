@@ -116,6 +116,13 @@ services:
         condition: service_healthy
     mem_limit: 64m
     security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      # статика отдаётся самим nginx, без Django: проверяем, что веб-сервер жив
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/static/core/health.txt"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 volumes:
   postgres_data:
