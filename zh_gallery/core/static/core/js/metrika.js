@@ -42,13 +42,16 @@ function loadCounter() {
         k.async = true;
         k.src = r;
         a.parentNode.insertBefore(k, a);
-    })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+    })(window, document, "script", `https://mc.yandex.ru/metrika/tag.js?id=${counterId}`, "ym");
 
     window.ym(counterId, "init", {
+        ssr: true,
+        webvisor: true,
         clickmap: true,
         trackLinks: true,
         accurateTrackBounce: true,
-        webvisor: false,
+        referrer: document.referrer,
+        url: window.location.href,
     });
 }
 
