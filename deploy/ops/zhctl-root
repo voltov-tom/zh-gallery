@@ -37,8 +37,8 @@ case "$CMD" in
         cd "$ROOT"
         # синхронизация конфигов: только здесь, до запуска deploy.sh, чтобы
         # скрипт не перезаписывал сам себя во время выполнения
-        $AS_ZH git -C src fetch -q origin refactor
-        $AS_ZH git -C src reset -q --hard origin/refactor
+        $AS_ZH git -C src fetch -q origin master
+        $AS_ZH git -C src reset -q --hard origin/master
         $AS_ZH cp -f src/deploy/docker-compose.prod.yml \
                      src/deploy/nginx-prod.conf src/deploy/maintenance.html \
                      src/deploy/nginx-health.txt .
