@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/voltov-tom/zh-gallery/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/voltov-tom/zh-gallery/actions/workflows/ci.yml)
 [![Deploy](https://github.com/voltov-tom/zh-gallery/actions/workflows/deploy.yml/badge.svg?branch=master)](https://github.com/voltov-tom/zh-gallery/actions/workflows/deploy.yml)
-![Python](https://img.shields.io/badge/python-3.12-blue)
+![Python](https://img.shields.io/badge/python-3.13-blue)
 ![Django](https://img.shields.io/badge/django-5.2-0b3b2e)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
@@ -61,7 +61,7 @@ zh_gallery/
 
 | Слой | Технологии |
 |------|------------|
-| Бэкенд | Python 3.12, Django 5.2 LTS |
+| Бэкенд | Python 3.13, Django 5.2 LTS |
 | Аутентификация | django-allauth (локальные аккаунты, ВКонтакте, Mail.ru) |
 | БД | PostgreSQL 16, в тестах — SQLite в памяти |
 | Кэш и сессии | Redis через django-redis, без Redis работает на БД |

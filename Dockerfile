@@ -1,7 +1,7 @@
 # Образ для прода: Python 3.12 + Django 5.2, запуск от непривилегированного пользователя.
 # Стадия `dev` дополнительно ставит инструменты разработки (pytest, ruff) и
 # используется сервисом `test` в docker-compose.
-FROM python:3.12-slim AS base
+FROM python:3.13-slim AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
