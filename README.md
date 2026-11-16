@@ -79,5 +79,4 @@ zh_gallery/
 ## Документация
 
 * [CHANGELOG.md](CHANGELOG.md) — версии и история исправлений;
-* [.env.example](.env.example) — все переменные окружения с комментариями;
 * [LICENSE](LICENSE) — MIT.

@@ -10,7 +10,6 @@ __pycache__
 *.log
 .env
 .env.*
-!.env.example
 # Локальные секреты не должны попасть в образ: Dockerfile делает COPY . .
 .secrets
 audit

@@ -1,5 +1,5 @@
 # Стек проекта: PostgreSQL, Redis, Django (gunicorn), nginx и Mailpit для писем.
-# Запуск:  cp .env.example .env && docker compose up --build
+# Запуск:  положите .env в корень и выполните docker compose up --build
 # Сайт:    http://localhost:8080
 #
 # Порты специально не совпадают с продакшн-стеком (80/8000), чтобы рядом

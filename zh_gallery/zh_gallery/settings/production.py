@@ -48,5 +48,5 @@ if not SECURE_SSL_REDIRECT:
     logging.getLogger(__name__).warning(
         "SECURE_SSL_REDIRECT=False: сайт отдаётся по HTTP. После настройки TLS "
         "включите SECURE_SSL_REDIRECT, SESSION_COOKIE_SECURE, CSRF_COOKIE_SECURE "
-        "и SECURE_HSTS_SECONDS (см. .env.example)."
+        "и SECURE_HSTS_SECONDS (список переменных — в settings/base.py)."
     )
