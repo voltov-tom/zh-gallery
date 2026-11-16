@@ -2,6 +2,14 @@
 
 # zh-gallery
 
+[![CI](https://github.com/voltov-tom/zh-gallery/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/voltov-tom/zh-gallery/actions/workflows/ci.yml)
+[![Deploy](https://github.com/voltov-tom/zh-gallery/actions/workflows/deploy.yml/badge.svg?branch=master)](https://github.com/voltov-tom/zh-gallery/actions/workflows/deploy.yml)
+![Python](https://img.shields.io/badge/python-3.12-blue)
+![Django](https://img.shields.io/badge/django-5.2-0b3b2e)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+![Каталог работ](docs/screenshot-home.jpg)
+
 Продакшн-проект: галерея работ творческого человека на [zh-gallery.ru](https://zh-gallery.ru).
 Категории → подкатегории → медиа-элементы, лайки, комментарии, страница «О проекте»,
 вход через django-allauth (ВКонтакте и Mail.ru), переводы ru/en, JSON API для
@@ -126,7 +134,7 @@ curl -s localhost:8080/healthz/            # {"status": "ok", ...}
 curl -s localhost:8080/ | grep -c vue      # 0 — Vue больше нет
 open http://localhost:8080                 # каталог, лайки, комментарии
 open http://localhost:8025                 # письма после регистрации
-make test && make lint                     # 200+ тестов + ruff
+make test && make lint                     # 238 тестов + ruff
 ```
 
 ## Медиа в Nextcloud
@@ -161,32 +169,33 @@ docker compose run --rm web python manage.py media_check --download
 
 ## Деплой
 
-Прод живёт на VPS (`zh-gallery.ru`, Debian 13), конфигурация — в `deploy/`:
+Прод — VPS `zh-gallery.ru` (Debian 13). Стек работает под **rootless Docker**
+пользователя `app`, каталог стека — `/home/app/zh-gallery`.
 
 ```
 deploy/
-├── docker-compose.prod.yml   # db, redis, web (образ из GHCR), nginx
-├── nginx-prod.conf           # HTTPS, HSTS, статика, медиа
-└── deploy.sh                 # pull образа → up → smoke /healthz/
+├── docker-compose.prod.yml      # db, redis, web (образ из GHCR), nginx, init
+├── nginx-prod.conf              # HTTPS/HSTS, /nginx-health, limit_req на админку
+├── maintenance.html             # страница техработ вместо голых 502/503
+├── bot/docker-compose.prod.yml  # стек бота: bot + xray (VLESS-прокси)
+└── ops/                         # zhctl, zhctl-root, zhbotctl-root
 ```
 
-Схема: `git push` → GitHub Actions (`ci.yml`) → сборка образа → публичный GHCR
-→ по SSH от пользователя `deploy` запускается `deploy.sh`.
+Ветки: **`master`** — прод (пуш в неё запускает деплой), **`refactor`** — рабочая ветка.
 
-На сервере:
+Схема выката:
 
-```
-/srv/zh-gallery/
-├── .env              # секреты, chmod 600
-├── certs/            # fullchain.pem + privkey.pem
-├── docker-compose.prod.yml
-├── nginx-prod.conf
-└── deploy.sh
-```
+1. push в `master` → GitHub Actions: `ruff`, `pytest`, `pip-audit`;
+2. сборка образа и публикация в GHCR (`:latest` и `:<sha>`);
+3. деплой по SSH пользователем `deploy`, чей ключ ограничен forced-command;
+4. `zhctl-root` проверяет, что аргумент — 40 hex-символов, синхронизирует конфиги
+   из клона, пересоздаёт стек, проверяет nginx (`nginx -t` + reload), чистит старые
+   образы и ждёт `/healthz/`.
 
-Секреты GitHub: `DEPLOY_SSH_KEY` — приватный ключ пользователя `deploy`.
-Сертификат — GlobalSign (nic.ru), продлевается вручную до 25.05.2027; позже
-переедем на Let's Encrypt с автообновлением.
+Откат — тем же механизмом, указав прежний sha: `deploy <sha>`.
+
+Секреты (`.env`, ключи) лежат на сервере вне репозитория, права `600`. Сертификат —
+GlobalSign (nic.ru), действует до 25.05.2027, продлевается через панель хостера.
 
 ## Юридические страницы
 
@@ -273,6 +282,43 @@ make migrate-check # миграции соответствуют моделям
 
 * `.po` лежат в репозитории, `.mo` собираются при старте контейнера (`compilemessages`);
 * после правки шаблонов: `make messages` (обновит `django.po`), затем перевод и `make compile-messages`.
+
+---
+
+## Прод: как это работает
+
+[zh-gallery.ru](https://zh-gallery.ru) — работающий сервис, а не только локальная заготовка.
+
+* **Стек в проде:** Docker Compose из пяти контейнеров — nginx (TLS, HTTP/2, страница
+  технических работ вместо голых 502/503), gunicorn (3 воркера), PostgreSQL 16, Redis 7
+  и короткоживущий `init` с миграциями и `collectstatic`.
+* **Медиа не в репозитории:** файлы лежат в Nextcloud по WebDAV, Django отдаёт их через
+  локальный кэш, пережимает в веб-размер (Pillow, учёт EXIF-ориентации) и держит отдельный
+  вариант оригинала для зума.
+* **CI/CD:** GitHub Actions → `ruff` + `pytest` + `pip-audit` → образ в GHCR → деплой по SSH
+  пользователем `deploy`, чей ключ ограничен forced-command: разрешены только `status`,
+  `logs` и `deploy <sha>`.
+* **Telegram-бот** — [отдельный репозиторий](https://github.com/voltov-tom/zh_gallery_bot)
+  и отдельный контейнер. В РФ `api.telegram.org` недоступен, поэтому бот выходит в Telegram
+  через VLESS-прокси на зарубежном сервере, а к API сайта ходит напрямую.
+* **Мониторинг:** Beszel (агент на сервере, хаб отдельно) плюс healthcheck у каждого
+  контейнера — панель показывает «здоровье» всего стека.
+* **Аналитика:** Яндекс Метрика; счётчик подключается только после согласия
+  в cookie-плашке, до этого запросов на `mc.yandex.ru` нет.
+
+## Безопасность
+
+* секреты живут только в `.env` и никогда не попадают в git (`.secrets/` и отчёты аудита
+  в `.gitignore`);
+* ключ деплоя один, с forced-command и белым списком команд; пользователь `deploy`
+  не состоит в группе docker;
+* в HTML нет внешних скриптов: Bulma и иконки лежат локально, счётчик Метрики грузится
+  из своего JS и только после согласия;
+* вход в админку ограничен по частоте (`limit_req` в nginx), бот-API закрыт токеном
+  со сравнением за постоянное время, отдача медиа ограничена белым списком типов;
+* `manage.py check --deploy` чистый, отдаются HSTS, `X-Frame-Options: DENY`,
+  `X-Content-Type-Options: nosniff`, `Referrer-Policy`;
+* в CI — `pip-audit` по известным CVE.
 
 ---
 
