@@ -5,9 +5,16 @@
 set -eu
 
 CMD="${1:-}"
-ROOT=/home/app/zh-bot
-SRC=/home/app/zh-gallery/src/deploy/bot
-AS_ZH="sudo -u app env XDG_RUNTIME_DIR=/run/user/988 DOCKER_HOST=unix:///run/user/988/docker.sock HOME=/home/app"
+# Пути и окружение демона — только на сервере (файл создаётся root, 600).
+CONF=${ZH_CONF:-/etc/zh-gallery.conf}
+if [ ! -r "$CONF" ]; then
+    echo "ошибка: нет $CONF" >&2
+    exit 1
+fi
+# shellcheck source=/dev/null
+. "$CONF"
+ROOT="$STACK_BOT"
+SRC="$STACK/src/deploy/bot"
 COMPOSE="docker compose -f $ROOT/docker-compose.prod.yml"
 
 case "$CMD" in

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import pathlib
 import subprocess
 
@@ -80,9 +81,33 @@ def test_deploy_reloads_nginx_after_config_sync():
     assert script.index("nginx -t") < script.index("nginx -s reload")
 
 
-def _run_botctl(*args: str) -> subprocess.CompletedProcess:
+@pytest.fixture
+def botctl_conf(tmp_path):
+    """Скрипту нужен серверный конфиг: пути живут вне репозитория."""
+    conf = tmp_path / "zh-gallery.conf"
+    conf.write_text('STACK=/nonexistent\nSTACK_BOT=/nonexistent\nAS_ZH="true"\n')
+    return conf
+
+
+def _run_botctl(conf, *args: str) -> subprocess.CompletedProcess:
     script = REPO_DIR / "deploy" / "ops" / "zhbotctl-root"
-    return subprocess.run(["sh", str(script), *args], capture_output=True, text=True, check=False)
+    env = {**os.environ, "ZH_CONF": str(conf)}
+    return subprocess.run(
+        ["sh", str(script), *args], capture_output=True, text=True, check=False, env=env
+    )
+
+
+def test_botctl_requires_server_config(tmp_path):
+    """Без /etc/zh-gallery.conf скрипт падает понятной ошибкой, а не молча."""
+    env = {**os.environ, "ZH_CONF": str(tmp_path / "missing.conf")}
+    script = REPO_DIR / "deploy" / "ops" / "zhbotctl-root"
+
+    result = subprocess.run(
+        ["sh", str(script), "status"], capture_output=True, text=True, check=False, env=env
+    )
+
+    assert result.returncode == 1
+    assert "нет" in result.stderr
 
 
 def test_zhctl_root_routes_bot_commands_to_its_own_script():
@@ -93,19 +118,19 @@ def test_zhctl_root_routes_bot_commands_to_its_own_script():
     assert "bot\\ *)" in script
 
 
-def test_bot_deploy_accepts_only_full_sha():
+def test_bot_deploy_accepts_only_full_sha(botctl_conf):
     """Короткий, неполный и не-hex sha отбиваются до запуска docker."""
     for bad in ("deploy ", "deploy abc", "deploy " + "z" * 40):
-        result = _run_botctl(bad)
+        result = _run_botctl(botctl_conf, bad)
         assert result.returncode == 2, bad
         assert "sha" in result.stderr
 
     # «deploy» без аргумента — вообще не разрешённая команда
-    assert _run_botctl("deploy").returncode == 1
+    assert _run_botctl(botctl_conf, "deploy").returncode == 1
 
 
-def test_bot_deploy_rejects_unknown_commands():
-    result = _run_botctl("rm -rf /")
+def test_bot_deploy_rejects_unknown_commands(botctl_conf):
+    result = _run_botctl(botctl_conf, "rm -rf /")
 
     assert result.returncode == 1
     assert "не разрешена" in result.stderr

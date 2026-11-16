@@ -1,6 +1,6 @@
 # Стек проекта: PostgreSQL, Redis, Django (gunicorn), nginx и Mailpit для писем.
 # Запуск:  cp .env.example .env && docker compose up --build
-# Сайт:    http://localhost:8080     Письма:  http://localhost:8025
+# Сайт:    http://localhost:8080
 #
 # Порты специально не совпадают с продакшн-стеком (80/8000), чтобы рядом
 # можно было держать боевую копию проекта.
@@ -103,19 +103,6 @@ services:
         condition: service_completed_successfully
       web:
         condition: service_healthy
-
-  # Локальный SMTP-приёмник (веб-интерфейс на :8025). Нужен только если хочется
-  # посмотреть письма регистрации: docker compose --profile mail up -d mailpit.
-  # По умолчанию письма печатаются в лог контейнера (console backend).
-  mailpit:
-    profiles: ["mail"]
-    image: axllent/mailpit:v1.21
-    restart: unless-stopped
-    ports:
-      - "8025:8025"
-      - "1025:1025"
-    environment:
-      MP_MAX_MESSAGES: 500
 
   # Тесты и линтеры: отдельный образ с dev-зависимостями.
   #   docker compose --profile tools run --rm test pytest
